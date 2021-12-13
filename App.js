@@ -1,112 +1,93 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+// import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import AppIntroSlider from "react-native-app-intro-slider";
 
-import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const slides = [
+  {
+    key: "one",
+    title: "JUST TRAVEL",
+    text:
+      "Live with no excuses and travel with no regrets",
+      image: require("./images/2.png")
+  },
+  {
+    key: "two",
+    title: "TAKE A BREAK",
+    text:
+      "We travel not to escape life but for life not to escape us.",
+      image: require("./images/1.png"),
+  },
+  {
+    key: "three",
+    title: "ENJOY YOUR JOURNEY",
+    text:
+      "Don't listen to what they say, go see",
+    image: require("./images/3.png"),
+  },
+];
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+export default class App extends React.Component {
+  state = { showHomePage: false };
+  _renderItem = ({ item }) => {
+    return (
+      <View style={{ flex: 1 }}>
+        <Image
+          source={item.image}
+          style={{
+            resizeMode: "cover",
+            height: "73%",
+            width: "100%",
+          }}
+        />
+        <Text
+          style={{
+            paddingTop: 25,
+            paddingBottom: 10,
+            fontSize: 23,
+            fontWeight: "bold",
+            color: "#21465b",
+            alignSelf: "center",
+          }}
+        >
+          {item.title}
+        </Text>
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+        <Text style={{
+          textAlign:"center",
+          color:"#b5b5b5",
+          fontSize:15,
+          paddingHorizontal:30
+        }}>
+          {item.text}
+        </Text>
+      </View>
+    );
   };
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One ???">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
+  render() {
+    if (this.state.showHomePage){
+      return <App/>
+    } else 
+    return (
+    <AppIntroSlider
+      renderItem={this._renderItem} 
+      data={slides} 
+      activeDotStyle={{
+        backgroundColor:"#21465b",
+        width:25
+      }}
+     />
+  
+    );
+  }
+}
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
-
-export default App;
