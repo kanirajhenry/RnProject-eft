@@ -20,6 +20,8 @@ import ProfileScreen1 from './src/screens/ProfileScreen1'
 import LoginScreen from './src/screens/LoginScreen'
 import RegisterScreen from './src/screens/RegisterScreen'
 
+import IpConfiguration from './src/screens/IpConfiguration';
+
 const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
 
@@ -68,12 +70,24 @@ function AuthStackScreen({ navigation }) {
       <AuthStack.Screen name='Login' component={LoginScreen} options={({ navigation }) => ({
         presentation: 'formSheet',
         headerRight: () => <Button onPress={() => navigation.navigate('Register')} title="Register" />,
-        headerLeft: () => <Button onPress={() => navigation.goBack()} title="Done" />,
+        headerLeft: () => <Button onPress={() => navigation.navigate('IpConfiguration')} title="IpConfig" />,
       })}
       />
       <AuthStack.Screen name='Register' component={RegisterScreen} options={({ navigation }) => ({
         // presentation: 'formSheet',
         headerRight: () => <Button title="Done" onPress={() => navigation.goBack()} />,
+      })}
+      />
+
+      <AuthStack.Screen name='IpConfiguration' component={IpConfiguration} options={({ navigation, route }) => ({
+        presentation: 'formSheet',
+        headerRight: () => <Button title="Done" onPress={() =>
+          navigation.goBack()
+          // navigation.navigate('Login', {
+          //   ip: "Nav bar tapped"
+          // })
+        }
+        />
       })}
       />
     </AuthStack.Navigator>
