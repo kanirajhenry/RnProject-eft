@@ -56,9 +56,9 @@ const ProfileStack = createNativeStackNavigator()
 function MyDrawer({ navigation }) {
   return (
     <Drawer.Navigator drawerPosition='left' screenOptions={{ headerShown: false }} >
-      <Drawer.Screen name="TabsScreen" component={TabsScreen} options={{ title: 'Home' }} />
-      <Drawer.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: 'Profile' }} />
-      <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
+      <Drawer.Screen name="TabsScreen" component={TabsScreen} options={{ title: 'Home', headerTitleAlign: 'center' }} />
+      <Drawer.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: 'Profile', headerTitleAlign: 'center'  }} />
+      <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile', headerTitleAlign: 'center'  }} />
       <Drawer.Screen name="Profile1" component={ProfileScreen1} />
     </Drawer.Navigator>
   )
@@ -66,7 +66,7 @@ function MyDrawer({ navigation }) {
 
 function AuthStackScreen({ navigation }) {
   return (
-    <AuthStack.Navigator >
+    <AuthStack.Navigator screenOptions={{ headerTitleAlign:'center' }} >
       <AuthStack.Screen name='Login' component={LoginScreen} options={({ navigation }) => ({
         presentation: 'formSheet',
         headerRight: () => <Button onPress={() => navigation.navigate('Register')} title="Register" />,
@@ -96,7 +96,7 @@ function AuthStackScreen({ navigation }) {
 
 function HomeStackScreen({ navigation }) {
   return (
-    <HomeStack.Navigator screenOptions={({ navigation }) => ({ headerShown: true })} >
+    <HomeStack.Navigator screenOptions={({ navigation }) => ({ headerShown: true, headerTitleAlign:'center'})} >
       <HomeStack.Screen name='Home1' component={HomeScreen1} options={{
         headerLeft: () => <Button title="Menu" color="green" onPress={() => navigation.dispatch(DrawerActions.toggleDrawer('drawerOpenRight'))} />,
         headerRight: () => <Button title="Logout" color="red" onPress={() => navigation.navigate("AuthStackScreen", {
@@ -119,7 +119,7 @@ function HomeStackScreen({ navigation }) {
 
 function SettingsStackScreen() {
   return (
-    <SettingsStack.Navigator screenOptions={{ headerShown: true }}>
+    <SettingsStack.Navigator screenOptions={{ headerShown: true, headerTitleAlign:'center' }}>
       <SettingsStack.Screen name='Settings' component={SettingsScreen} />
       <SettingsStack.Screen name='Settings2' component={SettingsScreen2} />
       <SettingsStack.Screen name='Settings3' component={SettingsScreen3} />
@@ -129,7 +129,7 @@ function SettingsStackScreen() {
 
 function ProfileStackScreen() {
   return (
-    <ProfileStack.Navigator screenOptions={{ headerShown: true }} >
+    <ProfileStack.Navigator screenOptions={{ headerShown: true, headerTitleAlign:'center' }} >
       <ProfileStack.Screen name='Profile' component={ProfileScreen} />
       <ProfileStack.Screen name='Profile1' component={ProfileScreen1} />
     </ProfileStack.Navigator>

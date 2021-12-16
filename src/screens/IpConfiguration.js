@@ -69,13 +69,15 @@ export default function IpConfiguration({ navigation }) {
             <View style={{ flex: 8.5, flexDirection: 'column', justifyContent: 'flex-end', marginBottom: 8 }}>
 
                 <Picker
-                    enabled="false"
-                    mode='dropdown'
+                    enabled={true}
+                    mode='dialog'
                     style={{ fontSize: 12 }}
                     ref={pickerRef}
                     selectedValue={selectedValue}
                     onValueChange={(itemValue, itemIndex) => { handleIpChange(itemValue, itemIndex) }}>
-                    <Picker.Item style={{ fontSize: 12 }} label="MSME - https://msme.effitrac.com" value="https://msme.effitrac.com" />
+
+                    <Picker.Item label="Demo server - https://demo.effitrac.com" value="https://demo.effitrac.com" />
+                    <Picker.Item label="MSME - https://msme.effitrac.com" value="https://msme.effitrac.com" />
                     <Picker.Item label="India - https://live.effigst.com" value="https://live.effigst.com" />
                     <Picker.Item label="Rest of the word - https://live.effitrac.ae" value="https://live.effitrac.ae" />
                     <Picker.Item label="Demo server India - https://demo.effitrac.ae" value="https://demo.effitrac.ae" />
