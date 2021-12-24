@@ -1,10 +1,13 @@
-import * as React from 'react';
-import { Text, View, Button, Settings } from 'react-native';
-import { NavigationContainer, DrawerActions, useNavigation } from '@react-navigation/native';
+import * as React from 'react'
+import { Text, View, Button, Settings } from 'react-native'
+import { NavigationContainer, DrawerActions, useNavigation } from '@react-navigation/native'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler'
+
+import * as constant from './src/constants/keys'
+import * as storage from './src/Asset/Utils/AsyncStore'
 
 import HomeScreen1 from './src/screens/HomeScreen1'
 import HomeScreen2 from './src/screens/HomeScreen2'
@@ -20,7 +23,7 @@ import ProfileScreen1 from './src/screens/ProfileScreen1'
 import LoginScreen from './src/screens/LoginScreen'
 import RegisterScreen from './src/screens/RegisterScreen'
 
-import IpConfiguration from './src/screens/IpConfiguration';
+import IpConfiguration from './src/screens/IpConfiguration'
 
 const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -57,8 +60,8 @@ function MyDrawer({ navigation }) {
   return (
     <Drawer.Navigator drawerPosition='left' screenOptions={{ headerShown: false }} >
       <Drawer.Screen name="TabsScreen" component={TabsScreen} options={{ title: 'Home', headerTitleAlign: 'center' }} />
-      <Drawer.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: 'Profile', headerTitleAlign: 'center'  }} />
-      <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile', headerTitleAlign: 'center'  }} />
+      <Drawer.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: 'Profile', headerTitleAlign: 'center' }} />
+      <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile', headerTitleAlign: 'center' }} />
       <Drawer.Screen name="Profile1" component={ProfileScreen1} />
     </Drawer.Navigator>
   )
@@ -66,7 +69,7 @@ function MyDrawer({ navigation }) {
 
 function AuthStackScreen({ navigation }) {
   return (
-    <AuthStack.Navigator screenOptions={{ headerTitleAlign:'center' }} >
+    <AuthStack.Navigator screenOptions={{ headerTitleAlign: 'center' }} >
       <AuthStack.Screen name='Login' component={LoginScreen} options={({ navigation }) => ({
         presentation: 'formSheet',
         headerRight: () => <Button onPress={() => navigation.navigate('Register')} title="Register" />,
@@ -94,14 +97,19 @@ function AuthStackScreen({ navigation }) {
   )
 }
 
+
+const handleLogOut = (navigation) => {
+
+  navigation.navigate("AuthStackScreen", { screen: 'Login' })
+  storage.setData(constant.keyIsBaseUrl, "")
+}
+
 function HomeStackScreen({ navigation }) {
   return (
-    <HomeStack.Navigator screenOptions={({ navigation }) => ({ headerShown: true, headerTitleAlign:'center'})} >
+    <HomeStack.Navigator screenOptions={({ navigation }) => ({ headerShown: true, headerTitleAlign: 'center' })} >
       <HomeStack.Screen name='Home1' component={HomeScreen1} options={{
         headerLeft: () => <Button title="Menu" color="green" onPress={() => navigation.dispatch(DrawerActions.toggleDrawer('drawerOpenRight'))} />,
-        headerRight: () => <Button title="Logout" color="red" onPress={() => navigation.navigate("AuthStackScreen", {
-          screen: 'Login'
-        })}
+        headerRight: () => <Button title="Logout" color="red" onPress={() => { handleLogOut(navigation) }}
         />
       }}
       />
@@ -119,7 +127,7 @@ function HomeStackScreen({ navigation }) {
 
 function SettingsStackScreen() {
   return (
-    <SettingsStack.Navigator screenOptions={{ headerShown: true, headerTitleAlign:'center' }}>
+    <SettingsStack.Navigator screenOptions={{ headerShown: true, headerTitleAlign: 'center' }}>
       <SettingsStack.Screen name='Settings' component={SettingsScreen} />
       <SettingsStack.Screen name='Settings2' component={SettingsScreen2} />
       <SettingsStack.Screen name='Settings3' component={SettingsScreen3} />
@@ -129,7 +137,7 @@ function SettingsStackScreen() {
 
 function ProfileStackScreen() {
   return (
-    <ProfileStack.Navigator screenOptions={{ headerShown: true, headerTitleAlign:'center' }} >
+    <ProfileStack.Navigator screenOptions={{ headerShown: true, headerTitleAlign: 'center' }} >
       <ProfileStack.Screen name='Profile' component={ProfileScreen} />
       <ProfileStack.Screen name='Profile1' component={ProfileScreen1} />
     </ProfileStack.Navigator>

@@ -1,57 +1,129 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Text, View, StyleSheet, Button } from 'react-native'
-import { Picker, PickerIOS } from '@react-native-picker/picker';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { TextInput } from 'react-native-gesture-handler';
+import { Picker } from '@react-native-picker/picker'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { TextInput } from 'react-native-gesture-handler'
 
-export default function IpConfiguration({ navigation }) {
+import * as actionType from './../redux/actions/actionTypes'
+import { useDispatch, useSelector } from 'react-redux'
+import { ActivityIndicator } from 'react-native-paper'
+import commonApiCall, { commonQueryParam } from '../redux/actions/actions'
+import { configuredUrl } from '../constants/api'
+
+import { getUrl, isValidUrl } from '../utility'
+import * as util from "../utility"
+
+import * as alerts from "../constants/alerts"
+import * as constant from '../constants/keys'
+import * as storage from "../Asset/Utils/AsyncStore"
+
+const IpConfiguration = ({ navigation }) => {
+
+    const [selectedValue, setSelectedValue] = React.useState("")
+    const [text, onChangeText] = React.useState("")
+    const [accepted, setAccepted] = React.useState("")
 
     const pickerRef = React.useRef()
+    const urlInputRef = React.useRef()
+
+    const dispatch = useDispatch()
+
+    const data = useSelector(({ ipReducer }) => ipReducer.data)
+    const loading = useSelector(({ ipReducer }) => ipReducer.loading)
+
+    const [savedUrl, setSavedUrl] = React.useState("")
+
+    useEffect(() => {
+
+        const gotUrl = storage.getData(constant.keyIsBaseUrl)
+        setTimeout(() => { setSavedUrl(gotUrl._W) }, 100)
+
+        console.log("savedUrl: from IP config screen", savedUrl, "text is ::: > ", text)
+
+    }, [])
 
     // FIXME: Both open() close() methods I think it works only for android.
     // FIXME: Dont know how to close and open picker for IOS.
 
-    function open() {
+    const open = () => {
         pickerRef.current.focus()
     }
 
-    function close() {
+    const close = () => {
         pickerRef.current.blur()
     }
 
-    // MSME - https://msme.effitrac.com
-    // India - https://live.effigst.com
-    // Rest of the word - https://live.effitrac.ae
-    // Demo server India - https://demo.effitrac.ae
-    // Custom server URL
-
-    const [selectedValue, setSelectedValue] = React.useState("")
-    const [text, onChangeText] = React.useState("")
-    const [number, onChangeNumber] = React.useState(null)
-
-    function handleIpChange(itemValue, itemIndex) {
+    const handleIpChange = (itemValue, itemIndex) => {
         setSelectedValue(itemValue)
         onChangeText("")
+        setSavedUrl("")
     }
-    
-    function handleIpConfig() {
+
+    console.log("data->0000000000", data)
+
+    const handleIpConfig = () => {
         
-        navigation.navigate('Login', { ip: selectedValue === "" ? text : selectedValue })
-        // console.log("Selcted Value: >>>>", selectedValue, "------> Custom Text: ====> ", text)
-        // alert("Selcted Value: >>>>", selectedValue, "------> Custom Text: ====> ", text)
+        let $url = ""
+
+        if (selectedValue != "") {
+            $url = selectedValue
+        } else if (selectedValue == "" && text != "") {
+            $url = text
+        } else if (selectedValue == "" && text == "" && savedUrl != "" && savedUrl != undefined) {
+            $url = savedUrl
+        }
+
+        console.log("Selected picker value  : >>>>", selectedValue)
+        console.log("Entered text value     : >>>>", text)
+        console.log("Saved Url value        : >>>>", savedUrl)
+
+        if (util.isFieldEmpty($url)) return alert(alerts.emptyUrl)
+        if (!isValidUrl($url)) return alert(alerts.urlErr)
+
+        const url = getUrl($url)
+        const undefinedProtoHost = (url.protocol === undefined && url.host === undefined)
+
+        if (isValidUrl($url) && undefinedProtoHost) return alert(alerts.protocolErr)
+        if (undefinedProtoHost) return alert(alerts.urlErr)
+        if (url.protocol === "http://") return alert(alerts.protocolErr)
+        if ((url === undefined) || (url.protocol != "https://") || (url.host === "")) return alert(alerts.urlErr)
+
+        storage.setData(constant.keyIsBaseUrl, configuredUrl($url))
+
+        const queryParam = { "cmpCode": "RGS" }
+        const query = commonQueryParam(queryParam, "A")
+
+        dispatch(commonApiCall(query, {}, actionType.controller.IP, actionType.ipScreen.IP_CONFIG))
+
+        setTimeout(() => {
+            afterCompletedApicall()
+        }, 500)
+    }
+
+    const afterCompletedApicall = () => {
+
+        if (data == "ACCEPTED") {
+
+            navigation.goBack()
+
+        } else { console.log("ACCEPTED else part") }
     }
 
     return (
+
         <SafeAreaView style={{ flex: 1 }}>
+
             <View style={{ flex: 1.5, alignItems: 'center', justifyContent: 'center', backgroundColor: "#34d8eb" }}>
+
                 {
                     selectedValue === ""
                         ?
                         <View style={{ alignContent: 'space-around' }}>
                             <TextInput
                                 style={styles.input}
+                                // ref={urlInputRef}
                                 onChangeText={text => onChangeText(text)}
-                                value={text}
+                                value={savedUrl == "" ? text : savedUrl}
                                 placeholder="Enter valid url"
                                 keyboardType='url'
                                 blurOnSubmit={true}
@@ -59,13 +131,18 @@ export default function IpConfiguration({ navigation }) {
                                 autoCapitalize='none'
                                 autoComplete='off'
                                 textContentType='URL'
+                                blurOnSubmit={true}
                             />
                         </View>
                         :
                         <Text style={{ fontSize: 25 }}>{selectedValue}</Text>
                 }
             </View>
+
             <Button style={{ marginBottom: 150 }} title="Config IP" onPress={() => { handleIpConfig() }} />
+
+            <Text>  Url Success: {data} </Text>
+
             <View style={{ flex: 8.5, flexDirection: 'column', justifyContent: 'flex-end', marginBottom: 8 }}>
 
                 <Picker
@@ -98,13 +175,13 @@ const styles = StyleSheet.create({
     },
     input: {
         fontSize: 25,
-        color: 'white',
-        height: 40,
         margin: 12,
         borderWidth: 0.2,
         padding: 10,
         marginTop: 15,
-        width: 300
+        width: 400
 
     },
-});
+})
+
+export default IpConfiguration
