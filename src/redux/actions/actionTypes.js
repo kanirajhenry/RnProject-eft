@@ -14,7 +14,8 @@ export const apiResponse = {
 
 export const controller = {
     IP: "IP",
-    LOGIN: "LOGIN"
+    LOGIN: "LOGIN",
+    DASHBOARD: "DASHBOARD"
 }
 
 export const ipScreen = {
@@ -25,4 +26,8 @@ export const loginScreen = {
     ON_LOGIN: "ON_LOGIN",
     ON_SIGN_UP: "ON_SIGN_UP",
     ON_REGISTER: "ON_REGISTER",
+}
+
+export const dashboard = {
+    ON_LAUNCH: "ON_LAUNCH"
 }

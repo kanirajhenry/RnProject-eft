@@ -51,17 +51,6 @@ export const commonQueryParam = (obj, queryObjType) => {
       ""
   }
 }
-// export const commonQueryParam = (obj, queryObjType) => {
-//   switch (queryObjType) {
-//     case B:
-//       return Object.keys(obj).reduce((prev, key, i) =>
-//         (`${prev}${i !== 0 ? '%22,%22' : 'tokenDTO=%7B%22'}${key}%22:%22${obj[key]}${i == 4 ? '%22%7D' : ''}`), '?')
-//     case A:
-//       return getQueryParamTypeA(obj).slice(0, getQueryParamTypeA(obj).length - 1)
-//     default:
-//       ""
-//   }
-// }
 
 const getQueryParamTypeA = (obj) => {
   return Object.keys(obj).reduce((prev, key, i) => (`${prev}${i !== 0 ? '' : ''}${key}=${obj[key]}&`), '?')
@@ -113,12 +102,14 @@ const commonApiCall = (query, data, className, triggeredAction) => {
     const joinedQuery = query === null ? "" : query
     const queryUrl = api.baseUrl + getPathUrl(triggeredAction) + joinedQuery
 
-    console.log("queryUrl::: ", queryUrl)
+    // console.log("queryUrl::: ", queryUrl)
 
     if (api.baseUrl == "") return alert("Base Url is Empty")
     if (api.baseUrl == undefined) return alert("Base Url is undefined")
 
     var headers = { "Content-Type": "application/json", "Access-Token": "" }
+
+     // console.log("TOKEN DTO: ", data)
 
     commonApi
       .postDataApi(queryUrl, "", data, headers)
@@ -126,14 +117,16 @@ const commonApiCall = (query, data, className, triggeredAction) => {
 
         let payload = {}
         payload = response.data
-        // payload.accessToken = "someAccessToken"
-        console.log("Api call success", JSON.stringify(payload))
+        
+        FIXME: // 1. If you want add some data into the obj
+        TODO: // payload.accessToken = "someAccessToken" 
+        // console.log("Api call success", JSON.stringify(payload))
 
         returnToDispatch(dispatch, actionType.apiResponse.API_SUCCESS, payload, className)
-        // returnToScreenNavigation(dispatch, actionType.API_SUCCESS, className);
+         // returnToScreenNavigation(dispatch, actionType.API_SUCCESS, className);
       })
       .catch(error => {
-        alert(error)
+        alert("error")
         returnToDispatch(dispatch, actionType.apiResponse.API_FAILURE, error, className)
         handleError(error, dispatch)
       })
@@ -141,7 +134,7 @@ const commonApiCall = (query, data, className, triggeredAction) => {
 }
 
 resetAsyncData = dispatch => {
-  // reset async data and navigate to login screen
+   // reset async data and navigate to login screen
 }
 
 handleError = (error, dispatch) => {

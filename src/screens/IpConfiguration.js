@@ -62,7 +62,7 @@ const IpConfiguration = ({ navigation }) => {
     console.log("data->0000000000", data)
 
     const handleIpConfig = () => {
-        
+
         let $url = ""
 
         if (selectedValue != "") {
@@ -101,11 +101,9 @@ const IpConfiguration = ({ navigation }) => {
     }
 
     const afterCompletedApicall = () => {
-
+        
         if (data == "ACCEPTED") {
-
             navigation.goBack()
-
         } else { console.log("ACCEPTED else part") }
     }
 
