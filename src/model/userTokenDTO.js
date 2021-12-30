@@ -1,5 +1,5 @@
 
-export class TokenDTO {
+export class UserTokenDTO {
 
     cmpCode: string
     orgCode: string

@@ -1,5 +1,4 @@
-export * from "./userDTO"
 export * from "./loginDTO"
-export * from "./tokenDTO"
+export * from "./userTokenDTO"
 
 

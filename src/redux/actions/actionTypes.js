@@ -26,6 +26,7 @@ export const loginScreen = {
     ON_LOGIN: "ON_LOGIN",
     ON_SIGN_UP: "ON_SIGN_UP",
     ON_REGISTER: "ON_REGISTER",
+    ON_FORGET_PASSWORD: "ON_FORGET_PASSWORD"
 }
 
 export const dashboard = {
