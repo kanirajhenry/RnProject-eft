@@ -17,7 +17,7 @@ import SettingsScreen from './src/screens/SettingsScreen'
 import SettingsScreen2 from './src/screens/SettingsScreen2'
 import SettingsScreen3 from './src/screens/SettingsScreen3'
 
-import ProfileScreen from './src/screens/ProfileScreen'
+import Participant from './src/screens/Participant'
 import ProfileScreen1 from './src/screens/ProfileScreen1'
 
 import LoginScreen from './src/screens/LoginScreen'
@@ -60,8 +60,8 @@ function MyDrawer({ navigation }) {
   return (
     <Drawer.Navigator drawerPosition='left' screenOptions={{ headerShown: false }} >
       <Drawer.Screen name="TabsScreen" component={TabsScreen} options={{ title: 'Home', headerTitleAlign: 'center' }} />
-      <Drawer.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: 'Profile', headerTitleAlign: 'center' }} />
-      <Drawer.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile', headerTitleAlign: 'center' }} />
+      <Drawer.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: "Create Participant", headerTitleAlign: 'center' }} />
+      <Drawer.Screen name="Participant" component={Participant} options={{ title: "Participant", headerTitleAlign: 'center' }} />
       <Drawer.Screen name="Profile1" component={ProfileScreen1} />
     </Drawer.Navigator>
   )
@@ -138,8 +138,8 @@ function SettingsStackScreen() {
 function ProfileStackScreen() {
   return (
     <ProfileStack.Navigator screenOptions={{ headerShown: true, headerTitleAlign: 'center' }} >
-      <ProfileStack.Screen name='Profile' component={ProfileScreen} />
-      <ProfileStack.Screen name='Profile1' component={ProfileScreen1} />
+      <ProfileStack.Screen name="Participant" component={Participant} options={{ title: "Customer"}} />
+      <ProfileStack.Screen name="Profile1" component={ProfileScreen1} />
     </ProfileStack.Navigator>
   )
 }

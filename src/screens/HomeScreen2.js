@@ -10,5 +10,5 @@ export default function HomeScreen2({ navigation }) {
             <Button title="navigation.push() => Home3" onPress={() => navigation.push("Home3")} />
             <Button title="navigation.goBack()" onPress={() => navigation.goBack()} />
         </View>
-    );
+    )
 }

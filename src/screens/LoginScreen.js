@@ -67,8 +67,8 @@ const LoginScreen = ({ navigation, route }) => {
 
         let tokenDTO = new UserTokenDTO()
         tokenDTO.cmpCode = "RGS"
-        tokenDTO.orgCode = "naeft".toUpperCase()
-        tokenDTO.userId = "admin".toUpperCase()
+        tokenDTO.orgCode = "???".toUpperCase()
+        tokenDTO.userId = "???".toUpperCase()
 
         const query = commonQueryParam(tokenDTO, "B")
 

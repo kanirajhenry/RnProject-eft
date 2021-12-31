@@ -7,7 +7,7 @@ class HomeScreen1 extends React.Component {
         super()
 
         this.state = {
-            isLoggedIn: false
+            isLoggedIn: true
         }
     }
 

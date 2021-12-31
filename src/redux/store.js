@@ -1,10 +1,14 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux'
 import { createLogger } from 'redux-logger'
+
 import ipReducer from './reducers/ipReducer'
+// import { participantReducer } from './reducers/ipReducer'
+import * as reducer from './reducers'
 import thunk from 'redux-thunk'
 
 export const rootReducer = combineReducers({
-    ipReducer: ipReducer
+    ipReducer: reducer.ipReducer,
+    participantReducer: reducer.participantReducer
 })
 
 const logger = createLogger()

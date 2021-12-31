@@ -1,79 +1,49 @@
-import { Alert } from "react-native"
-import { act } from "react-test-renderer"
 import { LoginDTO, UserTokenDTO } from "../../model"
 import * as actionType from "../actions/actionTypes"
 
-const initialState = {
-
+const ipInitialState = {
     loading: true,
     data: "",
     error: "",
-
     loginDTO: new LoginDTO(),
     forgetDTO: new LoginDTO(),
-
 }
 
-export default function ipReducer(state = initialState, action) {
+const ipReducer = (state = ipInitialState, action) => {
 
     switch (action.type) {
-
         case actionType.apiResponse.API_SUCCESS:
-
+            console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer API_SUCCESS")
             switch (action.className) {
-
                 case actionType.controller.IP:
+                    console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer controller.IP")
                     return {
                         ...state, loading: false, error: action.payload.error, data: action.payload,
                     }
 
                 case actionType.controller.LOGIN:
-
+                    console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer controller.LOGIN")
                     switch (action.triggeredAction) {
                         case actionType.loginScreen.ON_LOGIN:
-                            alert("login action called")
-                            return {
-                                ...state, loading: false, error: action.payload.error, data: "",
-                                loginDTO: action.payload,
-                            }
+                            console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer <- triggeredAction -> loginScreen.ON_LOGIN")
+                            return { ...state, loading: false, error: action.payload.error, data: "", loginDTO: action.payload }
 
                         case actionType.loginScreen.ON_FORGET_PASSWORD:
-                            alert("Forget action called")
-                            return {
-                                ...state, loading: false, error: action.payload.error, data: "",
-                                forgetDTO: action.payload,
-                            }
-
+                            console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer <- triggeredAction -> loginScreen.ON_FORGET_PASSWORD")
+                            return { ...state, loading: false, error: action.payload.error, data: "", forgetDTO: action.payload }
                         default:
                             return state
                     }
-
-                // =========================================
-
-
-                // case actionType.controller.LOGIN: case actionType.loginScreen.ON_FORGET_PASSWORD:
-                //     alert("Forget tapped ******----->")
-                //     return {
-                //         ...state, loading: false, error: action.payload.error, data: "",
-                //         loginDTO: action.payload,
-                //     }
-
-                // case actionType.controller.LOGIN: case actionType.loginScreen.ON_LOGIN:
-                //     alert("Login Tapped #########----->")
-                //     return {
-                //         ...state, loading: false, error: action.payload.error, data: "",
-                //         loginDTO: action.payload,
-                //     }
-
-                //     default: alert("Hell Boy")
-
             }
 
         case actionType.apiResponse.API_FAILURE:
-            console.log("Failed From Reducer ---->>>>>>>>", action.error)
+            console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer API_FAILURE", action.error)
             return { ...state, loading: false, error: action.error }
 
         default:
+            console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer Default")
             return state
     }
 }
+
+export { ipReducer }

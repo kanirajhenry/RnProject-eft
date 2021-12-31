@@ -78,6 +78,8 @@ const getPathUrl = triggeredAction => {
 
     case actionType.loginScreen.ON_SIGN_UP: return api.userSignUp
 
+    case actionType.participantScreen.ON_CREATE_PARTICIPANT: return api.gstinData
+
     default: return ""
   }
 }
@@ -88,8 +90,50 @@ export const getSavedBaseUrl = () => {
     .then(() => { return api.baseUrl })
 }
 
-const commonApiCall = (query, dataObj, className, triggeredAction) => {
+const commonGetApiCall = (query, dataObj, className, triggeredAction) => {
+  return dispatch => {
 
+    const gotUrl = storage.getData(constant.keyIsBaseUrl)
+    setTimeout(() => { api.baseUrl = gotUrl._W }, 500)
+
+    const data = dataObj === null ? {} : dataObj
+    const joinedQuery = query === null ? "" : query
+    const queryUrl = api.baseUrl + getPathUrl(triggeredAction) + joinedQuery
+
+    console.log("queryUrl::: >>>>", queryUrl)
+
+    if (api.baseUrl == "") return alert("Get Api Base Url is Empty")
+    if (api.baseUrl == undefined) return alert("Get Api Base Url is undefined")
+
+    var headers = { "Content-Type": "application/json", "Access-Token": "" }
+
+    console.log("TOKEN DTO: ----->", data)
+
+    commonApi
+      .getDataApi(queryUrl, "")
+      .then(response => {
+
+        let payload = {}
+        payload = response.data
+
+        FIXME: // 1. If you want add some data into the obj
+        TODO: // payload.accessToken = "someAccessToken" 
+        console.log("GET Api call success", JSON.stringify(payload))
+
+        returnToDispatch(dispatch, actionType.apiResponse.API_SUCCESS, payload, className, triggeredAction)
+        // returnToScreenNavigation(dispatch, actionType.API_SUCCESS, className);
+      })
+      .catch(error => {
+        console.log("GET Api call Failed", error)
+        alert(error)
+        returnToDispatch(dispatch, actionType.apiResponse.API_FAILURE, error, className, triggeredAction)
+        handleError(error, dispatch)
+      })
+
+  }
+}
+
+const commonApiCall = (query, dataObj, className, triggeredAction) => {
   return dispatch => {
 
     const gotUrl = storage.getData(constant.keyIsBaseUrl)
@@ -123,7 +167,8 @@ const commonApiCall = (query, dataObj, className, triggeredAction) => {
         // returnToScreenNavigation(dispatch, actionType.API_SUCCESS, className);
       })
       .catch(error => {
-        alert("error")
+        console.log("Api call Failed", error)
+        alert(error)
         returnToDispatch(dispatch, actionType.apiResponse.API_FAILURE, error, className, triggeredAction)
         handleError(error, dispatch)
       })
@@ -138,9 +183,7 @@ handleError = (error, dispatch) => {
   setTimeout(() => {
     if (error.response) {
       if (error.response.status === 401) {
-        Alert.alert("", alerts.UNAUTHENTIC_USER,
-          [{ text: "OK", onPress: () => resetAsyncData(dispatch) }]
-        )
+        Alert.alert("", alerts.UNAUTHENTIC_USER, [{ text: "OK", onPress: () => resetAsyncData(dispatch) }])
       }
     } else if (error.message) {
       utility.showAlert(error.message)
@@ -166,5 +209,4 @@ returnToScreenNavigation = (dispatch, type, className) => {
   })
 }
 
-
-export default commonApiCall
+export { commonApiCall as default, commonGetApiCall }

@@ -1,12 +1,3 @@
-export const ipConfig = {
-
-    IP_CONFIG: "IP_CONFIG",
-
-    PENDING: "PENDING",
-    SUCCESS: "SUCCESS",
-    ERROR: "ERROR"
-}
-
 export const apiResponse = {
     API_SUCCESS: "API_SUCCESS",
     API_FAILURE: "API_FAILURE",
@@ -15,7 +6,8 @@ export const apiResponse = {
 export const controller = {
     IP: "IP",
     LOGIN: "LOGIN",
-    DASHBOARD: "DASHBOARD"
+    DASHBOARD: "DASHBOARD",
+    PARTICIPANT: "PARTICIPANT"
 }
 
 export const ipScreen = {
@@ -29,6 +21,57 @@ export const loginScreen = {
     ON_FORGET_PASSWORD: "ON_FORGET_PASSWORD"
 }
 
+export const participantScreen = {
+    ON_CREATE_PARTICIPANT: "ON_CREATE_PARTICIPANT"
+}
+
 export const dashboard = {
     ON_LAUNCH: "ON_LAUNCH"
 }
+
+
+// TODO: // LOWER CASE CHANGED BELOW
+
+// export const apiResponse = {
+//     apiSuccess: "apiSuccess",
+//     apiFailure: "apiFailure",
+// }
+
+// export const controller = {
+//     ip: "ip",
+//     login: "login",
+//     dashboard: "dashboard"
+// }
+
+// export const triggeredAction {
+
+//     ipConfig: { "onIpConfig" },
+
+//     login: {
+//         onLogin: "onLogin",
+//         onSignUp: "onSignUp",
+//         onRegister: "onRegister",
+//         onForgetPassword: "onForgetPassword"
+//     },
+
+//     dashboard: { 
+//         onLaunch: "onLaunch"
+//     }
+// } 
+
+// TODO: // ABOVE CHANGED AS ON OBJECT FOR TRIGGERED ACTION
+
+// // export const ipScreen = {
+// //     ipConfig: "ipConfig"
+// // }
+
+// // export const loginScreen = {
+// //     onLogin: "onLogin",
+// //     onSignUp: "onSignUp",
+// //     onRegister: "onRegister",
+// //     onForgetPassword: "onForgetPassword"
+// // }
+
+// // export const dashboard = {
+// //     onLaunch: "onLaunch"
+// // }
