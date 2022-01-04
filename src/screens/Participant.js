@@ -2,8 +2,7 @@ import React from 'react'
 import { useEffect, useLayoutEffect, useState, useRef } from 'react'
 import {
     Text, View, Button, TextInput, Platform, StyleSheet, ScrollView, Switch,
-    PixelRatio,
-    Keyboard
+    PixelRatio, Dimensions, Keyboard
 } from 'react-native'
 
 import CustomTextInput from '../components/customTextInput';
@@ -15,6 +14,7 @@ import { CommonDataModel, UserTokenDTO } from '../model'
 import { color } from 'react-native-reanimated';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useScrollToTop } from '@react-navigation/native';
+import SegmentedControl from "rn-segmented-control";
 
 const Participant = ({ navigation }) => {
 
@@ -76,6 +76,9 @@ const Participant = ({ navigation }) => {
     const dispatch = useDispatch()
     const commonDataModel = useSelector(({ participantReducer }) => participantReducer.commonDataModel)
 
+
+    const [tabIndex, setTabIndex] = React.useState(1);
+
     const setupDefaultSwitch = () => {
         setCustSwitch(true)
         setVendSwitch(false)
@@ -85,7 +88,7 @@ const Participant = ({ navigation }) => {
     useLayoutEffect(() => {
 
         setTimeout(() => {
-            userNameRef.current.focus()
+            // userNameRef.current.focus()
         }, 500);
 
         clearFields()
@@ -143,9 +146,9 @@ const Participant = ({ navigation }) => {
         // // console.log("commonDataModel", parsedRes.stateMap)
         // // console.log("commonDataModel", parsedRes.sequenceGeneratorDTOs[0])
     }
-    
+
     const SeparatorLine = () => {
-        return <View style={{ height: 1, marginTop: 2}}></View>
+        return <View style={{ height: 1, marginTop: 2 }}></View>
     }
 
     function clearFields() {
@@ -173,356 +176,352 @@ const Participant = ({ navigation }) => {
         setProbability("")
     }
 
-    const toggleSwitch = () => {
-        setCustSwitch(true)
-        setVendSwitch(false)
-        setLeadSwitch(false)
-    }
-    const toggleSwitch2 = () => {
-        setCustSwitch(false)
-        setVendSwitch(true)
-        setLeadSwitch(false)
-    }
-    const toggleSwitch3 = () => {
-        setCustSwitch(false)
-        setVendSwitch(false)
-        setLeadSwitch(true)
+
+    const handleTabsChange = (index) => {
+        setTabIndex(index)
+        if (index == 0) { setCustSwitch(true); setVendSwitch(false); setLeadSwitch(false) }
+        if (index == 1) { setCustSwitch(false); setVendSwitch(true); setLeadSwitch(false) }
+        if (index == 2) { setCustSwitch(false); setVendSwitch(false); setLeadSwitch(true) }
     }
 
     return (
-        <KeyboardAwareScrollView style={[styles.container]}>
-
+        <View style={[styles.container]}>
             <View style={styles.row}>
-                <View style={styles.switch}>
-                    <Switch onValueChange={toggleSwitch} value={custSwitch} />
-                    <Text style={styles.rowLabel}>CUSTOMER</Text>
-                </View>
-                <View style={styles.switch}>
-                    <Switch onValueChange={toggleSwitch2} value={vendSwitch} />
-                    <Text style={styles.rowLabel}>VENDOR</Text>
-                </View>
-                <View style={styles.switch}>
-                    <Switch onValueChange={toggleSwitch3} value={leadSwitch} />
-                    <Text style={styles.rowLabel}>LEAD</Text>
-                </View>
-            </View>
-
-            <View style={styles.tableView}>
-
-                <Text style={styles.heading}>{vendSwitch ? "VENDOR" : custSwitch ? "CUSTOMER" : "LEAD"}</Text>
-                <TextInput
-                    style={styles.subHeading}
-                    editable={true}
-                    value={userName}
-                    returnKeyType="next"
-                    onChangeText={(name) => setUserName(name)}
-                    placeholder={vendSwitch ? "Vendor Name *" : custSwitch ? "Customer Name *" : "Lead Name *"}
-                    blurOnSubmit={false}
-                    keyboardAppearance='dark'
-                    ref={userNameRef}
-                    autoFocus={true}
-                    onSubmitEditing={() => gstinRef.current.focus()} />
-                <SeparatorLine />
-
-                <TextInput
-                    style={styles.subHeading}
-                    ref={gstinRef}
-                    editable={true}
-                    value={GSTIN}
-                    returnKeyType="next"
-                    onChangeText={(gstin) => setGSTIN(gstin)}
-                    placeholder="GSTIN"
-                    blurOnSubmit={false}
-                    keyboardAppearance='dark'
-                    // onSubmitEditing={() => placeOfSupplyRef.current.focus()}
-                    onSubmitEditing={() => console.log(userNameRef.current.value)}
+                <SegmentedControl
+                    tabs={["CUSTOMER", "VENDOR", "LEAD"]}
+                    segmentedControlBackgroundColor="#0a67a0"// "#86c4fD"
+                    activeSegmentBackgroundColor="#ff0026" // "#0482f7"
+                    activeTextColor="white"
+                    textColor="black"
+                    paddingVertical={9}
+                    width={Dimensions.get("screen").width - 90}
+                    containerStyle={{ marginVertical: 20 }}
+                    textStyle={{ fontWeight: "300", fontSize: 24 }}
+                    currentIndex={tabIndex}
+                    onChange={handleTabsChange}
                 />
-                <SeparatorLine />
-
-
-                <TextInput
-                    style={styles.subHeading}
-                    editable={true}
-                    value={placeOfSupply}
-                    returnKeyType="next"
-                    onChangeText={(pos) => setPlaceOfSupply(pos)}
-                    placeholder="Place of Supply *"
-                    blurOnSubmit={false}
-                    keyboardAppearance='dark'
-                    ref={placeOfSupplyRef}
-                    onSubmitEditing={() => emailRef.current.focus()} />
-                <SeparatorLine />
-
-                <TextInput
-                    style={styles.subHeading}
-                    editable={true}
-                    value={email}
-                    returnKeyType="next"
-                    onChangeText={(mail) => setEmail(mail)}
-                    placeholder="Email"
-                    keyboardType='email-address'
-                    blurOnSubmit={false}
-                    keyboardAppearance='dark'
-                    ref={emailRef}
-                    onSubmitEditing={() => mobileRef.current.focus()} />
-                <SeparatorLine />
-
-                <TextInput
-                    style={styles.subHeading}
-                    editable={true}
-                    value={mobile}
-                    returnKeyType={!leadSwitch ? "done" : "next"}
-                    // onChangeText={(mobileNo) => setMobile(mobileNo)}
-                    onChangeText={(mobileNo) => setMobile(mobileNo.replace(/[^\w\s]/gi, ""))}
-                    placeholder="Mobile"
-                    keyboardType='numeric'
-                    blurOnSubmit={false}
-                    keyboardAppearance='dark'
-                    ref={mobileRef}
-                    onSubmitEditing={() => leadSwitch ? probabilityRef.current.focus() : Keyboard.dismiss()} />
-                <SeparatorLine />
-
-                {/* TODO: LEAD FIELDS */}
-                {leadSwitch && <View>
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={probability}
-                        returnKeyType="next"
-                        onChangeText={(probability) => setProbability(probability)}
-                        placeholder="Probability"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={probabilityRef}
-                        onSubmitEditing={() => leadTypeRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={leadType}
-                        returnKeyType="next"
-                        onChangeText={(type) => setLeadType(type)}
-                        placeholder="Lead Type"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={leadTypeRef}
-                        onSubmitEditing={() => leadTerritoryRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={leadTerritory}
-                        returnKeyType="next"
-                        onChangeText={(territory) => setLeadTerritory(territory)}
-                        placeholder="Lead Territory"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={leadTerritoryRef}
-                        onSubmitEditing={() => industryTypeRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={industryType}
-                        returnKeyType="next"
-                        onChangeText={(industryType) => setIndustryType(industryType)}
-                        placeholder="Industry Type"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={industryTypeRef}
-                        onSubmitEditing={() => tagsRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={tags}
-                        returnKeyType="next"
-                        onChangeText={(tags) => setTags(tags)}
-                        placeholder="Tag"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={tagsRef}
-                        onSubmitEditing={() => titleRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={title}
-                        returnKeyType="next"
-                        onChangeText={(title) => setTitle(title)}
-                        placeholder="Title"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={titleRef}
-                        onSubmitEditing={() => leadDesignationRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={leadDesignation}
-                        returnKeyType="next"
-                        onChangeText={(leadDesignation) => setLeadDesignation(leadDesignation)}
-                        placeholder="Lead Designation"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={leadDesignationRef}
-                        onSubmitEditing={() => contactNameRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={contactName}
-                        returnKeyType="next"
-                        onChangeText={(contactName) => setContactName(contactName)}
-                        placeholder="Contact Name"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={contactNameRef}
-                        onSubmitEditing={() => phoneNoRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={phoneNo}
-                        returnKeyType="next"
-                        onChangeText={(phoneNo) => setPhoneNo(phoneNo)}
-                        placeholder="Phone No"
-                        keyboardType='numeric'
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={phoneNoRef}
-                        onSubmitEditing={() => valueRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={value}
-                        returnKeyType="next"
-                        onChangeText={(value) => setValue(value)}
-                        placeholder="Value"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={valueRef}
-                        onSubmitEditing={() => leadOwnerRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={leadOwner}
-                        returnKeyType="next"
-                        onChangeText={(leadOwner) => setLeadOwner(leadOwner)}
-                        placeholder="Lead Owner"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={leadOwnerRef}
-                        onSubmitEditing={() => leadSourceRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={leadSource}
-                        returnKeyType="next"
-                        onChangeText={(leadSource) => setLeadSource(leadSource)}
-                        placeholder="Lead Source"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={leadSourceRef}
-                        onSubmitEditing={() => leadStatusRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={leadStatus}
-                        returnKeyType="next"
-                        onChangeText={(leadStatus) => setLeadStatus(leadStatus)}
-                        placeholder="Lead Status"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={leadStatusRef}
-                        onSubmitEditing={() => streetRef.current.focus()} />
-                    <SeparatorLine />
-
-                    <Text style={styles.heading}>ADDRESS INFO</Text>
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={street}
-                        returnKeyType="next"
-                        onChangeText={(street) => setStreet(street)}
-                        placeholder="Street"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={streetRef}
-                        onSubmitEditing={() => cityRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={city}
-                        returnKeyType="next"
-                        onChangeText={(city) => setCity(city)}
-                        placeholder="City"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={cityRef}
-                        onSubmitEditing={() => postalCodeRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={postalCode}
-                        returnKeyType="next"
-                        onChangeText={(postalCode) => setPostalCode(postalCode)}
-                        placeholder="Postal Code"
-                        keyboardType='numeric'
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={postalCodeRef}
-                        onSubmitEditing={() => stateRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={state}
-                        returnKeyType="next"
-                        onChangeText={(state) => setState(state)}
-                        placeholder="State"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={stateRef}
-                        onSubmitEditing={() => countryRef.current.focus()} />
-                    <SeparatorLine />
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        value={country}
-                        returnKeyType="next"
-                        onChangeText={(country) => setCountry(country)}
-                        placeholder="Country"
-                        blurOnSubmit={false}
-                        keyboardAppearance='dark'
-                        ref={countryRef}
-                        onSubmitEditing={() => commentRef.current.focus()} />
-                    <SeparatorLine />
-                    <Text style={styles.heading}>COMMENT</Text>
-                    <TextInput
-                        style={styles.subHeading}
-                        editable={true}
-                        multiline={true}
-                        maxLength={5000}
-                        value={comment}
-                        onChangeText={(comment) => setComment(comment)}
-                        placeholder="Comment"
-                        blurOnSubmit={false}
-                        returnKeyType='done'
-                        keyboardAppearance='dark'
-                        ref={commentRef}
-                        onSubmitEditing={() => Keyboard.dismiss()} />
-                </View>}
-
             </View>
 
-        </KeyboardAwareScrollView >
+            <KeyboardAwareScrollView >
+
+
+                <View style={styles.tableView}>
+
+                    <Text style={styles.heading}>{vendSwitch ? "VENDOR" : custSwitch ? "CUSTOMER" : "LEAD"}</Text>
+                    <TextInput
+                        style={styles.subHeading}
+                        editable={true}
+                        value={userName}
+                        returnKeyType="next"
+                        onChangeText={(name) => setUserName(name)}
+                        placeholder={vendSwitch ? "Vendor Name *" : custSwitch ? "Customer Name *" : "Lead Name *"}
+                        blurOnSubmit={false}
+                        keyboardAppearance='dark'
+                        ref={userNameRef}
+                        autoFocus={false}
+                        onSubmitEditing={() => gstinRef.current.focus()} />
+                    <SeparatorLine />
+
+                    <TextInput
+                        style={styles.subHeading}
+                        ref={gstinRef}
+                        editable={true}
+                        value={GSTIN}
+                        returnKeyType="next"
+                        onChangeText={(gstin) => setGSTIN(gstin)}
+                        placeholder="GSTIN"
+                        blurOnSubmit={false}
+                        keyboardAppearance='dark'
+                        // onSubmitEditing={() => placeOfSupplyRef.current.focus()}
+                        onSubmitEditing={() => console.log(userNameRef.current.value)}
+                    />
+                    <SeparatorLine />
+
+
+                    <TextInput
+                        style={styles.subHeading}
+                        editable={true}
+                        value={placeOfSupply}
+                        returnKeyType="next"
+                        onChangeText={(pos) => setPlaceOfSupply(pos)}
+                        placeholder="Place of Supply *"
+                        blurOnSubmit={false}
+                        keyboardAppearance='dark'
+                        ref={placeOfSupplyRef}
+                        onSubmitEditing={() => emailRef.current.focus()} />
+                    <SeparatorLine />
+
+                    <TextInput
+                        style={styles.subHeading}
+                        editable={true}
+                        value={email}
+                        returnKeyType="next"
+                        onChangeText={(mail) => setEmail(mail)}
+                        placeholder="Email"
+                        keyboardType='email-address'
+                        blurOnSubmit={false}
+                        keyboardAppearance='dark'
+                        ref={emailRef}
+                        onSubmitEditing={() => mobileRef.current.focus()} />
+                    <SeparatorLine />
+
+                    <TextInput
+                        style={styles.subHeading}
+                        editable={true}
+                        value={mobile}
+                        returnKeyType={!leadSwitch ? "done" : "next"}
+                        // onChangeText={(mobileNo) => setMobile(mobileNo)}
+                        onChangeText={(mobileNo) => setMobile(mobileNo.replace(/[^\w\s]/gi, ""))}
+                        placeholder="Mobile"
+                        keyboardType='numeric'
+                        blurOnSubmit={false}
+                        keyboardAppearance='dark'
+                        ref={mobileRef}
+                        onSubmitEditing={() => leadSwitch ? probabilityRef.current.focus() : Keyboard.dismiss()} />
+                    <SeparatorLine />
+
+                    {/* TODO: LEAD FIELDS */}
+                    {leadSwitch && <View>
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={probability}
+                            returnKeyType="next"
+                            onChangeText={(probability) => setProbability(probability)}
+                            placeholder="Probability"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={probabilityRef}
+                            onSubmitEditing={() => leadTypeRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={leadType}
+                            returnKeyType="next"
+                            onChangeText={(type) => setLeadType(type)}
+                            placeholder="Lead Type"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={leadTypeRef}
+                            onSubmitEditing={() => leadTerritoryRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={leadTerritory}
+                            returnKeyType="next"
+                            onChangeText={(territory) => setLeadTerritory(territory)}
+                            placeholder="Lead Territory"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={leadTerritoryRef}
+                            onSubmitEditing={() => industryTypeRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={industryType}
+                            returnKeyType="next"
+                            onChangeText={(industryType) => setIndustryType(industryType)}
+                            placeholder="Industry Type"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={industryTypeRef}
+                            onSubmitEditing={() => tagsRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={tags}
+                            returnKeyType="next"
+                            onChangeText={(tags) => setTags(tags)}
+                            placeholder="Tag"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={tagsRef}
+                            onSubmitEditing={() => titleRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={title}
+                            returnKeyType="next"
+                            onChangeText={(title) => setTitle(title)}
+                            placeholder="Title"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={titleRef}
+                            onSubmitEditing={() => leadDesignationRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={leadDesignation}
+                            returnKeyType="next"
+                            onChangeText={(leadDesignation) => setLeadDesignation(leadDesignation)}
+                            placeholder="Lead Designation"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={leadDesignationRef}
+                            onSubmitEditing={() => contactNameRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={contactName}
+                            returnKeyType="next"
+                            onChangeText={(contactName) => setContactName(contactName)}
+                            placeholder="Contact Name"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={contactNameRef}
+                            onSubmitEditing={() => phoneNoRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={phoneNo}
+                            returnKeyType="next"
+                            onChangeText={(phoneNo) => setPhoneNo(phoneNo)}
+                            placeholder="Phone No"
+                            keyboardType='numeric'
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={phoneNoRef}
+                            onSubmitEditing={() => valueRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={value}
+                            returnKeyType="next"
+                            onChangeText={(value) => setValue(value)}
+                            placeholder="Value"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={valueRef}
+                            onSubmitEditing={() => leadOwnerRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={leadOwner}
+                            returnKeyType="next"
+                            onChangeText={(leadOwner) => setLeadOwner(leadOwner)}
+                            placeholder="Lead Owner"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={leadOwnerRef}
+                            onSubmitEditing={() => leadSourceRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={leadSource}
+                            returnKeyType="next"
+                            onChangeText={(leadSource) => setLeadSource(leadSource)}
+                            placeholder="Lead Source"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={leadSourceRef}
+                            onSubmitEditing={() => leadStatusRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={leadStatus}
+                            returnKeyType="next"
+                            onChangeText={(leadStatus) => setLeadStatus(leadStatus)}
+                            placeholder="Lead Status"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={leadStatusRef}
+                            onSubmitEditing={() => streetRef.current.focus()} />
+                        <SeparatorLine />
+
+                        <Text style={styles.heading}>ADDRESS INFO</Text>
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={street}
+                            returnKeyType="next"
+                            onChangeText={(street) => setStreet(street)}
+                            placeholder="Street"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={streetRef}
+                            onSubmitEditing={() => cityRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={city}
+                            returnKeyType="next"
+                            onChangeText={(city) => setCity(city)}
+                            placeholder="City"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={cityRef}
+                            onSubmitEditing={() => postalCodeRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={postalCode}
+                            returnKeyType="next"
+                            onChangeText={(postalCode) => setPostalCode(postalCode)}
+                            placeholder="Postal Code"
+                            keyboardType='numeric'
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={postalCodeRef}
+                            onSubmitEditing={() => stateRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={state}
+                            returnKeyType="next"
+                            onChangeText={(state) => setState(state)}
+                            placeholder="State"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={stateRef}
+                            onSubmitEditing={() => countryRef.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={country}
+                            returnKeyType="next"
+                            onChangeText={(country) => setCountry(country)}
+                            placeholder="Country"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={countryRef}
+                            onSubmitEditing={() => commentRef.current.focus()} />
+                        <SeparatorLine />
+                        <Text style={styles.heading}>COMMENT</Text>
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            multiline={true}
+                            maxLength={5000}
+                            value={comment}
+                            onChangeText={(comment) => setComment(comment)}
+                            placeholder="Comment"
+                            blurOnSubmit={false}
+                            returnKeyType='done'
+                            keyboardAppearance='dark'
+                            ref={commentRef}
+                            onSubmitEditing={() => Keyboard.dismiss()} />
+                    </View>}
+
+                </View>
+
+            </KeyboardAwareScrollView >
+        </View>
     )
 }
 
@@ -569,7 +568,7 @@ const styles = StyleSheet.create({
     // RND
     row: {
         flexDirection: 'row',
-        backgroundColor: 'lightgrey',
+        // backgroundColor: 'lightgrey',
         borderRadius: 0,
         borderWidth: 0,
         borderTopWidth: 1 / PixelRatio.get(),

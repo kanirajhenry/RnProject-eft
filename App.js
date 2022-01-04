@@ -138,7 +138,23 @@ function SettingsStackScreen() {
 function ProfileStackScreen() {
   return (
     <ProfileStack.Navigator screenOptions={{ headerShown: true, headerTitleAlign: 'center' }} >
-      <ProfileStack.Screen name="Participant" component={Participant} options={{ title: "Customer"}} />
+      <ProfileStack.Screen name="Participant" component={Participant}
+        options={{
+          headerLargeTitle: true,
+          // topBar: {
+          //   largeTitle: "true",
+          // },
+          statusBarStyle: "light",
+          title: "Create Participant",
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }} />
+
       <ProfileStack.Screen name="Profile1" component={ProfileScreen1} />
     </ProfileStack.Navigator>
   )
