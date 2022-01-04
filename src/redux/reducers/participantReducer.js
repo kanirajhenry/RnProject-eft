@@ -6,7 +6,10 @@ const participantInitialState = {
     loading: true,
     data: "",
     error: "",
-    commonDataModel: new CommonDataModel()
+    // commonDataModel: new CommonDataModel()
+
+    commonDataModel: {}
+
 
     // commonDataModel: new dataModel.CommonDataModel()
 }

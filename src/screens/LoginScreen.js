@@ -45,6 +45,8 @@ const LoginScreen = ({ navigation, route }) => {
     }
 
     const handleLogin = () => {
+        
+        // navigation.goBack()
 
         const loginDto = new LoginDTO()
         loginDto.cmpCode = "RGS".toUpperCase()
