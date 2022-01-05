@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 
 import CustomTextInput from '../components/customTextInput';
+import { useIsFocused } from "@react-navigation/native"
 
 import { useSelector, useDispatch } from 'react-redux'
 import * as actionType from '../redux/actions/actionTypes'
@@ -17,6 +18,8 @@ import { useScrollToTop } from '@react-navigation/native';
 import SegmentedControl from "rn-segmented-control";
 
 const Participant = ({ navigation }) => {
+
+    const isFocused = useIsFocused()
 
     const [custSwitch, setCustSwitch] = useState(false)
     const [vendSwitch, setVendSwitch] = useState(false)
@@ -80,6 +83,7 @@ const Participant = ({ navigation }) => {
     const [tabIndex, setTabIndex] = React.useState(1);
 
     const setupDefaultSwitch = () => {
+        setTabIndex(0)
         setCustSwitch(true)
         setVendSwitch(false)
         setLeadSwitch(false)
@@ -88,17 +92,26 @@ const Participant = ({ navigation }) => {
     useLayoutEffect(() => {
 
         setTimeout(() => {
-            // userNameRef.current.focus()
+            userNameRef.current.focus()
         }, 500);
-
-        clearFields()
 
     }, [])
 
     useEffect(() => {
-        setupDefaultSwitch()
         // fetchPlaceOfSupply()
-    }, [])
+
+        return () => { // Called when didMount && UnMount
+            clearFields()
+            setupDefaultSwitch()
+
+            // setTimeout(() => { userNameRef.current.focus() }, 500)
+        }
+
+        if (isFocused) {
+            alert("Focus Called")
+        }
+
+    }, [isFocused])
 
     const fetchPlaceOfSupply = () => {
         tokenDTO = new UserTokenDTO()
@@ -176,16 +189,16 @@ const Participant = ({ navigation }) => {
         setProbability("")
     }
 
-
     const handleTabsChange = (index) => {
         setTabIndex(index)
+        clearFields()
         if (index == 0) { setCustSwitch(true); setVendSwitch(false); setLeadSwitch(false) }
         if (index == 1) { setCustSwitch(false); setVendSwitch(true); setLeadSwitch(false) }
         if (index == 2) { setCustSwitch(false); setVendSwitch(false); setLeadSwitch(true) }
     }
 
     return (
-        <View style={[styles.container]}>
+        <KeyboardAwareScrollView style={[styles.container]}>
             <View style={styles.row}>
                 <SegmentedControl
                     tabs={["CUSTOMER", "VENDOR", "LEAD"]}
@@ -202,7 +215,7 @@ const Participant = ({ navigation }) => {
                 />
             </View>
 
-            <KeyboardAwareScrollView >
+            <View >
 
 
                 <View style={styles.tableView}>
@@ -520,8 +533,8 @@ const Participant = ({ navigation }) => {
 
                 </View>
 
-            </KeyboardAwareScrollView >
-        </View>
+            </View >
+        </KeyboardAwareScrollView>
     )
 }
 
@@ -535,7 +548,8 @@ export default Participant
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
-        flex: 1
+        flex: 1,
+        marginTop: 100
     },
     tableView: {
         backgroundColor: '#EFEFF4',
