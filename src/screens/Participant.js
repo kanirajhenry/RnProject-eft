@@ -80,7 +80,7 @@ const Participant = ({ navigation }) => {
     const commonDataModel = useSelector(({ participantReducer }) => participantReducer.commonDataModel)
 
 
-    const [tabIndex, setTabIndex] = React.useState(1);
+    const [tabIndex, setTabIndex] = React.useState(0)
 
     const setupDefaultSwitch = () => {
         setTabIndex(0)
@@ -90,11 +90,7 @@ const Participant = ({ navigation }) => {
     }
 
     useLayoutEffect(() => {
-
-        setTimeout(() => {
-            userNameRef.current.focus()
-        }, 500);
-
+        setTimeout(() => { userNameRef.current.focus() }, 500)
     }, [])
 
     useEffect(() => {
@@ -103,12 +99,11 @@ const Participant = ({ navigation }) => {
         return () => { // Called when didMount && UnMount
             clearFields()
             setupDefaultSwitch()
-
-            // setTimeout(() => { userNameRef.current.focus() }, 500)
+            setTimeout(() => { userNameRef.current.focus() }, 500)
         }
 
         if (isFocused) {
-            alert("Focus Called")
+            alert("Focus Called For tesing purpose")
         }
 
     }, [isFocused])
@@ -190,8 +185,8 @@ const Participant = ({ navigation }) => {
     }
 
     const handleTabsChange = (index) => {
-        setTabIndex(index)
         clearFields()
+        setTabIndex(index)
         if (index == 0) { setCustSwitch(true); setVendSwitch(false); setLeadSwitch(false) }
         if (index == 1) { setCustSwitch(false); setVendSwitch(true); setLeadSwitch(false) }
         if (index == 2) { setCustSwitch(false); setVendSwitch(false); setLeadSwitch(true) }

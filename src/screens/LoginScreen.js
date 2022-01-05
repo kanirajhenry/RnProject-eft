@@ -5,9 +5,9 @@ import * as actionType from '../redux/actions/actionTypes'
 import commonApiCall, { commonQueryParam } from '../redux/actions/actions'
 import { useDispatch, useSelector } from 'react-redux'
 
-import * as storage from "../Asset/Utils/AsyncStore"
+import * as storage from "../asset/utils/asyncStore"
 import * as constant from "../constants/keys"
-import { isFieldEmpty } from "./../utility/index"
+import { isFieldEmpty } from "../utility/index"
 
 import { UserTokenDTO, LoginDTO } from "../model"
 
@@ -46,7 +46,7 @@ const LoginScreen = ({ navigation, route }) => {
 
     const handleLogin = () => {
         
-        // navigation.goBack()
+        navigation.goBack()
 
         const loginDto = new LoginDTO()
         loginDto.cmpCode = "RGS".toUpperCase()

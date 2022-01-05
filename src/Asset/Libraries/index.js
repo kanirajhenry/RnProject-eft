@@ -1,7 +1,7 @@
-export * from './ResponsiveScreen';
-export * from './Spinner'
-export * from './MystatusBar_Tran'
-export * from './NpmList'
+export * from './responsiveScreen';
+export * from './spinner'
+export * from './mystatusBar_Tran'
+export * from './npmList'
 
 
 import {

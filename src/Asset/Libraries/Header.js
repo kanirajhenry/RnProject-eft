@@ -6,7 +6,7 @@ import {
     Image, Dimensions, Platform
 } from 'react-native'
 
-import { wp, hp } from './ResponsiveScreen';
+import { wp, hp } from './responsiveScreen';
 import { MystatusBar_Tran } from "./index"
 
 const { width, height } = Dimensions.get('window');

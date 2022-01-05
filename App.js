@@ -7,23 +7,23 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import * as constant from './src/constants/keys'
-import * as storage from './src/Asset/Utils/AsyncStore'
+import * as storage from './src/asset/utils/asyncStore'
 
-import HomeScreen1 from './src/screens/HomeScreen1'
-import HomeScreen2 from './src/screens/HomeScreen2'
-import HomeScreen3 from './src/screens/HomeScreen3'
+import HomeScreen1 from './src/screens/homeScreen1'
+import HomeScreen2 from './src/screens/homeScreen2'
+import HomeScreen3 from './src/screens/homeScreen3'
 
-import SettingsScreen from './src/screens/SettingsScreen'
-import SettingsScreen2 from './src/screens/SettingsScreen2'
-import SettingsScreen3 from './src/screens/SettingsScreen3'
+import SettingsScreen from './src/screens/settingsScreen'
+import SettingsScreen2 from './src/screens/settingsScreen2'
+import SettingsScreen3 from './src/screens/settingsScreen3'
 
-import Participant from './src/screens/Participant'
-import ProfileScreen1 from './src/screens/ProfileScreen1'
+import Participant from './src/screens/participant'
+import ProfileScreen1 from './src/screens/profileScreen1'
 
-import LoginScreen from './src/screens/LoginScreen'
-import RegisterScreen from './src/screens/RegisterScreen'
+import LoginScreen from './src/screens/loginScreen'
+import RegisterScreen from './src/screens/registerScreen'
 
-import IpConfiguration from './src/screens/IpConfiguration'
+import IpConfiguration from './src/screens/ipConfiguration'
 
 const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -58,13 +58,10 @@ const ProfileStack = createNativeStackNavigator()
 
 function MyDrawer({ navigation }) {
   return (
-    <Drawer.Navigator drawerPosition='left'
-      // screenOptions={{ headerShown: false }}
-      screenOptions={customHeader(false)}
-    >
+    <Drawer.Navigator drawerPosition='left' screenOptions={customHeader(false)} >
       <Drawer.Screen name="TabsScreen" component={TabsScreen} options={{ title: 'Home' }} />
       <Drawer.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: "Create Participant" }} />
-      <Drawer.Screen name="Participant" component={Participant} options={{title: "Participant"}} />
+      <Drawer.Screen name="Participant" component={Participant} options={{ title: "Participant" }} />
       <Drawer.Screen name="Profile1" component={ProfileScreen1} />
     </Drawer.Navigator>
   )
@@ -115,14 +112,10 @@ const customHeader = (isHeaderShown) => {
     headerTitleAlign: 'center',
     headerLargeTitle: true,
     statusBarStyle: "light",
-    headerStyle: {
-      backgroundColor: '#3FA796',
-    },
+    headerStyle: { backgroundColor: '#3FA796' },
     headerTitleAlign: 'center',
     headerTintColor: '#fff',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
+    headerTitleStyle: { fontWeight: 'bold' }
   })
 }
 
@@ -167,8 +160,8 @@ function ProfileStackScreen() {
 
 function TabsScreen() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false , tabBarActiveBackgroundColor: '#3FA796', tabBarActiveTintColor: 'white'}}>
-      <Tab.Screen name="HomeStackScreen" component={HomeStackScreen} options={{ title: "Home Page",  }} />
+    <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveBackgroundColor: '#3FA796', tabBarActiveTintColor: 'white' }}>
+      <Tab.Screen name="HomeStackScreen" component={HomeStackScreen} options={{ title: "Home Page", }} />
       <Tab.Screen name="SettingsStackScreen" component={SettingsStackScreen} options={{ title: "Setting Page" }} />
       <Tab.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: "Profile page" }} />
     </Tab.Navigator>

@@ -1,5 +1,5 @@
 import { getUrl } from "../utility"
-import * as storage from "../Asset/Utils/AsyncStore"
+import * as storage from "../asset/utils/asyncStore"
 import * as constant from "../constants/keys"
 
 export const configuredUrl = (url) => {

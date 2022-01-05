@@ -4,7 +4,7 @@ import { Picker } from '@react-native-picker/picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { TextInput } from 'react-native-gesture-handler'
 
-import * as actionType from './../redux/actions/actionTypes'
+import * as actionType from '../redux/actions/actionTypes'
 import { useDispatch, useSelector } from 'react-redux'
 import { ActivityIndicator } from 'react-native-paper'
 import commonApiCall, { commonQueryParam } from '../redux/actions/actions'
@@ -15,7 +15,7 @@ import * as util from "../utility"
 
 import * as alerts from "../constants/alerts"
 import * as constant from '../constants/keys'
-import * as storage from "../Asset/Utils/AsyncStore"
+import * as storage from "../asset/utils/asyncStore"
 
 const IpConfiguration = ({ navigation }) => {
 

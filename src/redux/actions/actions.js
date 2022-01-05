@@ -7,7 +7,7 @@ import { Alert } from "react-native";
 import * as commonApi from "./commonApi";
 
 import * as constant from '../../constants/keys'
-import * as storage from "../../Asset/Utils/AsyncStore"
+import * as storage from "../../asset/utils/asyncStore"
 
 export const changeInternetState = isConnected => {
   alert("0000000")

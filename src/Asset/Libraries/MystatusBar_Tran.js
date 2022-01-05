@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar, View, Dimensions, Platform } from 'react-native';
 const { width, height } = Dimensions.get('window');
-import { wp, hp } from './ResponsiveScreen';
+import { wp, hp } from './responsiveScreen';
 
 const MyStatusBar = ({ backgroundColor, ...props }) => (
     <View style={[{ height: hp('3%'), justifyContent: 'center' }, { backgroundColor }]}>
