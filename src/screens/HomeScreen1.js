@@ -1,25 +1,22 @@
-import React from 'react'
+
+import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react'
 import { Text, View, Button } from 'react-native'
 
-class HomeScreen1 extends React.Component {
+const HomeScreen1 = () => {
 
-    constructor(props) {
-        super()
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const navigation = useNavigation();
 
-        this.state = {
-            isLoggedIn: true
-        }
-    }
+    useEffect(() => {
+        setIsLoggedIn(true)
 
-    componentDidMount() {
-        if (!this.state.isLoggedIn) {
-            this.props.navigation.navigate("AuthStackScreen", {
+        if (!isLoggedIn) {
+            navigation.navigate("AuthStackScreen", {
                 screen: "Login"
             })
         }
-    }
-
-    render() {
+    }, [])
 
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -41,7 +38,6 @@ class HomeScreen1 extends React.Component {
                 {/* <Button title="navigation.navigate => Home3" onPress={() => navigation.navigate("Home3")} /> */}
             </View>
         )
-    }
 }
 
 export default HomeScreen1
