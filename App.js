@@ -58,10 +58,13 @@ const ProfileStack = createNativeStackNavigator()
 
 function MyDrawer({ navigation }) {
   return (
-    <Drawer.Navigator drawerPosition='left' screenOptions={{ headerShown: false }} >
-      <Drawer.Screen name="TabsScreen" component={TabsScreen} options={{ title: 'Home', headerTitleAlign: 'center' }} />
-      <Drawer.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: "Create Participant", headerTitleAlign: 'center' }} />
-      <Drawer.Screen name="Participant" component={Participant} options={{ title: "Participant", headerTitleAlign: 'center' }} />
+    <Drawer.Navigator drawerPosition='left'
+      // screenOptions={{ headerShown: false }}
+      screenOptions={customHeader(false)}
+    >
+      <Drawer.Screen name="TabsScreen" component={TabsScreen} options={{ title: 'Home' }} />
+      <Drawer.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: "Create Participant" }} />
+      <Drawer.Screen name="Participant" component={Participant} options={{title: "Participant"}} />
       <Drawer.Screen name="Profile1" component={ProfileScreen1} />
     </Drawer.Navigator>
   )
@@ -104,12 +107,31 @@ const handleLogOut = (navigation) => {
   storage.setData(constant.keyIsBaseUrl, "")
 }
 
+const customHeader = (isHeaderShown) => {
+  return ({
+    headerBlurEffect: 'regular',
+    headerTransparent: true,
+    headerShown: isHeaderShown,
+    headerTitleAlign: 'center',
+    headerLargeTitle: true,
+    statusBarStyle: "light",
+    headerStyle: {
+      backgroundColor: '#3FA796',
+    },
+    headerTitleAlign: 'center',
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  })
+}
+
 function HomeStackScreen({ navigation }) {
   return (
-    <HomeStack.Navigator screenOptions={({ navigation }) => ({ headerShown: true, headerTitleAlign: 'center' })} >
+    <HomeStack.Navigator screenOptions={({ navigation }) => (customHeader(true))} >
       <HomeStack.Screen name='Home1' component={HomeScreen1} options={{
-        headerLeft: () => <Button title="Menu" color="green" onPress={() => navigation.dispatch(DrawerActions.toggleDrawer('drawerOpenRight'))} />,
-        headerRight: () => <Button title="Logout" color="red" onPress={() => { handleLogOut(navigation) }}
+        headerLeft: () => <Button title="Menu" color="white" onPress={() => navigation.dispatch(DrawerActions.toggleDrawer('drawerOpenRight'))} />,
+        headerRight: () => <Button title="Logout" color="white" onPress={() => { handleLogOut(navigation) }}
         />
       }}
       />
@@ -124,10 +146,9 @@ function HomeStackScreen({ navigation }) {
   )
 }
 
-
 function SettingsStackScreen() {
   return (
-    <SettingsStack.Navigator screenOptions={{ headerShown: true, headerTitleAlign: 'center' }}>
+    <SettingsStack.Navigator screenOptions={customHeader(true)}>
       <SettingsStack.Screen name='Settings' component={SettingsScreen} />
       <SettingsStack.Screen name='Settings2' component={SettingsScreen2} />
       <SettingsStack.Screen name='Settings3' component={SettingsScreen3} />
@@ -137,24 +158,8 @@ function SettingsStackScreen() {
 
 function ProfileStackScreen() {
   return (
-    <ProfileStack.Navigator screenOptions={{ headerShown: true, headerTitleAlign: 'center' }} >
-      <ProfileStack.Screen name="Participant" component={Participant}
-        options={{
-          headerLargeTitle: true,
-          // topBar: {
-          //   largeTitle: "true",
-          // },
-          statusBarStyle: "light",
-          title: "Create Participant",
-          headerStyle: {
-            backgroundColor: '#f4511e',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }} />
-
+    <ProfileStack.Navigator screenOptions={customHeader(true)} >
+      <ProfileStack.Screen name="Participant" component={Participant} options={{ title: "Create Participant" }} />
       <ProfileStack.Screen name="Profile1" component={ProfileScreen1} />
     </ProfileStack.Navigator>
   )
@@ -162,8 +167,8 @@ function ProfileStackScreen() {
 
 function TabsScreen() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="HomeStackScreen" component={HomeStackScreen} options={{ title: "Home Page " }} />
+    <Tab.Navigator screenOptions={{ headerShown: false , tabBarActiveBackgroundColor: '#3FA796', tabBarActiveTintColor: 'white'}}>
+      <Tab.Screen name="HomeStackScreen" component={HomeStackScreen} options={{ title: "Home Page",  }} />
       <Tab.Screen name="SettingsStackScreen" component={SettingsStackScreen} options={{ title: "Setting Page" }} />
       <Tab.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: "Profile page" }} />
     </Tab.Navigator>
