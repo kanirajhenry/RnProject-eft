@@ -119,7 +119,7 @@ const IpConfiguration = ({ navigation }) => {
                         <View style={{ alignContent: 'space-around' }}>
                             <TextInput
                                 style={styles.input}
-                                // ref={urlInputRef}
+                                ref={urlInputRef}
                                 onChangeText={text => onChangeText(text)}
                                 value={savedUrl == "" ? text : savedUrl}
                                 placeholder="Enter valid url"

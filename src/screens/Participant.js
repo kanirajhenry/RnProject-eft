@@ -11,11 +11,14 @@ import { useIsFocused } from "@react-navigation/native"
 import { useSelector, useDispatch } from 'react-redux'
 import * as actionType from '../redux/actions/actionTypes'
 import commonApiCall, { commonGetApiCall, commonQueryParam } from '../redux/actions/actions'
-import { CommonDataModel, UserTokenDTO } from '../model'
+import { CommonDataModel, UserTokenDTO, ParticipantDTO, ParticipantContactModel } from '../model'
 import { color } from 'react-native-reanimated';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useScrollToTop } from '@react-navigation/native';
 import SegmentedControl from "rn-segmented-control";
+import { keyIsBaseUrl } from '../constants/keys';
+import * as colors from '../constants/colors'
+import { Colors } from 'react-native-paper';
 
 const Participant = ({ navigation }) => {
 
@@ -51,61 +54,66 @@ const Participant = ({ navigation }) => {
     const [leadType, setLeadType] = useState("")
     const [probability, setProbability] = useState("")
 
-    const userNameRef = useRef(null)
-    const gstinRef = useRef(null)
-    const placeOfSupplyRef = useRef(null)
-    const emailRef = useRef(null)
-    const mobileRef = useRef(null)
-    const commentRef = useRef(null)
-    const countryRef = useRef(null)
-    const stateRef = useRef(null)
-    const postalCodeRef = useRef(null)
-    const cityRef = useRef(null)
-    const streetRef = useRef(null)
-    const leadStatusRef = useRef(null)
-    const leadSourceRef = useRef(null)
-    const leadOwnerRef = useRef(null)
-    const valueRef = useRef(null)
-    const phoneNoRef = useRef(null)
-    const contactNameRef = useRef(null)
-    const leadDesignationRef = useRef(null)
-    const titleRef = useRef(null)
-    const tagsRef = useRef(null)
-    const industryTypeRef = useRef(null)
-    const leadTerritoryRef = useRef(null)
-    const leadTypeRef = useRef(null)
-    const probabilityRef = useRef(null)
+    const [segment1, setSegment1] = useState("")
+    const [segment2, setSegment2] = useState("")
+    const [segment3, setSegment3] = useState("")
+    const [segment4, setSegment4] = useState("")
+    const [segment5, setSegment5] = useState("")
+    const [segment6, setSegment6] = useState("")
+    const [segment7, setSegment7] = useState("")
+    const [segment8, setSegment8] = useState("")
+    const [segment9, setSegment9] = useState("")
+    const [segment10, setSegment10] = useState("")
+
+    const userNameRef = useRef(null), gstinRef = useRef(null), placeOfSupplyRef = useRef(null), emailRef = useRef(null),
+        mobileRef = useRef(null), commentRef = useRef(null), countryRef = useRef(null), stateRef = useRef(null),
+        postalCodeRef = useRef(null), cityRef = useRef(null), streetRef = useRef(null), leadStatusRef = useRef(null),
+        leadSourceRef = useRef(null), leadOwnerRef = useRef(null), valueRef = useRef(null), phoneNoRef = useRef(null),
+        contactNameRef = useRef(null), leadDesignationRef = useRef(null), titleRef = useRef(null), tagsRef = useRef(null),
+        industryTypeRef = useRef(null), leadTerritoryRef = useRef(null), leadTypeRef = useRef(null), probabilityRef = useRef(null);
+
+    const segment1Ref = useRef(null), segment2Ref = useRef(null), segment3Ref = useRef(null), segment4Ref = useRef(null), segment5Ref = useRef(null), segment6Ref = useRef(null), segment7Ref = useRef(null), segment8Ref = useRef(null), segment9Ref = useRef(null), segment10Ref = useRef(null);
 
     const dispatch = useDispatch()
     const commonDataModel = useSelector(({ participantReducer }) => participantReducer.commonDataModel)
 
-
-    const [tabIndex, setTabIndex] = React.useState(0)
+    const [isSegmentEnabled, setIsSegmentEnabled] = useState(true)
+    const [tabIndex, setTabIndex] = useState(0)
 
     const setupDefaultSwitch = () => {
+        setIsSegmentEnabled(true)
         setTabIndex(0)
-        setCustSwitch(true)
-        setVendSwitch(false)
-        setLeadSwitch(false)
+        setCustSwitch(true); setVendSwitch(false); setLeadSwitch(false)
     }
 
     useLayoutEffect(() => {
-        setTimeout(() => { userNameRef.current.focus() }, 500)
-    }, [])
+        
+        console.log("Called from useLayoutEffect() 111111")
+        setTabIndex(tabIndex)
+        switch (tabIndex) {
+            case 0: { setCustSwitch(true); setVendSwitch(false); setLeadSwitch(false) }; break
+            case 1: { setCustSwitch(false); setVendSwitch(true); setLeadSwitch(false) }; break
+            case 2: { setCustSwitch(false); setVendSwitch(false); setLeadSwitch(true) }; break
+        }
+        navigation.setOptions({
+            headerRight: () => <Button title="ADD" color='white' onPress={() => handleCreateParticipant()} />,
+        })
+
+    }, [navigation, tabIndex, userName, GSTIN, placeOfSupply,
+        email, mobile, comment, country, state, postalCode, city, street, leadStatus, leadSource,
+        leadOwner, value, phoneNo, contactName, leadDesignation, title, tags, industryType, leadTerritory,
+        leadType, probability, segment1, segment2, segment3, segment4, segment5, segment6, segment7, segment8, segment9, segment10]
+    )
 
     useEffect(() => {
+        console.log("Called from useEffect() 222222")
         // fetchPlaceOfSupply()
-
         return () => { // Called when didMount && UnMount
             clearFields()
             setupDefaultSwitch()
-            setTimeout(() => { userNameRef.current.focus() }, 500)
+            // setTimeout(() => { userNameRef.current.focus() }, 500)
         }
-
-        if (isFocused) {
-            alert("Focus Called For tesing purpose")
-        }
-
+        if (isFocused) { alert("Focus Called For tesing purpose") }
     }, [isFocused])
 
     const fetchPlaceOfSupply = () => {
@@ -182,14 +190,97 @@ const Participant = ({ navigation }) => {
         setLeadTerritory("")
         setLeadType("")
         setProbability("")
+
+        setSegment1("")
+        setSegment2("")
+        setSegment3("")
+        setSegment4("")
+        setSegment5("")
+        setSegment6("")
+        setSegment7("")
+        setSegment8("")
+        setSegment9("")
+        setSegment10("")
     }
 
-    const handleTabsChange = (index) => {
-        clearFields()
+    function handleTabsChange(index) {
         setTabIndex(index)
-        if (index == 0) { setCustSwitch(true); setVendSwitch(false); setLeadSwitch(false) }
-        if (index == 1) { setCustSwitch(false); setVendSwitch(true); setLeadSwitch(false) }
-        if (index == 2) { setCustSwitch(false); setVendSwitch(false); setLeadSwitch(true) }
+        clearFields()
+    }
+
+    let participantDto = new ParticipantDTO()
+    let contactModel = new ParticipantContactModel()
+    let gstinDatasList = new CommonDataModel()
+
+    function createCustomer() {
+
+        Keyboard.dismiss()
+
+        const isCustomer = tabIndex === 0
+        const isVendor = tabIndex === 1
+        const isLead = tabIndex === 2
+
+        participantDto.cmpCode = "RGS"
+        participantDto.orgCode = "DMSE"
+        participantDto.participantName = userName
+        participantDto.gstin = GSTIN
+        participantDto.tinNum = GSTIN
+        participantDto.emailId = email
+        participantDto.isSeller = isCustomer ? "N" : "Y"
+        participantDto.isBuyer = isCustomer ? "Y" : "N"
+
+        participantDto.contactMobile = mobile
+        participantDto.userId = "ADMIN"
+        participantDto.currencyCodes = "INR"
+
+        participantDto.commContacts = new ParticipantContactModel()
+        participantDto.commContacts.province = placeOfSupply
+        contactModel = new ParticipantContactModel()
+        contactModel.province = placeOfSupply
+        contactModel.addressType = "COMM"
+        contactModel.street1 = street
+        contactModel.city = city
+        contactModel.country
+        contactModel.zipCode = postalCode
+        contactModel.userId = "ADMIN"
+        // console.log(contactModel)
+        participantDto.participantContactList = [new ParticipantContactModel()]
+        participantDto.participantContactList = [contactModel]
+        // print(participantDto.participantContactList?.first?.toJSON())
+        // console.log(participantDto.participantContactList.)
+        contactModel = new ParticipantContactModel()
+        contactModel.province = placeOfSupply
+        contactModel.addressType = "HEADQ"
+        participantDto.participantContactList = [...participantDto.participantContactList, contactModel]
+
+        participantDto.segment1 = segment1
+        participantDto.segment2 = segment2
+        participantDto.segment3 = segment3
+        participantDto.segment4 = segment4
+        participantDto.segment5 = segment5
+        participantDto.segment6 = segment6
+        participantDto.segment7 = segment7
+        participantDto.segment8 = segment8
+        participantDto.segment9 = segment9
+        participantDto.segment10 = segment10
+
+        console.log("participantDto->*****************", JSON.stringify(participantDto))
+    }
+
+    function getRefValue() {
+        return userNameRef.current._internalFiberInstanceHandleDEV.memoizedProps.value
+    }
+
+    console.log("-----*******ReRendered******------")
+
+    const handleCreateParticipant = () => {
+        console.log("tabIndex========>", tabIndex)
+        switch (tabIndex) {
+            case 0: createCustomer(); break
+            case 1: createCustomer(); break
+            case 2: createCustomer(); break
+            default: break
+        }
     }
 
     return (
@@ -211,21 +302,22 @@ const Participant = ({ navigation }) => {
             </View>
 
             <View >
-
-
                 <View style={styles.tableView}>
-
                     <Text style={styles.heading}>{vendSwitch ? "VENDOR" : custSwitch ? "CUSTOMER" : "LEAD"}</Text>
                     <TextInput
                         style={styles.subHeading}
                         editable={true}
-                        value={userName}
+                        textContentType='username'
                         returnKeyType="next"
-                        onChangeText={(name) => setUserName(name)}
+                        selectionColor={colors.selectionColor}
+                        spellCheck={false}
+                        clearButtonMode='while-editing'
+                        autoCorrect={false}
+                        value={userName}
+                        onChangeText={(userName) => setUserName(userName)}
                         placeholder={vendSwitch ? "Vendor Name *" : custSwitch ? "Customer Name *" : "Lead Name *"}
                         blurOnSubmit={false}
                         keyboardAppearance='dark'
-                        ref={userNameRef}
                         autoFocus={false}
                         onSubmitEditing={() => gstinRef.current.focus()} />
                     <SeparatorLine />
@@ -236,23 +328,29 @@ const Participant = ({ navigation }) => {
                         editable={true}
                         value={GSTIN}
                         returnKeyType="next"
+                        selectionColor={colors.selectionColor}
+                        spellCheck={false}
+                        clearButtonMode='while-editing'
+                        autoCorrect={false}
                         onChangeText={(gstin) => setGSTIN(gstin)}
                         placeholder="GSTIN"
                         blurOnSubmit={false}
                         keyboardAppearance='dark'
-                        // onSubmitEditing={() => placeOfSupplyRef.current.focus()}
-                        onSubmitEditing={() => console.log(userNameRef.current.value)}
+                        onSubmitEditing={() => placeOfSupplyRef.current.focus()}
                     />
                     <SeparatorLine />
-
 
                     <TextInput
                         style={styles.subHeading}
                         editable={true}
                         value={placeOfSupply}
                         returnKeyType="next"
+                        selectionColor={colors.selectionColor}
+                        clearButtonMode='while-editing'
                         onChangeText={(pos) => setPlaceOfSupply(pos)}
                         placeholder="Place of Supply *"
+                        spellCheck={false}
+                        autoCorrect={false}
                         blurOnSubmit={false}
                         keyboardAppearance='dark'
                         ref={placeOfSupplyRef}
@@ -264,9 +362,15 @@ const Participant = ({ navigation }) => {
                         editable={true}
                         value={email}
                         returnKeyType="next"
+                        selectionColor={colors.selectionColor}
+                        spellCheck={false}
+                        clearButtonMode='while-editing'
                         onChangeText={(mail) => setEmail(mail)}
                         placeholder="Email"
                         keyboardType='email-address'
+                        textContentType='emailAddress'
+                        autoCorrect={false}
+                        autoCapitalize='none'
                         blurOnSubmit={false}
                         keyboardAppearance='dark'
                         ref={emailRef}
@@ -277,15 +381,20 @@ const Participant = ({ navigation }) => {
                         style={styles.subHeading}
                         editable={true}
                         value={mobile}
-                        returnKeyType={!leadSwitch ? "done" : "next"}
+                        returnKeyType={leadSwitch ? "next" : isSegmentEnabled ? "next" : "done"}
+                        selectionColor={colors.selectionColor}
+                        spellCheck={false}
+                        clearButtonMode='while-editing'
+                        autoCorrect={false}
                         // onChangeText={(mobileNo) => setMobile(mobileNo)}
                         onChangeText={(mobileNo) => setMobile(mobileNo.replace(/[^\w\s]/gi, ""))}
                         placeholder="Mobile"
+                        maxLength={10}
                         keyboardType='numeric'
                         blurOnSubmit={false}
                         keyboardAppearance='dark'
                         ref={mobileRef}
-                        onSubmitEditing={() => leadSwitch ? probabilityRef.current.focus() : Keyboard.dismiss()} />
+                        onSubmitEditing={() => leadSwitch ? probabilityRef.current.focus() : isSegmentEnabled ? segment1Ref.current.focus() : Keyboard.dismiss()} />
                     <SeparatorLine />
 
                     {/* TODO: LEAD FIELDS */}
@@ -295,6 +404,10 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={probability}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(probability) => setProbability(probability)}
                             placeholder="Probability"
                             blurOnSubmit={false}
@@ -307,6 +420,10 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadType}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(type) => setLeadType(type)}
                             placeholder="Lead Type"
                             blurOnSubmit={false}
@@ -319,6 +436,10 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadTerritory}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(territory) => setLeadTerritory(territory)}
                             placeholder="Lead Territory"
                             blurOnSubmit={false}
@@ -331,6 +452,10 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={industryType}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(industryType) => setIndustryType(industryType)}
                             placeholder="Industry Type"
                             blurOnSubmit={false}
@@ -343,6 +468,10 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={tags}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(tags) => setTags(tags)}
                             placeholder="Tag"
                             blurOnSubmit={false}
@@ -355,6 +484,10 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={title}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(title) => setTitle(title)}
                             placeholder="Title"
                             blurOnSubmit={false}
@@ -367,6 +500,10 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadDesignation}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(leadDesignation) => setLeadDesignation(leadDesignation)}
                             placeholder="Lead Designation"
                             blurOnSubmit={false}
@@ -379,6 +516,10 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={contactName}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(contactName) => setContactName(contactName)}
                             placeholder="Contact Name"
                             blurOnSubmit={false}
@@ -391,8 +532,13 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={phoneNo}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(phoneNo) => setPhoneNo(phoneNo)}
                             placeholder="Phone No"
+                            maxLength={15} 
                             keyboardType='numeric'
                             blurOnSubmit={false}
                             keyboardAppearance='dark'
@@ -404,6 +550,10 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={value}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(value) => setValue(value)}
                             placeholder="Value"
                             blurOnSubmit={false}
@@ -416,6 +566,9 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadOwner}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
                             onChangeText={(leadOwner) => setLeadOwner(leadOwner)}
                             placeholder="Lead Owner"
                             blurOnSubmit={false}
@@ -428,6 +581,10 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadSource}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(leadSource) => setLeadSource(leadSource)}
                             placeholder="Lead Source"
                             blurOnSubmit={false}
@@ -440,6 +597,10 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadStatus}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(leadStatus) => setLeadStatus(leadStatus)}
                             placeholder="Lead Status"
                             blurOnSubmit={false}
@@ -454,8 +615,13 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={street}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(street) => setStreet(street)}
                             placeholder="Street"
+                            textContentType="streetAddressLine1"
                             blurOnSubmit={false}
                             keyboardAppearance='dark'
                             ref={streetRef}
@@ -466,8 +632,13 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={city}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(city) => setCity(city)}
                             placeholder="City"
+                            textContentType="addressCity"
                             blurOnSubmit={false}
                             keyboardAppearance='dark'
                             ref={cityRef}
@@ -478,9 +649,15 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={postalCode}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(postalCode) => setPostalCode(postalCode)}
                             placeholder="Postal Code"
+                            textContentType="postalCode"
                             keyboardType='numeric'
+                            maxLength={6}
                             blurOnSubmit={false}
                             keyboardAppearance='dark'
                             ref={postalCodeRef}
@@ -491,8 +668,13 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={state}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(state) => setState(state)}
                             placeholder="State"
+                            textContentType="addressCityAndState"
                             blurOnSubmit={false}
                             keyboardAppearance='dark'
                             ref={stateRef}
@@ -503,7 +685,12 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={country}
                             returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
                             onChangeText={(country) => setCountry(country)}
+                            textContentType='countryName'
                             placeholder="Country"
                             blurOnSubmit={false}
                             keyboardAppearance='dark'
@@ -515,30 +702,194 @@ const Participant = ({ navigation }) => {
                             style={styles.subHeading}
                             editable={true}
                             multiline={true}
+                            dataDetectorTypes='phoneNumber'
                             maxLength={5000}
                             value={comment}
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
                             onChangeText={(comment) => setComment(comment)}
                             placeholder="Comment"
                             blurOnSubmit={false}
-                            returnKeyType='done'
+                            returnKeyType={isSegmentEnabled ? "next" : "done"}
                             keyboardAppearance='dark'
                             ref={commentRef}
-                            onSubmitEditing={() => Keyboard.dismiss()} />
+                            onSubmitEditing={() => isSegmentEnabled ? segment1Ref.current.focus() : Keyboard.dismiss()} />
                     </View>}
 
-                </View>
+                    {/* TODO: SEGMENTS */}
+                    {isSegmentEnabled && <View>
+                        <Text style={styles.heading}>SEGMENTS</Text>
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={segment1}
+                            returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
+                            onChangeText={(segment1) => setSegment1(segment1)}
+                            placeholder="Segment 1"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={segment1Ref}
+                            onSubmitEditing={() => segment2Ref.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={segment2}
+                            returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
+                            onChangeText={(segment2) => setSegment2(segment2)}
+                            placeholder="Segment 2"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={segment2Ref}
+                            onSubmitEditing={() => segment3Ref.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={segment3}
+                            returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
+                            onChangeText={(segment3) => setSegment3(segment3)}
+                            placeholder="Segment 3"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={segment3Ref}
+                            onSubmitEditing={() => segment4Ref.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={segment4}
+                            returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
+                            onChangeText={(segment4) => setSegment4(segment4)}
+                            placeholder="Segment 4"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={segment4Ref}
+                            onSubmitEditing={() => segment5Ref.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={segment5}
+                            returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
+                            onChangeText={(segment5) => setSegment5(segment5)}
+                            placeholder="Segment 5"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={segment5Ref}
+                            onSubmitEditing={() => segment6Ref.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={segment6}
+                            returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
+                            onChangeText={(segment6) => setSegment6(segment6)}
+                            placeholder="Segment 6"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={segment6Ref}
+                            onSubmitEditing={() => segment7Ref.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={segment7}
+                            returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
+                            onChangeText={(segment7) => setSegment7(segment7)}
+                            placeholder="Segment 7"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={segment7Ref}
+                            onSubmitEditing={() => segment8Ref.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={segment8}
+                            returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
+                            onChangeText={(segment8) => setSegment8(segment8)}
+                            placeholder="Segment 8"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={segment8Ref}
+                            onSubmitEditing={() => segment9Ref.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={segment9}
+                            returnKeyType="next"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
+                            onChangeText={(segment9) => setSegment9(segment9)}
+                            placeholder="Segment 9"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={segment9Ref}
+                            onSubmitEditing={() => segment10Ref.current.focus()} />
+                        <SeparatorLine />
+                        <TextInput
+                            style={styles.subHeading}
+                            editable={true}
+                            value={segment10}
+                            returnKeyType="done"
+                            selectionColor={colors.selectionColor}
+                            spellCheck={false}
+                            clearButtonMode='while-editing'
+                            autoCorrect={false}
+                            onChangeText={(segment10) => setSegment10(segment10)}
+                            placeholder="Segment 10"
+                            blurOnSubmit={false}
+                            keyboardAppearance='dark'
+                            ref={segment10Ref}
+                            onSubmitEditing={() => Keyboard.dismiss()}
+                        />
+                        <SeparatorLine />
 
+                    </View>}
+                </View>
             </View >
         </KeyboardAwareScrollView>
     )
 }
 
 export default Participant
-
-// let style = style = StyleSheet.create({
-//     textInput: {},
-//     textInputContainer: {}
-// })
 
 const styles = StyleSheet.create({
     container: {

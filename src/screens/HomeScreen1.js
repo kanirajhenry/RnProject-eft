@@ -5,7 +5,7 @@ import { Text, View, Button } from 'react-native'
 
 const HomeScreen1 = () => {
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(true)
     const navigation = useNavigation();
 
     useEffect(() => {

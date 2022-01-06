@@ -4,6 +4,7 @@ import { useIsFocused } from "@react-navigation/native"
 import * as actionType from '../redux/actions/actionTypes'
 import commonApiCall, { commonQueryParam } from '../redux/actions/actions'
 import { useDispatch, useSelector } from 'react-redux'
+import * as validation from "../asset/libraries/validations"
 
 import * as storage from "../asset/utils/asyncStore"
 import * as constant from "../constants/keys"
@@ -45,14 +46,12 @@ const LoginScreen = ({ navigation, route }) => {
     }
 
     const handleLogin = () => {
-        
-        navigation.goBack()
 
         const loginDto = new LoginDTO()
         loginDto.cmpCode = "RGS".toUpperCase()
         loginDto.userId = "admin".toUpperCase()
         loginDto.orgCode = "naeft".toUpperCase()
-        loginDto.password = "Pass1234"
+        loginDto.password = "Pass@1234"
         loginDto.deviceToken = "ci0MHp4n6yw:APA91bF93ekDVFw1PcM_IlclLIlhGtTNy5XP-UDeX-cbgbG60wxuD1IpVDUDcfw72HGUqdAiSMI3SjDwcARU-DY8In9EEbr8QVdiECjGrxfWG5QmNrgx40pXQgEARs_OqfH5klYjMKeO"
 
         if (isFieldEmpty(savedUrl) || savedUrl == undefined) return alert("Please configure your Url")
@@ -93,11 +92,9 @@ const LoginScreen = ({ navigation, route }) => {
         loginResult = loginData
 
         console.log("result.deviceToken : ----###############---->>>>>", loginResult)
-
-        if (loginResult.isValid) return alert("Login Success")
-        navigation.goBack()
-
-        alert(loginResult.isValid)
+        if (!loginResult.isValid) return alert(loginResult.message);
+        
+        navigation.goBack();
     }
 
     const handleOpenUrl = () => {

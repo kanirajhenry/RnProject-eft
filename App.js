@@ -61,7 +61,7 @@ function MyDrawer({ navigation }) {
     <Drawer.Navigator drawerPosition='left' screenOptions={customHeader(false)} >
       <Drawer.Screen name="TabsScreen" component={TabsScreen} options={{ title: 'Home' }} />
       <Drawer.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: "Create Participant" }} />
-      <Drawer.Screen name="Participant" component={Participant} options={{ title: "Participant" }} />
+      {/* <Drawer.Screen name="Participant" component={Participant} options={{ title: "Participant" }} /> */}
       <Drawer.Screen name="Profile1" component={ProfileScreen1} />
     </Drawer.Navigator>
   )
