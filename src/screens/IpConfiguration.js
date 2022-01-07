@@ -16,6 +16,8 @@ import * as util from "../utility"
 import * as alerts from "../constants/alerts"
 import * as constant from '../constants/keys'
 import * as storage from "../asset/utils/asyncStore"
+import axios from 'axios'
+import { Validations } from '../asset/libraries/validations'
 
 const IpConfiguration = ({ navigation }) => {
 
@@ -27,10 +29,7 @@ const IpConfiguration = ({ navigation }) => {
     const urlInputRef = React.useRef()
 
     const dispatch = useDispatch()
-
-    const data = useSelector(({ ipReducer }) => ipReducer.data)
-    const loading = useSelector(({ ipReducer }) => ipReducer.loading)
-
+    
     const [savedUrl, setSavedUrl] = React.useState("")
 
     useEffect(() => {
@@ -58,8 +57,6 @@ const IpConfiguration = ({ navigation }) => {
         onChangeText("")
         setSavedUrl("")
     }
-
-    console.log("data->0000000000", data)
 
     const handleIpConfig = () => {
 
@@ -93,18 +90,18 @@ const IpConfiguration = ({ navigation }) => {
         const queryParam = { "cmpCode": "RGS" }
         const query = commonQueryParam(queryParam, "A")
 
-        dispatch(commonApiCall(query, {}, actionType.controller.IP, actionType.ipScreen.IP_CONFIG))
+        const baseURL = configuredUrl($url)
+        let mainURL = baseURL + "/erp/rest/login/checkConfig" + query
 
-        setTimeout(() => {
-            afterCompletedApicall()
-        }, 500)
-    }
-
-    const afterCompletedApicall = () => {
-        
-        if (data == "ACCEPTED") {
-            navigation.goBack()
-        } else { console.log("ACCEPTED else part") }
+        axios.post(mainURL, {})
+            .then(response => {
+                if (response.data == "ACCEPTED") {
+                    Validations.snackBar("IP Configuration Success")
+                    navigation.goBack()
+                } else {
+                    Validations.snackBar("IP Configuration Failed")
+                }
+            })
     }
 
     return (
@@ -139,7 +136,7 @@ const IpConfiguration = ({ navigation }) => {
 
             <Button style={{ marginBottom: 150 }} title="Config IP" onPress={() => { handleIpConfig() }} />
 
-            <Text>  Url Success: {data} </Text>
+            {/* <Text>  Url Success: {data} </Text> */}
 
             <View style={{ flex: 8.5, flexDirection: 'column', justifyContent: 'flex-end', marginBottom: 8 }}>
 

@@ -23,14 +23,31 @@ class Validations extends React.Component {
     return nospecial.test(special);
   }
 
-  static snackBar = (text) =>{
+  // static snackBar = (text) => {
+  //   Snackbar.show({
+  //     text: text,
+  //     duration: Snackbar.LENGTH_SHORT,
+  //   },
+  //     action: {
+  //     text: 'UNDO',
+  //     textColor: 'green',
+  //     onPress: () => { /* Do something. */ },
+  //   })
+  // }
+  static snackBar = (msg, actiontext) => {
     Snackbar.show({
-      text: text,
+      text: msg,
       duration: Snackbar.LENGTH_SHORT,
-    })
+      action: {
+        text: actiontext,
+        textColor: 'green',
+        onPress: () => { /* Do something. */ },
+      },
+    });
   }
+
 
 }
 
 
-export { Validations };
+export { Validations }

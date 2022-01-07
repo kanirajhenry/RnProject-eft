@@ -5,20 +5,22 @@ import {
     PixelRatio, Dimensions, Keyboard
 } from 'react-native'
 
-import CustomTextInput from '../components/customTextInput';
+import CustomTextInput from '../components/customTextInput'
 import { useIsFocused } from "@react-navigation/native"
 
 import { useSelector, useDispatch } from 'react-redux'
 import * as actionType from '../redux/actions/actionTypes'
 import commonApiCall, { commonGetApiCall, commonQueryParam } from '../redux/actions/actions'
 import { CommonDataModel, UserTokenDTO, ParticipantDTO, ParticipantContactModel } from '../model'
-import { color } from 'react-native-reanimated';
+import { color } from 'react-native-reanimated'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { useScrollToTop } from '@react-navigation/native';
-import SegmentedControl from "rn-segmented-control";
-import { keyIsBaseUrl } from '../constants/keys';
+import { useScrollToTop } from '@react-navigation/native'
+import SegmentedControl from "rn-segmented-control"
 import * as colors from '../constants/colors'
-import { Colors } from 'react-native-paper';
+import { Colors } from 'react-native-paper'
+import { Validations } from "../asset/libraries/validations"
+import * as storage from "../asset/utils/asyncStore"
+import * as constant from "../constants/keys"
 
 const Participant = ({ navigation }) => {
 
@@ -87,7 +89,7 @@ const Participant = ({ navigation }) => {
     }
 
     useLayoutEffect(() => {
-        
+
         console.log("Called from useLayoutEffect() 111111")
         setTabIndex(tabIndex)
         switch (tabIndex) {
@@ -106,6 +108,10 @@ const Participant = ({ navigation }) => {
     )
 
     useEffect(() => {
+
+        // storage.setData(constant.keyIsEmailId, "kanirajhenryeft13@hotmail.com")
+        // storage.setData(constant.keyIsEmployeeCode, "")
+
         console.log("Called from useEffect() 222222")
         // fetchPlaceOfSupply()
         return () => { // Called when didMount && UnMount
@@ -212,7 +218,48 @@ const Participant = ({ navigation }) => {
     let contactModel = new ParticipantContactModel()
     let gstinDatasList = new CommonDataModel()
 
+    let localdata = ""
+
+    const [admin, setAdmin] = useState("someADMIN")
+
+    const getLocalData = (forKeyIs) => {
+        // let data = "qwerty"
+        // setTimeout(() => {
+        //     storage.getData(constant.keyIsUserId)
+        //         .then((gotData) => { data = gotData })
+        // }, 500);
+
+        // const gotLocaldata = storage.getData(constant.keyIsBaseUrl)
+        // setTimeout(() => { localdata = gotLocaldata }, 500)
+
+        // const gotUrl = storage.getData(constant.keyIsCmpCode)
+        // setTimeout(() => {
+        //     setAdmin(gotUrl._W)
+        //     alert(admin)
+        // }, 500)
+
+    }
+
     function createCustomer() {
+
+        // TODO: RND 
+        // const gotUrl = storage.getData(constant.keyIsBaseUrl).then((name) => {
+        //     setTimeout(() => {
+        //         storage.myName = name
+        //         console.log("=-=--=-=-=-=-=-=->", name)
+        //     }, 500)
+        // })
+
+        // storage.getToken().then(() => console.log("*--*-*-*-*-**-*-*-*-*->>>>", storage.tokenId))
+        // storage.getCmpCode().then(() => console.log("*--*-*-*-*-**-*-*-*-*->>>>", storage.cmpCode))
+        // alert("storage data is: ::::::", storage.cmpCode)
+
+        // let data1 = storage.getData(constant.keyIsCmpCode).then((local) => { alert(local) })
+        // console.log("storage.myName", storage.myName)
+        // let data2 = storage.getData(constant.keyIsCmpCode).then((local) => { storage.myName = local })
+        // console.log(storage.myName)
+
+        // ===============================================================
 
         Keyboard.dismiss()
 
@@ -220,8 +267,9 @@ const Participant = ({ navigation }) => {
         const isVendor = tabIndex === 1
         const isLead = tabIndex === 2
 
-        participantDto.cmpCode = "RGS"
-        participantDto.orgCode = "DMSE"
+        participantDto.cmpCode = storage.cmpCode
+
+        participantDto.orgCode = storage.orgCode
         participantDto.participantName = userName
         participantDto.gstin = GSTIN
         participantDto.tinNum = GSTIN
@@ -230,7 +278,7 @@ const Participant = ({ navigation }) => {
         participantDto.isBuyer = isCustomer ? "Y" : "N"
 
         participantDto.contactMobile = mobile
-        participantDto.userId = "ADMIN"
+        participantDto.userId = storage.userId
         participantDto.currencyCodes = "INR"
 
         participantDto.commContacts = new ParticipantContactModel()
@@ -242,7 +290,7 @@ const Participant = ({ navigation }) => {
         contactModel.city = city
         contactModel.country
         contactModel.zipCode = postalCode
-        contactModel.userId = "ADMIN"
+        contactModel.userId = storage.userId
         // console.log(contactModel)
         participantDto.participantContactList = [new ParticipantContactModel()]
         participantDto.participantContactList = [contactModel]
@@ -538,7 +586,7 @@ const Participant = ({ navigation }) => {
                             autoCorrect={false}
                             onChangeText={(phoneNo) => setPhoneNo(phoneNo)}
                             placeholder="Phone No"
-                            maxLength={15} 
+                            maxLength={15}
                             keyboardType='numeric'
                             blurOnSubmit={false}
                             keyboardAppearance='dark'

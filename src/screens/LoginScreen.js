@@ -4,7 +4,7 @@ import { useIsFocused } from "@react-navigation/native"
 import * as actionType from '../redux/actions/actionTypes'
 import commonApiCall, { commonQueryParam } from '../redux/actions/actions'
 import { useDispatch, useSelector } from 'react-redux'
-import * as validation from "../asset/libraries/validations"
+import { Validations } from "../asset/libraries/validations"
 
 import * as storage from "../asset/utils/asyncStore"
 import * as constant from "../constants/keys"
@@ -38,10 +38,10 @@ const LoginScreen = ({ navigation, route }) => {
     }, [isFocused])
 
     const getInitialData = async () => {
+        // storage.getData(constant.keyIsBaseUrl).then((gotUrl) => { setSavedUrl(gotUrl) })
+        // setSavedUrl(JSON.parse(storage.baseUrl))
 
-        storage.getData(constant.keyIsBaseUrl)
-            .then((gotUrl) => { setSavedUrl(gotUrl) })
-
+        setSavedUrl(storage.baseUrl)
         console.log("savedUrl: from Login screen", savedUrl)
     }
 
@@ -58,10 +58,7 @@ const LoginScreen = ({ navigation, route }) => {
 
         dispatch(commonApiCall(null, loginDto, actionType.controller.LOGIN, actionType.loginScreen.ON_LOGIN))
 
-        setTimeout(() => {
-            afterCompletedApicall()
-        }, 100)
-
+        setTimeout(() => { afterCompletedApicall() }, 500)
     }
 
     const handleForgetPassword = () => {
@@ -93,8 +90,24 @@ const LoginScreen = ({ navigation, route }) => {
 
         console.log("result.deviceToken : ----###############---->>>>>", loginResult)
         if (!loginResult.isValid) return alert(loginResult.message);
-        
-        navigation.goBack();
+
+        // Have to set local stoage for entire app usage
+        storage.setData(constant.keyIsOrgCode, loginResult.orgCode)
+        storage.setData(constant.keyIsUserId, loginResult.userId)
+        storage.setData(constant.keyIsEmailId, loginResult.emailId)
+        storage.setData(constant.keyIsPassword, loginResult.password)
+        storage.setData(constant.keyIsBranch, loginResult.branch)
+        storage.setData(constant.keyIsCmpCode, loginResult.cmpCode)
+        storage.setData(constant.keyIsName, loginResult.name)
+        storage.setData(constant.keyIsRoleCode, loginResult.roleCode)
+        storage.setData(constant.keyIsUserPrivileges, loginResult.userPrivileges)
+        storage.setData(constant.keyIsEmployeeCode, loginResult.employeeCode)
+        storage.setData(constant.keyIsTokenId, loginResult.tokenId)
+        storage.setData(constant.keyIsPasswordExpDate, loginResult.passwordExpDate)
+        // ViewController.defaults.set(model.licensePortalMap, forKey: "licensePortalMap")
+
+        Validations.snackBar(loginResult.message)
+        navigation.goBack()
     }
 
     const handleOpenUrl = () => {

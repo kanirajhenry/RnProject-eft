@@ -100,8 +100,11 @@ function AuthStackScreen({ navigation }) {
 
 const handleLogOut = (navigation) => {
 
-  navigation.navigate("AuthStackScreen", { screen: 'Login' })
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", storage.userPrivileges)
+
+  storage.baseUrl = ""
   storage.setData(constant.keyIsBaseUrl, "")
+  navigation.navigate("AuthStackScreen", { screen: 'Login' })
 }
 
 const customHeader = (isHeaderShown) => {

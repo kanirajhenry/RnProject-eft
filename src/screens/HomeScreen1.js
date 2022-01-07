@@ -1,15 +1,15 @@
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native'
 import React, { useState, useEffect } from 'react'
 import { Text, View, Button } from 'react-native'
 
 const HomeScreen1 = () => {
 
-    const [isLoggedIn, setIsLoggedIn] = useState(true)
-    const navigation = useNavigation();
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const navigation = useNavigation()
 
     useEffect(() => {
-        setIsLoggedIn(true)
+        setIsLoggedIn(false)
 
         if (!isLoggedIn) {
             navigation.navigate("AuthStackScreen", {

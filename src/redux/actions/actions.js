@@ -129,21 +129,19 @@ const commonGetApiCall = (query, dataObj, className, triggeredAction) => {
         returnToDispatch(dispatch, actionType.apiResponse.API_FAILURE, error, className, triggeredAction)
         handleError(error, dispatch)
       })
-
   }
 }
 
 const commonApiCall = (query, dataObj, className, triggeredAction) => {
   return dispatch => {
 
-    const gotUrl = storage.getData(constant.keyIsBaseUrl)
-    setTimeout(() => { api.baseUrl = gotUrl._W }, 500)
+    // const gotUrl = storage.getData(constant.keyIsBaseUrl)
+    // setTimeout(() => { api.baseUrl = gotUrl._W }, 500)
 
+    api.baseUrl = storage.baseUrl
     const data = dataObj === null ? {} : dataObj
     const joinedQuery = query === null ? "" : query
     const queryUrl = api.baseUrl + getPathUrl(triggeredAction) + joinedQuery
-
-    console.log("queryUrl::: >>>>", queryUrl)
 
     if (api.baseUrl == "") return alert("Base Url is Empty")
     if (api.baseUrl == undefined) return alert("Base Url is undefined")
