@@ -1,9 +1,20 @@
 import { ParticipantContactModel } from "./participantContactModel"
+import { CommentDTO } from "."
 
 export class ParticipantDTO {
-    orgCode: string
-    cmpCode: string
+    //For Transfer
+    //GST
+    isGST: boolean
+    customerName: string
+    store: string
+    placeOfSupply: string
+    bankAccountName: string
+    commContacts: ParticipantContactModel
+    leadStatusId: string
+   
     participantId: string
+    cmpCode: string
+    orgCode: string
     participantName: string
     webAddress: string
     contactTitle: string
@@ -14,6 +25,7 @@ export class ParticipantDTO {
     officeNo: string
     emailId: string
     phone: string
+    partiContactList: [PartiContactDTO]
     participantContactList: [ParticipantContactModel]
     bankAccNum: string
     bankAccHolderName: string
@@ -33,7 +45,6 @@ export class ParticipantDTO {
     tierId: string
     isNodeCreate: boolean
     isPartCurAccCreate: boolean
-    //For Transfer
     country: string
     isDoorToDoor: string
     isDepositIntoAcc: string
@@ -41,21 +52,19 @@ export class ParticipantDTO {
     currencyCodes: string
     currency: string
     termsAndCondition: string
-    //GST
     sezUnit: string
     gstin: string
-    partType: string
-    isGST: boolean
+    isGST: sool
     isDuplicateName: boolean
-
-    customerName: string
-    store: string
-    placeOfSupply: string
-    bankAccountName: string
-    commContacts: ParticipantContactModel
-
-    leadStatusId: string
+    partType: string
+    //var headQuoState: String?
+    leadOwner: string
+    leadSource: string
     leadStatus: string
+    leadStatusId: number
+    commentList: [CommentDTO]
+    oldStatusId: number
+    attachmentLocation: string
 
     segment1: string
     segment2: string

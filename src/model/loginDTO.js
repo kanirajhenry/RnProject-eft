@@ -1,6 +1,5 @@
 
 export class LoginDTO {
-
     cmpCode: string
     orgCode: string
     userId: string
@@ -30,6 +29,8 @@ export class LoginDTO {
     appCode: string
     userPrivileges: [string]
     tokenId: string
-    // licensePortalMap: [string: string]
+    licensePortalMap: [{key: string, value: string}]
     passwordExpDate: string
 }
+
+

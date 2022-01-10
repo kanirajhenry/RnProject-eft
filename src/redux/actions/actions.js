@@ -1,4 +1,3 @@
-
 import * as actionType from "./actionTypes";
 import * as api from "../../constants/api";
 import * as alerts from "../../constants/alerts";

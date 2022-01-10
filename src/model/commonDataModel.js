@@ -6,12 +6,12 @@ export class CommonDataModel {
     orgCode: string
     gstin: string
     userId: string
-    // nodeMap: [string: string]
-    // stateMap: [string: string]
-    // paymentTermMap: [string: string]
-    // paymentModeMap: [string: string]
-    // salesPersonMap: [string: string]
-    // orderCategoryMap: [string: string]
+    nodeMap: [{ key: string, value: string }]
+    stateMap: [{ key: string, value: string }]
+    paymentTermMap: [{ key: string, value: string }]
+    paymentModeMap: [{ key: string, value: string }]
+    salesPersonMap: [{ key: string, value: string }]
+    orderCategoryMap: [{ key: string, value: string }]
     sequenceGeneratorDTOs: [SequenceGeneratorDTO]
 }
 

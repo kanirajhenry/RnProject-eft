@@ -11,16 +11,16 @@ import { useIsFocused } from "@react-navigation/native"
 import { useSelector, useDispatch } from 'react-redux'
 import * as actionType from '../redux/actions/actionTypes'
 import commonApiCall, { commonGetApiCall, commonQueryParam } from '../redux/actions/actions'
-import { CommonDataModel, UserTokenDTO, ParticipantDTO, ParticipantContactModel } from '../model'
-import { color } from 'react-native-reanimated'
+import { CommonDataModel, UserTokenDTO, ParticipantDTO, ParticipantContactModel, CommentDTO } from '../model'
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useScrollToTop } from '@react-navigation/native'
 import SegmentedControl from "rn-segmented-control"
-import * as colors from '../constants/colors'
-import { Colors } from 'react-native-paper'
+import * as appColor from '../constants/colors'
 import { Validations } from "../asset/libraries/validations"
 import * as storage from "../asset/utils/asyncStore"
 import * as constant from "../constants/keys"
+import { isFieldEmpty } from '../utility'
 
 const Participant = ({ navigation }) => {
 
@@ -218,88 +218,98 @@ const Participant = ({ navigation }) => {
     let contactModel = new ParticipantContactModel()
     let gstinDatasList = new CommonDataModel()
 
-    let localdata = ""
-
-    const [admin, setAdmin] = useState("someADMIN")
-
-    const getLocalData = (forKeyIs) => {
-        // let data = "qwerty"
-        // setTimeout(() => {
-        //     storage.getData(constant.keyIsUserId)
-        //         .then((gotData) => { data = gotData })
-        // }, 500);
-
-        // const gotLocaldata = storage.getData(constant.keyIsBaseUrl)
-        // setTimeout(() => { localdata = gotLocaldata }, 500)
-
-        // const gotUrl = storage.getData(constant.keyIsCmpCode)
-        // setTimeout(() => {
-        //     setAdmin(gotUrl._W)
-        //     alert(admin)
-        // }, 500)
-
-    }
-
-    function createCustomer() {
-
-        // TODO: RND 
-        // const gotUrl = storage.getData(constant.keyIsBaseUrl).then((name) => {
-        //     setTimeout(() => {
-        //         storage.myName = name
-        //         console.log("=-=--=-=-=-=-=-=->", name)
-        //     }, 500)
-        // })
-
-        // storage.getToken().then(() => console.log("*--*-*-*-*-**-*-*-*-*->>>>", storage.tokenId))
-        // storage.getCmpCode().then(() => console.log("*--*-*-*-*-**-*-*-*-*->>>>", storage.cmpCode))
-        // alert("storage data is: ::::::", storage.cmpCode)
-
-        // let data1 = storage.getData(constant.keyIsCmpCode).then((local) => { alert(local) })
-        // console.log("storage.myName", storage.myName)
-        // let data2 = storage.getData(constant.keyIsCmpCode).then((local) => { storage.myName = local })
-        // console.log(storage.myName)
-
-        // ===============================================================
+    function createParticipant() {
 
         Keyboard.dismiss()
 
-        const isCustomer = tabIndex === 0
-        const isVendor = tabIndex === 1
-        const isLead = tabIndex === 2
+        const isCustomer = tabIndex === 0, isVendor = tabIndex === 1, isLead = tabIndex === 2
 
         participantDto.cmpCode = storage.cmpCode
-
         participantDto.orgCode = storage.orgCode
         participantDto.participantName = userName
-        participantDto.gstin = GSTIN
+
         participantDto.tinNum = GSTIN
         participantDto.emailId = email
-        participantDto.isSeller = isCustomer ? "N" : "Y"
-        participantDto.isBuyer = isCustomer ? "Y" : "N"
+
+        if (!isLead) {
+            participantDto.gstin = GSTIN
+            participantDto.isSeller = isCustomer ? "N" : "Y"
+            participantDto.isBuyer = isCustomer ? "Y" : "N"
+        }
 
         participantDto.contactMobile = mobile
         participantDto.userId = storage.userId
-        participantDto.currencyCodes = "INR"
 
-        participantDto.commContacts = new ParticipantContactModel()
-        participantDto.commContacts.province = placeOfSupply
+        if (isCustomer || isVendor && !isLead) {
+            participantDto.currencyCodes = "INR"
+            participantDto.commContacts = new ParticipantContactModel()
+            participantDto.commContacts.province = "37" // "placeOfSupply"
+        }
+
+        if (isLead) {
+            participantDto.contactName = contactName //"participantDto.contactName"
+            participantDto.phone = phoneNo //"9886569858"
+            participantDto.bankAccHolderName = tags // ""
+            participantDto.contactTitle = "Miss" // Show Picker
+            participantDto.cstNum = "9865986532"
+            participantDto.fax = ""
+            participantDto.territory = leadTerritory // ""
+            participantDto.tierId = ""
+            participantDto.contactDesignation = "Staff" // Show Picker
+            participantDto.partType = "Lead"
+            participantDto.leadOwner = storage.userId
+            participantDto.leadSource = "Partner"
+            participantDto.partiContactList = []
+            participantDto.isContractor = "Y"
+
+            // if (LeadTabController.status != nil && LeadTabController.status.count > 0) {
+            participantDto.leadStatusId = 46 // "Int(LeadTabController.status)"
+            participantDto.leadStatus = "NEW"
+            // }
+        }
+
         contactModel = new ParticipantContactModel()
-        contactModel.province = placeOfSupply
         contactModel.addressType = "COMM"
-        contactModel.street1 = street
-        contactModel.city = city
-        contactModel.country
-        contactModel.zipCode = postalCode
-        contactModel.userId = storage.userId
-        // console.log(contactModel)
+        contactModel.province = "37" // "placeOfSupply"
+
+        if (isLead) {
+            contactModel.street1 = street
+            contactModel.city = city
+            contactModel.country = "" // FIXME: ??? Have to consider again  
+            contactModel.zipCode = postalCode // "568954"// 
+            contactModel.userId = storage.userId
+            contactModel.cmpCode = storage.cmpCode
+            contactModel.orgCode = storage.orgCode
+        }
+
         participantDto.participantContactList = [new ParticipantContactModel()]
         participantDto.participantContactList = [contactModel]
-        // print(participantDto.participantContactList?.first?.toJSON())
-        // console.log(participantDto.participantContactList.)
+
         contactModel = new ParticipantContactModel()
-        contactModel.province = placeOfSupply
+        if (isLead) {
+            contactModel.street1 = street
+            contactModel.city = city
+            contactModel.country = "" // FIXME: ??? Have to consider again  
+            contactModel.zipCode = postalCode // "568954"
+            contactModel.userId = storage.userId
+            contactModel.cmpCode = storage.cmpCode
+            contactModel.orgCode = storage.orgCode
+        }
+        contactModel.province = "37" // "placeOfSupply"
         contactModel.addressType = "HEADQ"
         participantDto.participantContactList = [...participantDto.participantContactList, contactModel]
+
+        if (isLead && !isFieldEmpty(comment)) {
+            let commentDto = new CommentDTO()
+            commentDto.cmpCode = storage.cmpCode
+            commentDto.orgCode = storage.orgCode
+            commentDto.user = storage.userId
+            commentDto.opFlag = "I"
+            commentDto.type = "LEAD"
+            commentDto.comment = comment
+            participantDto.commentList = []
+            participantDto.commentList = [commentDto]
+        }
 
         participantDto.segment1 = segment1
         participantDto.segment2 = segment2
@@ -312,7 +322,7 @@ const Participant = ({ navigation }) => {
         participantDto.segment9 = segment9
         participantDto.segment10 = segment10
 
-        console.log("participantDto->*****************", JSON.stringify(participantDto))
+        console.log("participantDto->********", JSON.stringify(participantDto))
     }
 
     function getRefValue() {
@@ -324,9 +334,9 @@ const Participant = ({ navigation }) => {
     const handleCreateParticipant = () => {
         console.log("tabIndex========>", tabIndex)
         switch (tabIndex) {
-            case 0: createCustomer(); break
-            case 1: createCustomer(); break
-            case 2: createCustomer(); break
+            case 0: createParticipant(); break
+            case 1: createParticipant(); break
+            case 2: createParticipant(); break
             default: break
         }
     }
@@ -336,10 +346,10 @@ const Participant = ({ navigation }) => {
             <View style={styles.row}>
                 <SegmentedControl
                     tabs={["CUSTOMER", "VENDOR", "LEAD"]}
-                    segmentedControlBackgroundColor="#0a67a0"// "#86c4fD"
-                    activeSegmentBackgroundColor="#ff0026" // "#0482f7"
-                    activeTextColor="white"
-                    textColor="black"
+                    segmentedControlBackgroundColor={appColor.segmentedControlBackgroundColor}
+                    activeSegmentBackgroundColor={appColor.activeSegmentBackgroundColor}
+                    activeTextColor={appColor.white}
+                    textColor={appColor.appTextColor}
                     paddingVertical={9}
                     width={Dimensions.get("screen").width - 90}
                     containerStyle={{ marginVertical: 20 }}
@@ -357,7 +367,7 @@ const Participant = ({ navigation }) => {
                         editable={true}
                         textContentType='username'
                         returnKeyType="next"
-                        selectionColor={colors.selectionColor}
+                        selectionColor={appColor.selectionColor}
                         spellCheck={false}
                         clearButtonMode='while-editing'
                         autoCorrect={false}
@@ -376,7 +386,7 @@ const Participant = ({ navigation }) => {
                         editable={true}
                         value={GSTIN}
                         returnKeyType="next"
-                        selectionColor={colors.selectionColor}
+                        selectionColor={appColor.selectionColor}
                         spellCheck={false}
                         clearButtonMode='while-editing'
                         autoCorrect={false}
@@ -393,7 +403,7 @@ const Participant = ({ navigation }) => {
                         editable={true}
                         value={placeOfSupply}
                         returnKeyType="next"
-                        selectionColor={colors.selectionColor}
+                        selectionColor={appColor.selectionColor}
                         clearButtonMode='while-editing'
                         onChangeText={(pos) => setPlaceOfSupply(pos)}
                         placeholder="Place of Supply *"
@@ -410,7 +420,7 @@ const Participant = ({ navigation }) => {
                         editable={true}
                         value={email}
                         returnKeyType="next"
-                        selectionColor={colors.selectionColor}
+                        selectionColor={appColor.selectionColor}
                         spellCheck={false}
                         clearButtonMode='while-editing'
                         onChangeText={(mail) => setEmail(mail)}
@@ -430,7 +440,7 @@ const Participant = ({ navigation }) => {
                         editable={true}
                         value={mobile}
                         returnKeyType={leadSwitch ? "next" : isSegmentEnabled ? "next" : "done"}
-                        selectionColor={colors.selectionColor}
+                        selectionColor={appColor.selectionColor}
                         spellCheck={false}
                         clearButtonMode='while-editing'
                         autoCorrect={false}
@@ -452,7 +462,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={probability}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -468,7 +478,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadType}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -484,7 +494,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadTerritory}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -500,7 +510,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={industryType}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -516,7 +526,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={tags}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -532,7 +542,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={title}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -548,7 +558,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadDesignation}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -564,7 +574,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={contactName}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -580,7 +590,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={phoneNo}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -598,7 +608,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={value}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -614,7 +624,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadOwner}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             onChangeText={(leadOwner) => setLeadOwner(leadOwner)}
@@ -629,7 +639,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadSource}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -645,7 +655,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={leadStatus}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -663,7 +673,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={street}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -680,7 +690,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={city}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -697,7 +707,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={postalCode}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -716,7 +726,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={state}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -733,7 +743,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={country}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -753,7 +763,7 @@ const Participant = ({ navigation }) => {
                             dataDetectorTypes='phoneNumber'
                             maxLength={5000}
                             value={comment}
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             onChangeText={(comment) => setComment(comment)}
@@ -773,7 +783,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={segment1}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -789,7 +799,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={segment2}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -805,7 +815,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={segment3}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -821,7 +831,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={segment4}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -837,7 +847,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={segment5}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -853,7 +863,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={segment6}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -869,7 +879,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={segment7}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -885,7 +895,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={segment8}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -901,7 +911,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={segment9}
                             returnKeyType="next"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}
@@ -917,7 +927,7 @@ const Participant = ({ navigation }) => {
                             editable={true}
                             value={segment10}
                             returnKeyType="done"
-                            selectionColor={colors.selectionColor}
+                            selectionColor={appColor.selectionColor}
                             spellCheck={false}
                             clearButtonMode='while-editing'
                             autoCorrect={false}

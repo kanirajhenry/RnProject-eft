@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 import * as constant from './src/constants/keys'
+import * as appColor from './src/constants/colors'
 import * as storage from './src/asset/utils/asyncStore'
 
 import HomeScreen1 from './src/screens/homeScreen1'
@@ -100,7 +101,8 @@ function AuthStackScreen({ navigation }) {
 
 const handleLogOut = (navigation) => {
 
-  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", storage.userPrivileges)
+  console.log("++++++++++++++++++++->", storage.userPrivileges)
+  console.log("++++++++++++++++++++-> lpmap", storage.licensePortalMap)
 
   storage.baseUrl = ""
   storage.setData(constant.keyIsBaseUrl, "")
@@ -115,9 +117,9 @@ const customHeader = (isHeaderShown) => {
     headerTitleAlign: 'center',
     headerLargeTitle: true,
     statusBarStyle: "light",
-    headerStyle: { backgroundColor: '#3FA796' },
+    headerStyle: { backgroundColor: appColor.primaryColor },
     headerTitleAlign: 'center',
-    headerTintColor: '#fff',
+    headerTintColor: appColor.headerTintColor,
     headerTitleStyle: { fontWeight: 'bold' }
   })
 }
@@ -126,8 +128,8 @@ function HomeStackScreen({ navigation }) {
   return (
     <HomeStack.Navigator screenOptions={({ navigation }) => (customHeader(true))} >
       <HomeStack.Screen name='Home1' component={HomeScreen1} options={{
-        headerLeft: () => <Button title="Menu" color="white" onPress={() => navigation.dispatch(DrawerActions.toggleDrawer('drawerOpenRight'))} />,
-        headerRight: () => <Button title="Logout" color="white" onPress={() => { handleLogOut(navigation) }}
+        headerLeft: () => <Button title="Menu" color={appColor.headerLeft} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer('drawerOpenRight'))} />,
+        headerRight: () => <Button title="Logout" color={appColor.headerRight} onPress={() => { handleLogOut(navigation) }}
         />
       }}
       />
@@ -163,7 +165,7 @@ function ProfileStackScreen() {
 
 function TabsScreen() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveBackgroundColor: '#3FA796', tabBarActiveTintColor: 'white' }}>
+    <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveBackgroundColor: appColor.tabBarActiveBackgroundColor, tabBarActiveTintColor: 'white' }}>
       <Tab.Screen name="HomeStackScreen" component={HomeStackScreen} options={{ title: "Home Page", }} />
       <Tab.Screen name="SettingsStackScreen" component={SettingsStackScreen} options={{ title: "Setting Page" }} />
       <Tab.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: "Profile page" }} />

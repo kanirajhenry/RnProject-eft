@@ -104,6 +104,8 @@ const LoginScreen = ({ navigation, route }) => {
         storage.setData(constant.keyIsEmployeeCode, loginResult.employeeCode)
         storage.setData(constant.keyIsTokenId, loginResult.tokenId)
         storage.setData(constant.keyIsPasswordExpDate, loginResult.passwordExpDate)
+        storage.setData(constant.keyIsLicensePortalMap, loginResult.licensePortalMap)
+
         // ViewController.defaults.set(model.licensePortalMap, forKey: "licensePortalMap")
 
         Validations.snackBar(loginResult.message)

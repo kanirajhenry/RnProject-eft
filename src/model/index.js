@@ -4,5 +4,5 @@ export * from "./commonDataModel"
 export * from "./sequenceGeneratorDTO"
 export * from "./participantDTO"
 export * from "./participantContactModel"
-
+export * from "./commentDTO"
 
