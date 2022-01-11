@@ -8,7 +8,8 @@ import thunk from 'redux-thunk'
 
 export const rootReducer = combineReducers({
     ipReducer: reducer.ipReducer,
-    participantReducer: reducer.participantReducer
+    participantReducer: reducer.participantReducer,
+    singletonReducer: reducer.singletonReducer
 })
 
 const logger = createLogger()

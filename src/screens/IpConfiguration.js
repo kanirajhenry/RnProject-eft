@@ -29,16 +29,12 @@ const IpConfiguration = ({ navigation }) => {
     const urlInputRef = React.useRef()
 
     const dispatch = useDispatch()
-    
+
     const [savedUrl, setSavedUrl] = React.useState("")
 
     useEffect(() => {
-
-        const gotUrl = storage.getData(constant.keyIsBaseUrl)
-        setTimeout(() => { setSavedUrl(gotUrl._W) }, 100)
-
+        (async () => { setSavedUrl(await storage.getData(constant.keyIsBaseUrl)) })()
         console.log("savedUrl: from IP config screen", savedUrl, "text is ::: > ", text)
-
     }, [])
 
     // FIXME: Both open() close() methods I think it works only for android.
@@ -85,13 +81,14 @@ const IpConfiguration = ({ navigation }) => {
         if (url.protocol === "http://") return alert(alerts.protocolErr)
         if ((url === undefined) || (url.protocol != "https://") || (url.host === "")) return alert(alerts.urlErr)
 
-        storage.setData(constant.keyIsBaseUrl, configuredUrl($url))
+        const configuredBaseUrl = configuredUrl($url)
 
         const queryParam = { "cmpCode": "RGS" }
         const query = commonQueryParam(queryParam, "A")
 
-        const baseURL = configuredUrl($url)
-        let mainURL = baseURL + "/erp/rest/login/checkConfig" + query
+        let mainURL = configuredBaseUrl + "/erp/rest/login/checkConfig" + query
+
+        storage.setData(constant.keyIsBaseUrl, configuredBaseUrl)
 
         axios.post(mainURL, {})
             .then(response => {

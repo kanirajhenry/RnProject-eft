@@ -34,10 +34,11 @@ class Validations extends React.Component {
   //     onPress: () => { /* Do something. */ },
   //   })
   // }
+
   static snackBar = (msg, actiontext) => {
     Snackbar.show({
       text: msg,
-      duration: Snackbar.LENGTH_SHORT,
+      duration: Snackbar.LENGTH_INDEFINITE,
       action: {
         text: actiontext,
         textColor: 'green',

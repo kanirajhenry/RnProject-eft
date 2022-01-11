@@ -5,4 +5,4 @@ export * from "./sequenceGeneratorDTO"
 export * from "./participantDTO"
 export * from "./participantContactModel"
 export * from "./commentDTO"
-
+export * from "./displayAddressDTO"

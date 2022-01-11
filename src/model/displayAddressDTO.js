@@ -1,0 +1,35 @@
+export class DisplayAddressDTO {
+    name: string
+    address: string
+    addressType: string
+    headAddress: string
+    companyDetail: string
+    orgNameForAura: string
+    facRegNo: string
+    salesTermsConditions: string
+    contactNo: string
+    phone: string
+    headPhoneNo: string
+    email: string
+    fax: string
+    web: string
+    range: string
+    division: string
+    eccCode: string
+    areaCode: string
+    tinNo: string
+    cstNo: string
+    city: string
+    webAddress: string
+    contactEmailId: string
+    attachmentLocation: string
+    employerId: string
+    employerBankCode: string
+    contactDesignation: string
+    contactName: string
+    firstName: string
+    lastName: string
+    licenseNO: string
+    panNumber: string
+    signupType: string
+}

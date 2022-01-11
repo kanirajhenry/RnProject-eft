@@ -9,7 +9,9 @@ import { Validations } from "../asset/libraries/validations"
 import * as storage from "../asset/utils/asyncStore"
 import * as constant from "../constants/keys"
 import { isFieldEmpty } from "../utility/index"
-
+import Controller from '../singleton/singleton'
+import * as api from "../constants/api"
+import axios from 'axios'
 import { UserTokenDTO, LoginDTO } from "../model"
 
 const LoginScreen = ({ navigation, route }) => {
@@ -38,16 +40,13 @@ const LoginScreen = ({ navigation, route }) => {
     }, [isFocused])
 
     const getInitialData = async () => {
-        // storage.getData(constant.keyIsBaseUrl).then((gotUrl) => { setSavedUrl(gotUrl) })
-        // setSavedUrl(JSON.parse(storage.baseUrl))
-
-        setSavedUrl(storage.baseUrl)
+        (async () => { setSavedUrl(await storage.getData(constant.keyIsBaseUrl)) })()
         console.log("savedUrl: from Login screen", savedUrl)
     }
 
     const handleLogin = () => {
 
-        const loginDto = new LoginDTO()
+        loginDto = new LoginDTO()
         loginDto.cmpCode = "RGS".toUpperCase()
         loginDto.userId = "admin".toUpperCase()
         loginDto.orgCode = "naeft".toUpperCase()
@@ -58,7 +57,7 @@ const LoginScreen = ({ navigation, route }) => {
 
         dispatch(commonApiCall(null, loginDto, actionType.controller.LOGIN, actionType.loginScreen.ON_LOGIN))
 
-        setTimeout(() => { afterCompletedApicall() }, 500)
+        setTimeout(() => { afterCompletedApicall() }, 1000)
     }
 
     const handleForgetPassword = () => {
@@ -89,7 +88,8 @@ const LoginScreen = ({ navigation, route }) => {
         loginResult = loginData
 
         console.log("result.deviceToken : ----###############---->>>>>", loginResult)
-        if (!loginResult.isValid) return alert(loginResult.message);
+
+        if (!loginResult.isValid) return Validations.snackBar(loginResult.message, "DISMISS")
 
         // Have to set local stoage for entire app usage
         storage.setData(constant.keyIsOrgCode, loginResult.orgCode)
@@ -106,7 +106,9 @@ const LoginScreen = ({ navigation, route }) => {
         storage.setData(constant.keyIsPasswordExpDate, loginResult.passwordExpDate)
         storage.setData(constant.keyIsLicensePortalMap, loginResult.licensePortalMap)
 
-        // ViewController.defaults.set(model.licensePortalMap, forKey: "licensePortalMap")
+        storage.setData(constant.keyIsLoggedIn, true)
+
+        Controller.sharedInstance.registerTokenDTO()
 
         Validations.snackBar(loginResult.message)
         navigation.goBack()

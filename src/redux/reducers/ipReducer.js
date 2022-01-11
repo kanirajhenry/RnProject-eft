@@ -9,7 +9,7 @@ const ipInitialState = {
     forgetDTO: new LoginDTO(),
 }
 
-const ipReducer = (state = ipInitialState, action) => {
+export const ipReducer = (state = ipInitialState, action) => {
 
     switch (action.type) {
         case actionType.apiResponse.API_SUCCESS:
@@ -46,4 +46,3 @@ const ipReducer = (state = ipInitialState, action) => {
     }
 }
 
-export { ipReducer }

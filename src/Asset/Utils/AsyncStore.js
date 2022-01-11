@@ -1,27 +1,11 @@
 import AsyncStorage from "@react-native-community/async-storage"
 import * as constant from "../../constants/keys"
-
-export let baseUrl = ""
-export let orgCode = ""
-export let userId = ""
-export let emailId = ""
-export let password = ""
-export let branch = ""
-export let cmpCode = ""
-export let name = ""
-export let roleCode = ""
-export let userPrivileges = ""
-export let employeeCode = ""
-export let tokenId = ""
-export let passwordExpDate = ""
-export let licensePortalMap = [{ key: String, value: String }]
+import { getSavedBaseUrl } from "../../redux/actions/actions"
 
 export const setData = async (key, value) => {
     try {
         const item = JSON.stringify(value)
-        const result = await AsyncStorage.setItem(key, item).then(() => {
-            getData(key)
-        })
+        const result = await AsyncStorage.setItem(key, item)
         return result
     } catch (e) {
         throw e
@@ -29,28 +13,86 @@ export const setData = async (key, value) => {
 }
 
 export const getData = async (key) => {
-    try {
-        await AsyncStorage.getItem(key).then((storedData) => {
-            const data = JSON.parse(storedData)
-            switch (key) {
-                case constant.keyIsBaseUrl: baseUrl = data; break
-                case constant.keyIsOrgCode: orgCode = data; break
-                case constant.keyIsUserId: userId = data; break
-                case constant.keyIsEmailId: emailId = data; break
-                case constant.keyIsPassword: password = data; break
-                case constant.keyIsBranch: branch = data; break
-                case constant.keyIsCmpCode: cmpCode = data; break
-                case constant.keyIsName: name = data; break
-                case constant.keyIsRoleCode: roleCode = data; break
-                case constant.keyIsUserPrivileges: userPrivileges = data; break
-                case constant.keyIsEmployeeCode: employeeCode = data; break
-                case constant.keyIsTokenId: tokenId = data; break
-                case constant.keyIsPasswordExpDate: passwordExpDate = data; break
-                case constant.keyIsLicensePortalMap: licensePortalMap = data; break
-                default: break
-            }
-        })
-    } catch (e) {
-        throw e
-    }
+    const data = await AsyncStorage.getItem(key)
+    return JSON.parse(data)
 }
+
+// ================================================
+
+// export const getLicensePortalMap = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsLicensePortalMap)
+//     return JSON.parse(data)
+// }
+
+// export const getPasswordExpDate = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsPasswordExpDate)
+//     return JSON.parse(data)
+// }
+
+// export const getTokenId = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsTokenId)
+//     return JSON.parse(data)
+// }
+
+// export const getEmployeeCode = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsEmployeeCode)
+//     return JSON.parse(data)
+// }
+
+// export const getUserPrivileges = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsUserPrivileges)
+//     return JSON.parse(data)
+// }
+
+// export const getRoleCode = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsRoleCode)
+//     return JSON.parse(data)
+// }
+
+// export const getName = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsName)
+//     return JSON.parse(data)
+// }
+
+// export const getCmpCode = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsCmpCode)
+//     return JSON.parse(data)
+// }
+
+// export const getBranch = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsBranch)
+//     return JSON.parse(data)
+// }
+
+// export const getPassword = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsPassword)
+//     return JSON.parse(data)
+// }
+
+// export const getEmailId = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsEmailId)
+//     return JSON.parse(data)
+// }
+
+// export const getUserId = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsUserId)
+//     return JSON.parse(data)
+// }
+
+// export const getOrgCode = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsOrgCode)
+//     return JSON.parse(data)
+// }
+
+// export const getBaseUrl = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsBaseUrl)
+//     return JSON.parse(data)
+// }
+// export const getIsLoggedIn = async () => {
+//     const data = await AsyncStorage.getItem(constant.keyIsLoggedIn)
+//     return JSON.parse(data)
+// }
+
+
+
+

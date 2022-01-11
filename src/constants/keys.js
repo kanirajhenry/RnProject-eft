@@ -1,5 +1,5 @@
-export const KEY_IS_LOGIN = "isLoggedIn"
-export const KEY_ACCESS_TOKEN = "accessToken"
+export const keyIsLoggedIn = "@isLoggedIn"
+export const accessToken = "@accessToken"
 
 export const keyIsBaseUrl = "@baseUrl"
 export const keyIsPassword = "@password"

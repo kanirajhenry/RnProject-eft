@@ -7,11 +7,8 @@ const participantInitialState = {
     data: "",
     error: "",
     // commonDataModel: new CommonDataModel()
-
-    commonDataModel: {}
-
-
     // commonDataModel: new dataModel.CommonDataModel()
+    commonDataModel: {}
 }
 
 const participantReducer = (state = participantInitialState, action) => {

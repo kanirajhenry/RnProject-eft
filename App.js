@@ -104,8 +104,10 @@ const handleLogOut = (navigation) => {
   console.log("++++++++++++++++++++->", storage.userPrivileges)
   console.log("++++++++++++++++++++-> lpmap", storage.licensePortalMap)
 
-  storage.baseUrl = ""
+  // storage.isLoggedIn = false
+  // storage.baseUrl = ""
   storage.setData(constant.keyIsBaseUrl, "")
+  storage.setData(constant.keyIsLoggedIn, false)
   navigation.navigate("AuthStackScreen", { screen: 'Login' })
 }
 

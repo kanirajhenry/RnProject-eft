@@ -29,7 +29,7 @@ export class LoginDTO {
     appCode: string
     userPrivileges: [string]
     tokenId: string
-    licensePortalMap: [{key: string, value: string}]
+    licensePortalMap: [{ key: string, value: string }]
     passwordExpDate: string
 }
 
