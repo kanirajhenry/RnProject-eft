@@ -1,39 +1,84 @@
 
+import React from "react"
 import { tokenId } from "../asset/utils/asyncStore"
 import { UserTokenDTO } from "../model"
-import * as storage from "../asset/utils/asyncStore"
 import { commonGetApiCall, commonQueryParam } from "../redux/actions/actions"
 import { Item } from "react-native-paper/lib/typescript/components/List/List"
+import * as storage from "../asset/utils/asyncStore"
+import * as constant from "../constants/keys"
 
-
-export default class Singleton {
+export default class Singleton extends React.Component {
 
     static sharedInstance = Singleton.sharedInstance || new Singleton()
 
+    // constructor(props) {
+    //     super(props)
+
+    //     this.state = {
+    //         cmpCode: "",
+    //         orgCode: "",
+    //         userId: "",
+    //         tokenId: ""
+    //     }
+    // }
+
+    // componentDidMount() {
+    //     (async () => {
+    //         cmpCode = this.setState({ cmpCode: await storage.getData(constant.keyIsCmpCode) })
+    //         orgCode = this.setState({ orgCode: await storage.getData(constant.keyIsOrgCode) })
+    //         userId = this.setState({ userId: await storage.getData(constant.keyIsUserId) })
+    //         tokenId = this.setState({ tokenId: await storage.getData(constant.keyIsTokenId) })
+    //         // orgCode = await storage.getData(constant.keyIsOrgCode)
+    //         // userId = await storage.getData(constant.keyIsUserId)
+    //         // tokenId = await storage.getData(constant.keyIsTokenId)
+    //     })()
+    // }
+
     registerTokenDTO() {
 
-        tokenDTO = new UserTokenDTO()
-        tokenDTO.cmpCode = storage.cmpCode
-        tokenDTO.orgCode = storage.orgCode
-        tokenDTO.userId = storage.userId
-        tokenDTO.tokenId = storage.tokenId
-        tokenDTO.isSendNotification = false
-        tokenDTO.deviceId = "fsvLQ7YUt05PqkX9iOiRSD:APA91bH0Wi5RMMU63FOM8bdA_Kuyzszf8fz1Fp0GdFGBtraRYPqer6qvqW9QF_1SoOwzvT8bY5MhKVZu9QQk8MRvdq_BYc5DiFNB65JUFqSvT1fAhF3TviNn2adV-gF5z299TmrBfiNR"
-        return tokenDTO
+        // let cmpCode = ""
+        // let orgCode = ""
+        // let userId = ""
+        // let tokenId = "jk"
 
         // tokenDTO = new UserTokenDTO()
-        // tokenDTO.cmpCode = "RGS"
-        // tokenDTO.orgCode = "dmse".toUpperCase()
-        // tokenDTO.userId = "admin".toUpperCase()
+        // tokenDTO.cmpCode = cmpCode
+        // tokenDTO.orgCode = orgCode
+        // tokenDTO.userId = userId
+        // tokenDTO.tokenId = tokenId
+        // tokenDTO.isSendNotification = false
         // tokenDTO.deviceId = "fsvLQ7YUt05PqkX9iOiRSD:APA91bH0Wi5RMMU63FOM8bdA_Kuyzszf8fz1Fp0GdFGBtraRYPqer6qvqW9QF_1SoOwzvT8bY5MhKVZu9QQk8MRvdq_BYc5DiFNB65JUFqSvT1fAhF3TviNn2adV-gF5z299TmrBfiNR"
-        // tokenDTO.tokenId = "1000:3efcdb5493cf44f50c473d5f6da81846374475e8435ab0bd:105d6dc43ec64f169e04d71248500abe6dafceb72ac2ba53"
         // return tokenDTO
+
+        // tokenDTO = new UserTokenDTO()
+        // tokenDTO.cmpCode = storage.cmpCode
+        // tokenDTO.orgCode = storage.orgCode
+        // tokenDTO.userId = storage.userId
+        // tokenDTO.tokenId = storage.tokenId
+        // tokenDTO.isSendNotification = false
+        // tokenDTO.deviceId = "fsvLQ7YUt05PqkX9iOiRSD:APA91bH0Wi5RMMU63FOM8bdA_Kuyzszf8fz1Fp0GdFGBtraRYPqer6qvqW9QF_1SoOwzvT8bY5MhKVZu9QQk8MRvdq_BYc5DiFNB65JUFqSvT1fAhF3TviNn2adV-gF5z299TmrBfiNR"
+        // return tokenDTO
+
+        tokenDTO = new UserTokenDTO()
+        tokenDTO.cmpCode = "RGS"
+        tokenDTO.orgCode = "naeft".toUpperCase()
+        tokenDTO.userId = "admin".toUpperCase()
+        tokenDTO.deviceId = "fsvLQ7YUt05PqkX9iOiRSD:APA91bH0Wi5RMMU63FOM8bdA_Kuyzszf8fz1Fp0GdFGBtraRYPqer6qvqW9QF_1SoOwzvT8bY5MhKVZu9QQk8MRvdq_BYc5DiFNB65JUFqSvT1fAhF3TviNn2adV-gF5z299TmrBfiNR"
+        tokenDTO.tokenId = "1000:3efcdb5493cf44f50c473d5f6da81846374475e8435ab0bd:105d6dc43ec64f169e04d71248500abe6dafceb72ac2ba53"
+        return tokenDTO
+    }
+
+    getTokenDTO() {
+        return commonQueryParam(this.registerTokenDTO(), "B")
     }
 
     getDisplayAddress() {
-        return item = { queryItem: commonQueryParam(this.registerTokenDTO(), "B"), data: null }
+        return item = { queryItem: this.getTokenDTO(), data: null }
     }
 
+    getFiscalYearList() {
+        return item = { queryItem: this.getTokenDTO(), data: null }
+    }
 
     getOneTimeConstants() {
 

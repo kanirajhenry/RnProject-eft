@@ -10,7 +10,7 @@ import * as constant from './src/constants/keys'
 import * as appColor from './src/constants/colors'
 import * as storage from './src/asset/utils/asyncStore'
 
-import HomeScreen1 from './src/screens/homeScreen1'
+import Dashboard from './src/screens/dashboard'
 import HomeScreen2 from './src/screens/homeScreen2'
 import HomeScreen3 from './src/screens/homeScreen3'
 
@@ -129,7 +129,7 @@ const customHeader = (isHeaderShown) => {
 function HomeStackScreen({ navigation }) {
   return (
     <HomeStack.Navigator screenOptions={({ navigation }) => (customHeader(true))} >
-      <HomeStack.Screen name='Home1' component={HomeScreen1} options={{
+      <HomeStack.Screen name='Dashboard' component={Dashboard} options={{
         headerLeft: () => <Button title="Menu" color={appColor.headerLeft} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer('drawerOpenRight'))} />,
         headerRight: () => <Button title="Logout" color={appColor.headerRight} onPress={() => { handleLogOut(navigation) }}
         />

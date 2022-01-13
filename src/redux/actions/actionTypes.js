@@ -31,7 +31,8 @@ export const dashboard = {
 }
 
 export const singletonScreen = {
-    ON_GET_DISPLAY_ADDRESS: "ON_GET_DISPLAY_ADDRESS"
+    ON_GET_DISPLAY_ADDRESS: "ON_GET_DISPLAY_ADDRESS",
+    ON_GET_FISCAL_YEAR_LIST: "ON_GET_FISCAL_YEAR_LIST"
 }
 
 

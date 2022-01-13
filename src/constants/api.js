@@ -6,7 +6,7 @@ export const configuredUrl = (url) => {
     return getUrl(url).protocol + getUrl(url).host
 }
 
-export let baseUrl                  = "https://demo.effitrac.com/"
+export let baseUrl                  = "https://demo.effitrac.com/13"
 
 export const getMultipleLedgers     = "/erp/rest/accounts/ledger/getMultipleLedgers"
 
@@ -14,8 +14,8 @@ export const retrieveSegement       = "/erp/rest/common/retrieveSegement"
 export const onChangeSegment        = "/erp/rest/common/onChangeSegment"
 
 export const chartview              = "/erp/rest/crm/crmLeads/chartview"
-export const getCrmStatusOrderList  = "/erp/rest/crm/commonData/getCrmStatusOrderList/"
-export const retrieveTierId         = "/erp/rest/crm/crmLeads/retrieveTierId/"
+export const getCrmStatusOrderList  = "/erp/rest/crm/commonData/getCrmStatusOrderList"
+export const retrieveTierId         = "/erp/rest/crm/crmLeads/retrieveTierId"
 
 export const gstSummaryList         = "/erp/rest/gstDashboard/gstSummaryList"
 export const productCreate          = "/erp/rest/product/create/"

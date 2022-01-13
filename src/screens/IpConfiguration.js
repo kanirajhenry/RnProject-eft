@@ -16,8 +16,9 @@ import * as util from "../utility"
 import * as alerts from "../constants/alerts"
 import * as constant from '../constants/keys'
 import * as storage from "../asset/utils/asyncStore"
+import * as api from "../constants/api"
 import axios from 'axios'
-import { Validations } from '../asset/libraries/validations'
+import validations from '../asset/libraries/validations'
 
 const IpConfiguration = ({ navigation }) => {
 
@@ -33,7 +34,11 @@ const IpConfiguration = ({ navigation }) => {
     const [savedUrl, setSavedUrl] = React.useState("")
 
     useEffect(() => {
-        (async () => { setSavedUrl(await storage.getData(constant.keyIsBaseUrl)) })()
+        (async () => {
+            await storage.getData(constant.keyIsBaseUrl)
+                .then(localBaseUrl => setSavedUrl(localBaseUrl))
+                .catch(error => console.log("IPconfig local data fetch Error: ", error))
+        })()
         console.log("savedUrl: from IP config screen", savedUrl, "text is ::: > ", text)
     }, [])
 
@@ -56,7 +61,7 @@ const IpConfiguration = ({ navigation }) => {
 
     const handleIpConfig = () => {
 
-        let $url = ""
+        var $url = ""
 
         if (selectedValue != "") {
             $url = selectedValue
@@ -66,9 +71,11 @@ const IpConfiguration = ({ navigation }) => {
             $url = savedUrl
         }
 
-        console.log("Selected picker value  : >>>>", selectedValue)
-        console.log("Entered text value     : >>>>", text)
-        console.log("Saved Url value        : >>>>", savedUrl)
+        console.log(
+            "Selected picker value  : >>>>", selectedValue,
+            "Entered text value     : >>>>", text,
+            "Saved Url value        : >>>>", savedUrl
+        )
 
         if (util.isFieldEmpty($url)) return alert(alerts.emptyUrl)
         if (!isValidUrl($url)) return alert(alerts.urlErr)
@@ -86,19 +93,19 @@ const IpConfiguration = ({ navigation }) => {
         const queryParam = { "cmpCode": "RGS" }
         const query = commonQueryParam(queryParam, "A")
 
-        let mainURL = configuredBaseUrl + "/erp/rest/login/checkConfig" + query
+        let mainURL = configuredBaseUrl + api.checkConfig + query
 
         storage.setData(constant.keyIsBaseUrl, configuredBaseUrl)
 
         axios.post(mainURL, {})
             .then(response => {
                 if (response.data == "ACCEPTED") {
-                    Validations.snackBar("IP Configuration Success")
+                    validations.snackBar("IP Configuration Success")
                     navigation.goBack()
                 } else {
-                    Validations.snackBar("IP Configuration Failed")
+                    validations.snackBar("IP Configuration Failed")
                 }
-            })
+            }).catch(error => console.log("IpConfiguration Catched Error:", error))
     }
 
     return (
@@ -146,7 +153,7 @@ const IpConfiguration = ({ navigation }) => {
                     onValueChange={(itemValue, itemIndex) => { handleIpChange(itemValue, itemIndex) }}>
 
                     <Picker.Item label="Demo server - https://demo.effitrac.com" value="https://demo.effitrac.com" />
-                    <Picker.Item label="MSME - https://msme.effitrac.com" value="https://msme.effitrac.com" />
+                    {/* <Picker.Item label="MSME - https://msme.effitrac.com" value="https://msme.effitrac.com" /> */}
                     <Picker.Item label="India - https://live.effigst.com" value="https://live.effigst.com" />
                     <Picker.Item label="Rest of the word - https://live.effitrac.ae" value="https://live.effitrac.ae" />
                     <Picker.Item label="Demo server India - https://demo.effitrac.ae" value="https://demo.effitrac.ae" />

@@ -38,7 +38,7 @@ class Validations extends React.Component {
   static snackBar = (msg, actiontext) => {
     Snackbar.show({
       text: msg,
-      duration: Snackbar.LENGTH_INDEFINITE,
+      duration: Snackbar.LENGTH_LONG,
       action: {
         text: actiontext,
         textColor: 'green',
@@ -51,4 +51,4 @@ class Validations extends React.Component {
 }
 
 
-export { Validations }
+export { Validations as default }

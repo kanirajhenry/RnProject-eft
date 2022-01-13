@@ -17,7 +17,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useScrollToTop } from '@react-navigation/native'
 import SegmentedControl from "rn-segmented-control"
 import * as appColor from '../constants/colors'
-import { Validations } from "../asset/libraries/validations"
+import validations from '../asset/libraries/validations'
 import * as storage from "../asset/utils/asyncStore"
 import * as constant from "../constants/keys"
 import { isFieldEmpty } from '../utility'
@@ -102,24 +102,55 @@ const Participant = ({ navigation }) => {
         })
 
     }, [navigation, tabIndex, userName, GSTIN, placeOfSupply,
-        email, mobile, comment, country, state, postalCode, city, street, leadStatus, leadSource,
-        leadOwner, value, phoneNo, contactName, leadDesignation, title, tags, industryType, leadTerritory,
-        leadType, probability, segment1, segment2, segment3, segment4, segment5, segment6, segment7, segment8, segment9, segment10]
-    )
+        email, mobile, comment, country, state, postalCode, city, street, leadStatus, leadSource, leadOwner, value,
+        phoneNo, contactName, leadDesignation, title, tags, industryType, leadTerritory, leadType, probability,
+        segment1, segment2, segment3, segment4, segment5, segment6, segment7, segment8, segment9, segment10
+    ])
+
+    const [cmpCode, setCmpCode] = useState(null)
+    const [orgCode, setorgCode] = useState(null)
+    const [userId, setUserId] = useState(null)
 
     useEffect(() => {
 
-        // storage.setData(constant.keyIsEmailId, "kanirajhenryeft13@hotmail.com")
-        // storage.setData(constant.keyIsEmployeeCode, "")
+        // (async () => {
+        //     setCmpCode(await storage.getData(constant.keyIsCmpCode))
+        //     setorgCode(await storage.getData(constant.keyIsOrgCode))
+        //     setUserId(await storage.getData(constant.keyIsUserId))
+        // })()
 
-        console.log("Called from useEffect() 222222")
+        (async () => {
+            // setCmpCode(await storage.getData(constant.keyIsCmpCode))
+            // setorgCode(await storage.getData(constant.keyIsOrgCode))
+            // setUserId(await storage.getData(constant.keyIsUserId))
+
+            await storage.getData(constant.keyIsCmpCode).then(localCmpCode => {
+                setCmpCode(localCmpCode)
+            }).catch(error => console.log(error))
+
+            await storage.getData(constant.keyIsOrgCode).then(localOrgCode => {
+                setCmpCode(localOrgCode)
+            }).catch(error => console.log(error))
+
+            await storage.getData(constant.keyIsUserId).then(localUserId => {
+                setCmpCode(localUserId)
+            }).catch(error => console.log(error))
+
+        })()
+
+        console.log("Called from useEffect()")
+
         // fetchPlaceOfSupply()
+
         return () => { // Called when didMount && UnMount
+            validations.snackBar("Called from useEffect UnMount")
             clearFields()
             setupDefaultSwitch()
             // setTimeout(() => { userNameRef.current.focus() }, 500)
         }
-        if (isFocused) { alert("Focus Called For tesing purpose") }
+
+        if (isFocused) { validations.snackBar("Focus Called For tesing purpose") }
+
     }, [isFocused])
 
     const fetchPlaceOfSupply = () => {
@@ -134,7 +165,7 @@ const Participant = ({ navigation }) => {
             "": commonQueryParam(tokenDTO, "B"),
             "gstin": "32HYZXI134764RF"
         }
-        
+
         const query = commonQueryParam(obj, "C")
 
         dispatch(commonGetApiCall(query, null,
@@ -217,7 +248,7 @@ const Participant = ({ navigation }) => {
 
     let participantDto = new ParticipantDTO()
     let contactModel = new ParticipantContactModel()
-    let gstinDatasList = new CommonDataModel()
+    let gstinDataList = new CommonDataModel()
 
     function createParticipant() {
 
@@ -225,8 +256,8 @@ const Participant = ({ navigation }) => {
 
         const isCustomer = tabIndex === 0, isVendor = tabIndex === 1, isLead = tabIndex === 2
 
-        participantDto.cmpCode = storage.cmpCode
-        participantDto.orgCode = storage.orgCode
+        participantDto.cmpCode = cmpCode
+        participantDto.orgCode = orgCode
         participantDto.participantName = userName
 
         participantDto.tinNum = GSTIN
@@ -239,7 +270,7 @@ const Participant = ({ navigation }) => {
         }
 
         participantDto.contactMobile = mobile
-        participantDto.userId = storage.userId
+        participantDto.userId = userId
 
         if (isCustomer || isVendor && !isLead) {
             participantDto.currencyCodes = "INR"
@@ -258,7 +289,7 @@ const Participant = ({ navigation }) => {
             participantDto.tierId = ""
             participantDto.contactDesignation = "Staff" // Show Picker
             participantDto.partType = "Lead"
-            participantDto.leadOwner = storage.userId
+            participantDto.leadOwner = userId
             participantDto.leadSource = "Partner"
             participantDto.partiContactList = []
             participantDto.isContractor = "Y"
@@ -278,9 +309,9 @@ const Participant = ({ navigation }) => {
             contactModel.city = city
             contactModel.country = "" // FIXME: ??? Have to consider again  
             contactModel.zipCode = postalCode // "568954"// 
-            contactModel.userId = storage.userId
-            contactModel.cmpCode = storage.cmpCode
-            contactModel.orgCode = storage.orgCode
+            contactModel.userId = userId
+            contactModel.cmpCode = cmpCode
+            contactModel.orgCode = orgCode
         }
 
         participantDto.participantContactList = [new ParticipantContactModel()]
@@ -292,9 +323,9 @@ const Participant = ({ navigation }) => {
             contactModel.city = city
             contactModel.country = "" // FIXME: ??? Have to consider again  
             contactModel.zipCode = postalCode // "568954"
-            contactModel.userId = storage.userId
-            contactModel.cmpCode = storage.cmpCode
-            contactModel.orgCode = storage.orgCode
+            contactModel.userId = userId
+            contactModel.cmpCode = cmpCode
+            contactModel.orgCode = orgCode
         }
         contactModel.province = "37" // "placeOfSupply"
         contactModel.addressType = "HEADQ"
@@ -302,9 +333,9 @@ const Participant = ({ navigation }) => {
 
         if (isLead && !isFieldEmpty(comment)) {
             let commentDto = new CommentDTO()
-            commentDto.cmpCode = storage.cmpCode
-            commentDto.orgCode = storage.orgCode
-            commentDto.user = storage.userId
+            commentDto.cmpCode = cmpCode
+            commentDto.orgCode = orgCode
+            commentDto.user = userId
             commentDto.opFlag = "I"
             commentDto.type = "LEAD"
             commentDto.comment = comment

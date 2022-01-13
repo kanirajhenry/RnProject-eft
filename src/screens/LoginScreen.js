@@ -4,12 +4,12 @@ import { useIsFocused } from "@react-navigation/native"
 import * as actionType from '../redux/actions/actionTypes'
 import commonApiCall, { commonQueryParam } from '../redux/actions/actions'
 import { useDispatch, useSelector } from 'react-redux'
-import { Validations } from "../asset/libraries/validations"
+import validations from '../asset/libraries/validations'
 
 import * as storage from "../asset/utils/asyncStore"
 import * as constant from "../constants/keys"
 import { isFieldEmpty } from "../utility/index"
-import Controller from '../singleton/singleton'
+import singleton from '../singleton/singleton'
 import * as api from "../constants/api"
 import axios from 'axios'
 import { UserTokenDTO, LoginDTO } from "../model"
@@ -40,7 +40,13 @@ const LoginScreen = ({ navigation, route }) => {
     }, [isFocused])
 
     const getInitialData = async () => {
-        (async () => { setSavedUrl(await storage.getData(constant.keyIsBaseUrl)) })()
+        // (async () => { setSavedUrl(await storage.getData(constant.keyIsBaseUrl)) })()
+
+        (async () => await storage.getData(constant.keyIsBaseUrl)
+            .then(localBaseUrl => setSavedUrl(localBaseUrl))
+            .catch(error => console.log(error))
+        )()
+
         console.log("savedUrl: from Login screen", savedUrl)
     }
 
@@ -89,29 +95,59 @@ const LoginScreen = ({ navigation, route }) => {
 
         console.log("result.deviceToken : ----###############---->>>>>", loginResult)
 
-        if (!loginResult.isValid) return Validations.snackBar(loginResult.message, "DISMISS")
+        switch (loginResult.isValid) {
+            case true:
+                // Have to set local stoage for entire app usage
+                storage.setData(constant.keyIsOrgCode, loginResult.orgCode)
+                storage.setData(constant.keyIsUserId, loginResult.userId)
+                storage.setData(constant.keyIsEmailId, loginResult.emailId)
+                storage.setData(constant.keyIsPassword, loginResult.password)
+                storage.setData(constant.keyIsBranch, loginResult.branch)
+                storage.setData(constant.keyIsCmpCode, loginResult.cmpCode)
+                storage.setData(constant.keyIsName, loginResult.name)
+                storage.setData(constant.keyIsRoleCode, loginResult.roleCode)
+                storage.setData(constant.keyIsUserPrivileges, loginResult.userPrivileges)
+                storage.setData(constant.keyIsEmployeeCode, loginResult.employeeCode)
+                storage.setData(constant.keyIsTokenId, loginResult.tokenId)
+                storage.setData(constant.keyIsPasswordExpDate, loginResult.passwordExpDate)
+                storage.setData(constant.keyIsLicensePortalMap, loginResult.licensePortalMap)
 
-        // Have to set local stoage for entire app usage
-        storage.setData(constant.keyIsOrgCode, loginResult.orgCode)
-        storage.setData(constant.keyIsUserId, loginResult.userId)
-        storage.setData(constant.keyIsEmailId, loginResult.emailId)
-        storage.setData(constant.keyIsPassword, loginResult.password)
-        storage.setData(constant.keyIsBranch, loginResult.branch)
-        storage.setData(constant.keyIsCmpCode, loginResult.cmpCode)
-        storage.setData(constant.keyIsName, loginResult.name)
-        storage.setData(constant.keyIsRoleCode, loginResult.roleCode)
-        storage.setData(constant.keyIsUserPrivileges, loginResult.userPrivileges)
-        storage.setData(constant.keyIsEmployeeCode, loginResult.employeeCode)
-        storage.setData(constant.keyIsTokenId, loginResult.tokenId)
-        storage.setData(constant.keyIsPasswordExpDate, loginResult.passwordExpDate)
-        storage.setData(constant.keyIsLicensePortalMap, loginResult.licensePortalMap)
+                storage.setData(constant.keyIsLoggedIn, true)
 
-        storage.setData(constant.keyIsLoggedIn, true)
+                singleton.sharedInstance.registerTokenDTO()
 
-        Controller.sharedInstance.registerTokenDTO()
+                validations.snackBar(loginResult.message)
+                navigation.goBack()
+                break
+            case false:
+                validations.snackBar(loginResult.message, "DISMISS")
+                break
+            default:
+                break
+        }
 
-        Validations.snackBar(loginResult.message)
-        navigation.goBack()
+        // if (!loginResult.isValid) return validations.snackBar(loginResult.message, "DISMISS")
+        // // Have to set local stoage for entire app usage
+        // storage.setData(constant.keyIsOrgCode, loginResult.orgCode)
+        // storage.setData(constant.keyIsUserId, loginResult.userId)
+        // storage.setData(constant.keyIsEmailId, loginResult.emailId)
+        // storage.setData(constant.keyIsPassword, loginResult.password)
+        // storage.setData(constant.keyIsBranch, loginResult.branch)
+        // storage.setData(constant.keyIsCmpCode, loginResult.cmpCode)
+        // storage.setData(constant.keyIsName, loginResult.name)
+        // storage.setData(constant.keyIsRoleCode, loginResult.roleCode)
+        // storage.setData(constant.keyIsUserPrivileges, loginResult.userPrivileges)
+        // storage.setData(constant.keyIsEmployeeCode, loginResult.employeeCode)
+        // storage.setData(constant.keyIsTokenId, loginResult.tokenId)
+        // storage.setData(constant.keyIsPasswordExpDate, loginResult.passwordExpDate)
+        // storage.setData(constant.keyIsLicensePortalMap, loginResult.licensePortalMap)
+
+        // storage.setData(constant.keyIsLoggedIn, true)
+
+        // singleton.sharedInstance.registerTokenDTO()
+
+        // validations.snackBar(loginResult.message)
+        // navigation.goBack()
     }
 
     const handleOpenUrl = () => {
@@ -131,7 +167,6 @@ const LoginScreen = ({ navigation, route }) => {
             <Button title="Tutorial <#> Ip Configuration" onPress={() => handleOpenUrl()} />
         </View>
     )
-
 }
 
 export default LoginScreen

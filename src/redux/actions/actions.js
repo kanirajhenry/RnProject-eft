@@ -2,13 +2,14 @@ import * as actionType from "./actionTypes"
 import * as api from "../../constants/api"
 import * as alerts from "../../constants/alerts"
 import * as utility from "../../utility"
-import { Alert } from "react-native"
 import * as commonApi from "./commonApi"
+import { Alert } from "react-native"
 
 import * as constant from '../../constants/keys'
 import * as storage from "../../asset/utils/asyncStore"
 import { UserTokenDTO } from "../../model"
-import Controller from "../../singleton/singleton"
+import singleton from "../../singleton/singleton"
+import validations from "../../asset/libraries/validations"
 
 export const changeInternetState = isConnected => {
   alert("0000000")
@@ -96,7 +97,68 @@ const getPathUrl = triggeredAction => {
 
     case actionType.singletonScreen.ON_GET_DISPLAY_ADDRESS: return api.getOrgAddress
 
+    case actionType.singletonScreen.ON_GET_FISCAL_YEAR_LIST: return api.getFiscalYearList
+
     default: return ""
+  }
+}
+
+const getQuerUrl = (query, dataObj, triggeredAction) => {
+
+  (async () => api.baseUrl = await storage.getData(constant.keyIsBaseUrl))()
+
+  // (async () => await storage.getData(constant.keyIsBaseUrl)
+  //   .then(localBaseUrl => api.baseUrl = localBaseUrl)
+  //   .catch(error => console.log(error))
+  // )()
+
+  const joinedQuery = (query === null) ? "" : query
+  const queryUrl = api.baseUrl + getPathUrl(triggeredAction) + joinedQuery
+
+  if (api.baseUrl == "") return alert("BASE URL IS EMPTY")
+  if (api.baseUrl == undefined) return alert("BASE URL IS undefined")
+
+  return queryUrl
+}
+
+
+const genericApiCallSuccess = (response, triggeredAction, dispatch, className) => {
+
+  console.log(JSON.stringify(response))
+
+  let payload = {}
+  payload = response.data
+
+  let userTokenDTO = new UserTokenDTO()
+  userTokenDTO = payload
+
+  FIXME: // 1. If you want add some data into the obj
+  TODO: // payload.accessToken = "someAccessToken" 
+  console.log("Api call success", JSON.stringify(payload))
+  // alert(JSON.stringify(userTokenDTO.tokenId))
+
+  switch (triggeredAction) {
+
+    case actionType.loginScreen.ON_LOGIN:
+      returnToDispatch(dispatch, actionType.apiResponse.API_SUCCESS, payload, className, triggeredAction)
+      break
+
+    default:
+      switch (userTokenDTO.responseCode) {
+        case "1":
+          alert("response code is 1")
+          if (userTokenDTO.response != null && userTokenDTO.response.length > 0) {
+            returnToDispatch(dispatch, actionType.apiResponse.API_SUCCESS, payload, className, triggeredAction)
+          }
+          break
+        case "0":
+          alert("response code is 0")
+          validations.snackBar("responseCode Is Zero: action Is", triggeredAction, userTokenDTO.responseCode)
+          if (userTokenDTO.errorMessages.length > 0) alert(JSON.stringify(userTokenDTO.errorMessages))
+          break
+
+        default: break
+      }
   }
 }
 
@@ -104,49 +166,36 @@ const commonGetApiCall = (query, dataObj, className, triggeredAction) => {
 
   return dispatch => {
 
-    (async () => {
-      const baseUrlString = await storage.getData(constant.keyIsBaseUrl)
-      api.baseUrl = baseUrlString
-    })()
+    // // // (async () => api.baseUrl = await storage.getData(constant.keyIsBaseUrl))()
 
-    const data = dataObj === null ? {} : dataObj
-    const joinedQuery = query === null ? "" : query
-    const queryUrl = api.baseUrl + getPathUrl(triggeredAction) + joinedQuery
+    // (async () => await storage.getData(constant.keyIsBaseUrl)
+    //   .then(localBaseUrl => api.baseUrl = localBaseUrl)
+    //   .catch(error => console.log(error))
+    // )()
 
-    console.log("queryUrl::: >>>>", queryUrl)
+    // const data = (dataObj === null) ? {} : dataObj
+    // const joinedQuery = (query === null) ? "" : query
+    // const queryUrl = api.baseUrl + getPathUrl(triggeredAction) + joinedQuery
+    // const headers = { "Content-Type": "application/json", "Access-Token": "" }
 
-    if (api.baseUrl == "") return alert("Get Api Base Url is Empty")
-    if (api.baseUrl == undefined) return alert("Get Api Base Url is undefined")
+    // // alert(queryUrl)
+    // console.log("Query Url ::: >>>>", queryUrl)
+    // // return
 
-    var headers = { "Content-Type": "application/json", "Access-Token": "" }
+    // if (api.baseUrl == "") return alert("Get Api Base Url is Empty")
+    // if (api.baseUrl == undefined) return alert("Get Api Base Url is undefined")
 
+    // console.log("TOKEN DTO: ----->", data)
+
+    const queryUrl = getQuerUrl(query, dataObj, triggeredAction)
+    const data = (dataObj === null) ? {} : dataObj
     console.log("TOKEN DTO: ----->", data)
 
     commonApi
-      .getDataApi(queryUrl, "")
-      .then(response => {
-
-        let payload = {}
-        payload = response.data
-
-        let userTokenDTO = new UserTokenDTO()
-        userTokenDTO = payload
-
-        FIXME: // 1. If you want add some data into the obj
-        TODO: // payload.accessToken = "someAccessToken" 
-        // console.log("GET Api call success", JSON.stringify(payload))
-        console.log("GET Api call success", payload)
-
-        if (userTokenDTO.isTokenChanged != null && userTokenDTO.isTokenChanged) {
-          storage.setData(constant.keyIsTokenId, userTokenDTO.tokenId)
-          Controller.sharedInstance.registerTokenDTO()
-        }
-
-        returnToDispatch(dispatch, actionType.apiResponse.API_SUCCESS, payload, className, triggeredAction)
-        // returnToScreenNavigation(dispatch, actionType.API_SUCCESS, className);
-      })
+      .getDataApi(queryUrl, {})
+      .then(response => genericApiCallSuccess(response, triggeredAction, dispatch, className))
       .catch(error => {
-        console.log("GET Api call Failed", error)
+        console.log("GET API FAILED ACTION IS: ", triggeredAction, error)
         alert(error)
         returnToDispatch(dispatch, actionType.apiResponse.API_FAILURE, error, className, triggeredAction)
         handleError(error, dispatch)
@@ -156,49 +205,17 @@ const commonGetApiCall = (query, dataObj, className, triggeredAction) => {
 
 const commonApiCall = (query, dataObj, className, triggeredAction) => {
 
+  const queryUrl = getQuerUrl(query, dataObj, triggeredAction)
+  const headers = { "Content-Type": "application/json", "Access-Token": "" }
+  const data = (dataObj === null) ? {} : dataObj
+  console.log("TOKEN DTO: ----->", data)
 
   return dispatch => {
-
-    (async () => {
-      const baseUrlString = await storage.getData(constant.keyIsBaseUrl)
-      api.baseUrl = baseUrlString
-    })()
-
-    const data = dataObj === null ? {} : dataObj
-    const joinedQuery = query === null ? "" : query
-    const queryUrl = api.baseUrl + getPathUrl(triggeredAction) + joinedQuery
-
-    if (api.baseUrl == "") return alert("Base Url is Empty")
-    if (api.baseUrl == undefined) return alert("Base Url is undefined")
-
-    var headers = { "Content-Type": "application/json", "Access-Token": "" }
-
-    console.log("TOKEN DTO: ----->", data)
-
     commonApi
       .postDataApi(queryUrl, "", data, headers)
-      .then(response => {
-
-        let payload = {}
-        payload = response.data
-
-        let userTokenDTO = new UserTokenDTO()
-        userTokenDTO = payload
-
-        FIXME: // 1. If you want add some data into the obj
-        TODO: // payload.accessToken = "someAccessToken" 
-        console.log("Api call success", JSON.stringify(payload))
-
-        if (userTokenDTO.isTokenChanged != null && userTokenDTO.isTokenChanged) {
-          storage.setData(constant.keyIsTokenId, userTokenDTO.tokenId)
-          Controller.sharedInstance.registerTokenDTO()
-        }
-
-        returnToDispatch(dispatch, actionType.apiResponse.API_SUCCESS, payload, className, triggeredAction)
-        // returnToScreenNavigation(dispatch, actionType.API_SUCCESS, className);
-      })
+      .then(response => genericApiCallSuccess(response, triggeredAction, dispatch, className))
       .catch(error => {
-        console.warn("Api call Failed", error)
+        console.warn("POST API FAILED", error)
         alert(error)
         returnToDispatch(dispatch, actionType.apiResponse.API_FAILURE, error, className, triggeredAction)
         handleError(error, dispatch)
