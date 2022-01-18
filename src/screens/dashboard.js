@@ -2,8 +2,7 @@ import { useNavigation } from '@react-navigation/native'
 import React, { useState, useEffect } from 'react'
 import { Text, View, Button } from 'react-native'
 import * as storage from "../asset/utils/asyncStore"
-import { getToken } from "../asset/utils/asyncStore"
-import { keyIsBaseUrl, keyIsLoggedIn, keyIsOrgCode } from '../constants/keys'
+import * as constant from '../constants/keys'
 
 import { useSelector, useDispatch } from 'react-redux'
 import singleton from '../singleton/singleton'
@@ -33,14 +32,13 @@ const Dashboard = () => {
 
         if (isFocused) {
             (async () => {
-                await storage.getData(keyIsLoggedIn).then(isLoggedIn => {
-                    switch (isLoggedIn) {
-                        case true:
-                            validations.snackBar("Successfully came to the Dashboard")
-                            callSingletonApiCalls()
-                            break
-                        case false: navigation.navigate("AuthStackScreen", { screen: "Login" })
-                    }
+                await storage.getData(constant.keyIsLoggedIn).then(isLoggedIn => {
+
+                    if (!isLoggedIn) navigation.navigate("AuthStackScreen", { screen: "Login" }); return;
+
+                    validations.snackBar("Successfully came to the Dashboard")
+                    callSingletonApiCalls()
+
                 }).catch(error => console.log(error))
             })()
         }
