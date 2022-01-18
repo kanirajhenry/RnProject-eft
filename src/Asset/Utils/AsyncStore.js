@@ -8,13 +8,19 @@ export const setData = async (key, value) => {
         const result = await AsyncStorage.setItem(key, item)
         return result
     } catch (e) {
+        console.log("Catched error from setData local storage Error: ", e)
         throw e
     }
 }
 
 export const getData = async (key) => {
-    const data = await AsyncStorage.getItem(key)
-    return JSON.parse(data)
+    try {
+        const data = await AsyncStorage.getItem(key)
+        return JSON.parse(data)
+    } catch (e) {
+        console.log("Catched error from getData local storage Error: ", e)
+        throw e
+    }
 }
 
 // ================================================

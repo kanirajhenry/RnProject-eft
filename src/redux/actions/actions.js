@@ -190,6 +190,7 @@ const commonGetApiCall = (query, dataObj, className, triggeredAction) => {
     const queryUrl = getQuerUrl(query, dataObj, triggeredAction)
     const data = (dataObj === null) ? {} : dataObj
     console.log("TOKEN DTO: ----->", data)
+    console.log("Effitrac main url : =================", queryUrl)
 
     commonApi
       .getDataApi(queryUrl, {})
@@ -215,7 +216,7 @@ const commonApiCall = (query, dataObj, className, triggeredAction) => {
       .postDataApi(queryUrl, "", data, headers)
       .then(response => genericApiCallSuccess(response, triggeredAction, dispatch, className))
       .catch(error => {
-        console.warn("POST API FAILED", error)
+        console.warn("POST API FAILED ACTION IS: ", triggeredAction, error)
         alert(error)
         returnToDispatch(dispatch, actionType.apiResponse.API_FAILURE, error, className, triggeredAction)
         handleError(error, dispatch)
@@ -234,9 +235,9 @@ handleError = (error, dispatch) => {
         Alert.alert("", alerts.UNAUTHENTIC_USER, [{ text: "OK", onPress: () => resetAsyncData(dispatch) }])
       }
     } else if (error.message) {
-      utility.showAlert("error.message")
+      utility.showAlert(error.message)
     } else {
-      utility.showAlert("JSON.stringify(error)")
+      utility.showAlert(JSON.stringify(error))
     }
   }, 500)
 }

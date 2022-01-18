@@ -33,8 +33,11 @@ const Dashboard = () => {
         if (isFocused) {
             (async () => {
                 await storage.getData(constant.keyIsLoggedIn).then(isLoggedIn => {
-
-                    if (!isLoggedIn) navigation.navigate("AuthStackScreen", { screen: "Login" }); return;
+                    console.log("isLoggedIn >>>>>", isLoggedIn)
+                    if (!isLoggedIn) {
+                        navigation.navigate("AuthStackScreen", { screen: "Login" })
+                        return
+                    }
 
                     validations.snackBar("Successfully came to the Dashboard")
                     callSingletonApiCalls()
