@@ -114,7 +114,7 @@ const LoginScreen = ({ navigation, route }) => {
 
                 storage.setData(constant.keyIsLoggedIn, true)
 
-                singleton.sharedInstance.registerTokenDTO()
+                api.loadingSharedPreferences()
 
                 validations.snackBar(loginResult.message)
                 navigation.goBack()
@@ -122,8 +122,8 @@ const LoginScreen = ({ navigation, route }) => {
             case false:
                 validations.snackBar(loginResult.message, "DISMISS")
                 break
-            default:
-                break
+
+            default: break
         }
 
         // if (!loginResult.isValid) return validations.snackBar(loginResult.message, "DISMISS")
