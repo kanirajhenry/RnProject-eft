@@ -126,29 +126,6 @@ const LoginScreen = ({ navigation, route }) => {
 
             default: break
         }
-
-        // if (!loginResult.isValid) return validations.snackBar(loginResult.message, "DISMISS")
-        // // Have to set local stoage for entire app usage
-        // storage.setData(constant.keyIsOrgCode, loginResult.orgCode)
-        // storage.setData(constant.keyIsUserId, loginResult.userId)
-        // storage.setData(constant.keyIsEmailId, loginResult.emailId)
-        // storage.setData(constant.keyIsPassword, loginResult.password)
-        // storage.setData(constant.keyIsBranch, loginResult.branch)
-        // storage.setData(constant.keyIsCmpCode, loginResult.cmpCode)
-        // storage.setData(constant.keyIsName, loginResult.name)
-        // storage.setData(constant.keyIsRoleCode, loginResult.roleCode)
-        // storage.setData(constant.keyIsUserPrivileges, loginResult.userPrivileges)
-        // storage.setData(constant.keyIsEmployeeCode, loginResult.employeeCode)
-        // storage.setData(constant.keyIsTokenId, loginResult.tokenId)
-        // storage.setData(constant.keyIsPasswordExpDate, loginResult.passwordExpDate)
-        // storage.setData(constant.keyIsLicensePortalMap, loginResult.licensePortalMap)
-
-        // storage.setData(constant.keyIsLoggedIn, true)
-
-        // singleton.sharedInstance.registerTokenDTO()
-
-        // validations.snackBar(loginResult.message)
-        // navigation.goBack()
     }
 
     const handleOpenUrl = () => {

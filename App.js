@@ -9,6 +9,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import * as constant from './src/constants/keys'
 import * as appColor from './src/constants/colors'
 import * as storage from './src/asset/utils/asyncStore'
+import * as localData from "./src/constants/sharedpreference"
 
 import Dashboard from './src/screens/dashboard'
 import HomeScreen2 from './src/screens/homeScreen2'
@@ -106,6 +107,8 @@ const handleLogOut = (navigation) => {
 
   storage.setData(constant.keyIsBaseUrl, null)
   storage.setData(constant.keyIsLoggedIn, false)
+  localData.isLoggedIn = false
+  localData.tokenDTO = {}
   navigation.navigate("AuthStackScreen", { screen: 'Login' })
 }
 
