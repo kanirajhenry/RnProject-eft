@@ -1,6 +1,6 @@
 // import * as dataModel from "../../model"
 import { getFiscalYearList } from "../../constants/api"
-import { UserTokenDTO, DisplayAddressDTO, FiscalYearDTO } from "../../model"
+import { UserTokenDTO, DisplayAddressDTO, FiscalYearDTO, GstinSettingDTO } from "../../model"
 import {  } from "../../model/fiscalYearDTO"
 import * as actionType from "../actions/actionTypes"
 
@@ -11,7 +11,8 @@ const singletonInitialState = {
 
     userTokenDTO: {},
     displayAddressDTO: {},
-    fiscalYearDTO: {}
+    fiscalYearDTO: {},
+    gstinSettingDTO: {}
 }
 
 export const singletonReducer = (state = singletonInitialState, action) => {
@@ -23,13 +24,25 @@ export const singletonReducer = (state = singletonInitialState, action) => {
                     console.log("=-=-=-=-=-=-=-=-==-=@@@@@@@@@@=ON_GET_DISPLAY_ADDRESS", action.payload)
                     return {
                         ...state, loading: false, error: action.payload.error, data: action.payload,
-                        userTokenDTO: action.payload,
+                        userTokenDTO: action.payload, displayAddressDTO: action.payload
                     }
                 case actionType.singletonScreen.ON_GET_FISCAL_YEAR_LIST:
                     console.log("=-=-=-=-=-=-=-=-==-=@@@@@@@@@@=ON_GET_FISCAL_YEAR_LIST", action.payload)
                     return {
                         ...state, loading: false, error: action.payload.error, data: action.payload,
-                        userTokenDTO: action.payload,
+                        userTokenDTO: action.payload, fiscalYearDTO: action.payload
+                    }
+                case actionType.singletonScreen.ON_GET_FISCAL_YEAR:
+                    console.log("=-=-=-=-=-=-=-=-==-=@@@@@@@@@@=ON_GET_FISCAL_YEAR", action.payload)
+                    return {
+                        ...state, loading: false, error: action.payload.error, data: action.payload,
+                        userTokenDTO: action.payload, // ??? do some Querry
+                    }
+                case actionType.singletonScreen.ON_GET_GSTIN_DATA_LIST:
+                    console.log("=-=-=-=-=-=-=-=-==-=@@@@@@@@@@=ON_GET_GSTIN_DATA_LIST", action.payload)
+                    return {
+                        ...state, loading: false, error: action.payload.error, data: action.payload,
+                        userTokenDTO: action.payload, gstinSettingDTO: action.payload
                     }
                 default:
                     return { data: "Not Success from default singletonReducer" }

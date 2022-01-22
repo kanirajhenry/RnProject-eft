@@ -10,6 +10,7 @@ import * as storage from "../../asset/utils/asyncStore"
 import { UserTokenDTO } from "../../model"
 import singleton from "../../singleton/singleton"
 import validations from "../../asset/libraries/validations"
+import * as localData from "../../constants/sharedpreference"
 
 export const changeInternetState = isConnected => {
   alert("0000000")
@@ -99,20 +100,17 @@ const getPathUrl = triggeredAction => {
 
     case actionType.singletonScreen.ON_GET_FISCAL_YEAR_LIST: return api.getFiscalYearList
 
+    case actionType.singletonScreen.ON_GET_GSTIN_DATA_LIST: return api.gstinList
+
+    case actionType.singletonScreen.ON_GET_FISCAL_YEAR: return api.getFiscalYear
+
     default: return ""
   }
 }
 
-const getQuerUrl = (query, dataObj, triggeredAction) => {
-
-  (async () => api.baseUrl = await storage.getData(constant.keyIsBaseUrl))()
-
-  // (async () => await storage.getData(constant.keyIsBaseUrl)
-  //   .then(localBaseUrl => api.baseUrl = localBaseUrl)
-  //   .catch(error => console.log(error))
-  // )()
-
-  const joinedQuery = (query === null) ? "" : query
+export const getQuerUrl = (query, dataObj, triggeredAction) => {
+  
+  const joinedQuery = (query === null || query === undefined) ? "" : query
   const queryUrl = api.baseUrl + getPathUrl(triggeredAction) + joinedQuery
 
   if (api.baseUrl == "") return alert("BASE URL IS EMPTY")
@@ -146,14 +144,14 @@ const genericApiCallSuccess = (response, triggeredAction, dispatch, className) =
     default:
       switch (userTokenDTO.responseCode) {
         case "1":
-          alert("response code is 1")
+          // alert("response code is 1 from genericApiCallSuccess()")
           if (userTokenDTO.response != null && userTokenDTO.response.length > 0) {
             returnToDispatch(dispatch, actionType.apiResponse.API_SUCCESS, payload, className, triggeredAction)
           }
           break
         case "0":
-          alert("response code is 0")
-          validations.snackBar("responseCode Is Zero: action Is", triggeredAction, userTokenDTO.responseCode)
+          // alert("response code is 0 genericApiCallSuccess()")
+          validations.snackBar("userTokenDTO.responseCode Is Zero: action Is", triggeredAction, userTokenDTO.responseCode)
           if (userTokenDTO.errorMessages.length > 0) alert(JSON.stringify(userTokenDTO.errorMessages))
           break
 
@@ -166,29 +164,9 @@ const commonGetApiCall = (query, dataObj, className, triggeredAction) => {
 
   return dispatch => {
 
-    // // // (async () => api.baseUrl = await storage.getData(constant.keyIsBaseUrl))()
-
-    // (async () => await storage.getData(constant.keyIsBaseUrl)
-    //   .then(localBaseUrl => api.baseUrl = localBaseUrl)
-    //   .catch(error => console.log(error))
-    // )()
-
-    // const data = (dataObj === null) ? {} : dataObj
-    // const joinedQuery = (query === null) ? "" : query
-    // const queryUrl = api.baseUrl + getPathUrl(triggeredAction) + joinedQuery
-    // const headers = { "Content-Type": "application/json", "Access-Token": "" }
-
-    // // alert(queryUrl)
-    // console.log("Query Url ::: >>>>", queryUrl)
-    // // return
-
-    // if (api.baseUrl == "") return alert("Get Api Base Url is Empty")
-    // if (api.baseUrl == undefined) return alert("Get Api Base Url is undefined")
-
-    // console.log("TOKEN DTO: ----->", data)
-
     const queryUrl = getQuerUrl(query, dataObj, triggeredAction)
     const data = (dataObj === null) ? {} : dataObj
+    console.log("Query URL: ----->", queryUrl)
     console.log("TOKEN DTO: ----->", data)
     console.log("Effitrac main url : =================", queryUrl)
 

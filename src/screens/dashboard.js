@@ -6,27 +6,29 @@ import * as constant from '../constants/keys'
 
 import { useSelector, useDispatch } from 'react-redux'
 import singleton from '../singleton/singleton'
-import { commonGetApiCall, getSavedBaseUrl } from '../redux/actions/actions'
+import { commonGetApiCall, commonQueryParam, getQuerUrl, getSavedBaseUrl } from '../redux/actions/actions'
 import * as actionType from "../redux/actions/actionTypes"
-import { UserTokenDTO, DisplayAddressDTO } from '../model'
+import { UserTokenDTO, DisplayAddressDTO, GstinSettingDTO, InventoryDTO } from '../model'
 import validations from '../asset/libraries/validations'
 import Snackbar from 'react-native-snackbar'
 import { useIsFocused } from "@react-navigation/native"
-import * as api from "../constants/api"
-import { FiscalYearDTO } from '../model/fiscalYearDTO'
+import * as localData from "../constants/sharedpreference"
+import { FiscalYearDTO } from "../model/fiscalYearDTO"
+import axios from 'axios'
 
 const Dashboard = () => {
 
     const isFocused = useIsFocused()
     const navigation = useNavigation()
     const dispatch = useDispatch()
+
     const userTokenDTO = useSelector(({ singletonReducer }) => singletonReducer.userTokenDTO)
+    const fiscalYear = useSelector(({ singletonReducer }) => singletonReducer.fiscalYearDTO)
+    const displayAddressDTO = useSelector(({ singletonReducer }) => singletonReducer.displayAddressDTO)
+    const gstinSettingDTO = useSelector(({ singletonReducer }) => singletonReducer.gstinSettingDTO)
 
     const [fiscalYearList, setFiscalYearList] = useState([]) // [{}]
-
-    // TODO: BASECONTROLLER API CALLS
-    const getDisplayAddress = singleton.sharedInstance.getDisplayAddress()
-    const getFiscalYearList = singleton.sharedInstance.getFiscalYearList()
+    const [displayAddress, setDisplayAddress] = useState({})
 
     useEffect(() => {
 
@@ -47,21 +49,78 @@ const Dashboard = () => {
         }
     }, [isFocused])
 
+    const getFiscalYearApiCall = () => {
+
+        const queryUrl = getQuerUrl(localData.getTokenDTO(), null, actionType.singletonScreen.ON_GET_FISCAL_YEAR)
+
+        alert(queryUrl)
+
+        axios.get(queryUrl).then(response => {
+            switch (response.status) {
+                case 200:
+                    let userToken = new UserTokenDTO()
+                    userToken = response.data
+                    const responseCode = userToken.responseCode
+                    switch (responseCode) {
+                        case "1":
+                            let inventoryDto = new InventoryDTO()
+                            inventoryDto.orgCode = localData.tokenDTO.orgCode
+                            inventoryDto.cmpCode = localData.tokenDTO.cmpCode
+                            alert(JSON.stringify(inventoryDto))
+                            break;
+                        case "0": alert("status code is ONE : 0"); break;
+                        default: break
+                    }
+                    break
+                default: alert("getFiscalYearApiCall () FAILED")
+            }
+        })
+
+    }
+
+    const getGstinDataListApiCall = () => {
+
+        dispatch(commonGetApiCall(localData.getTokenDTO(), null,
+            actionType.controller.SINGLETON, actionType.singletonScreen.ON_GET_GSTIN_DATA_LIST)
+        )
+
+        let userTokenDto = new UserTokenDTO()
+        userTokenDto = userTokenDTO
+        console.log("&&&&&&&&&&&&&&&&&&& getGstinDataList", userTokenDTO)
+
+        switch (userTokenDto.responseCode) {
+            case "1":
+                validations.snackBar("Success singleton localData call")
+                let gstinSettingDto = new GstinSettingDTO()
+                console.log("", userTokenDto.response)
+                gstinSettingDto = JSON.parse(userTokenDto.response)
+                console.log("gstinSettingDto------> ", gstinSettingDto)
+                break
+            case "0":
+                const errorMsg = userTokenDto.errorMessages
+                validations.snackBar(errorMsg.length > 0 ? errorMsg[0] : "Api call failed")
+            default: break
+        }
+
+    }
+
     const getDisplayAddressApiCall = () => {
 
-        dispatch(commonGetApiCall(getDisplayAddress.queryItem, getDisplayAddress.data,
+        dispatch(commonGetApiCall(localData.getTokenDTO(), null,
             actionType.controller.SINGLETON, actionType.singletonScreen.ON_GET_DISPLAY_ADDRESS)
         )
 
         let userTokenDto = new UserTokenDTO()
         userTokenDto = userTokenDTO
+        console.log("&&&&&&&&&&&&&&&&&&& getDisplayAddressApiCall", userTokenDTO)
 
         switch (userTokenDto.responseCode) {
             case "1":
-                validations.snackBar("Success singleton api call")
+                validations.snackBar("Success singleton localData call")
                 let displayAddressDto = new DisplayAddressDTO()
-                console.log(userTokenDto.response)
+                console.log("", userTokenDto.response)
                 displayAddressDto = JSON.parse(userTokenDto.response)
+                console.log("displayAddressDto------> ", displayAddressDto)
                 // alert(displayAddressDto.signupType)
                 break
             case "0":
@@ -72,12 +131,17 @@ const Dashboard = () => {
     }
 
     const getFiscalYearListApiCall = () => {
-        dispatch(commonGetApiCall(getFiscalYearList.queryItem, getFiscalYearList.data,
-            actionType.controller.SINGLETON, actionType.singletonScreen.ON_GET_FISCAL_YEAR_LIST
-        ))
+
+        dispatch(commonGetApiCall(localData.getTokenDTO(), null,
+            actionType.controller.SINGLETON, actionType.singletonScreen.ON_GET_FISCAL_YEAR_LIST)
+        )
 
         let userTokenDto = new UserTokenDTO()
         userTokenDto = userTokenDTO
+
+        console.log("&&&&&&&&&&&&&&&&&&& getFiscalYearListApiCall", userTokenDTO)
+        console.log("----------------------------------------2", userTokenDTO)
+        console.log("----------------------------------------3", fiscalYear)
 
         switch (userTokenDto.responseCode) {
             case "1":
@@ -96,8 +160,10 @@ const Dashboard = () => {
 
     function callSingletonApiCalls() {
 
+        getFiscalYearApiCall()
+        // getGstinDataListApiCall()
         // getDisplayAddressApiCall()
-        getFiscalYearListApiCall()
+        // getFiscalYearListApiCall()
 
     }
 
