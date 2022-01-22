@@ -5,8 +5,13 @@ import { getSavedBaseUrl } from "../../redux/actions/actions"
 export const setData = async (key, value) => {
     try {
         const item = JSON.stringify(value)
-        const result = await AsyncStorage.setItem(key, item)
-        return result
+        if (item) {
+            const result = await AsyncStorage.setItem(key, item)
+            return result
+        } else {
+            console.log('not set, stringify failed:', key, value)
+        }
+
     } catch (e) {
         console.log("Catched error from setData local storage Error: ", e)
         throw e
@@ -21,7 +26,17 @@ export const getData = async (key) => {
         console.log("Catched error from getData local storage Error: ", e)
         throw e
     }
+
+    // AsyncStorage.getItem(key, (err, value) => {
+    //     if (err) {
+    //         console.log("err*******************************")
+    //     } else {
+    //          // boolean false
+    //         console.log(JSON.parse(value), "+++++++++++++++++++++++++++++")
+    //     }
+    // })
 }
+
 
 // ================================================
 

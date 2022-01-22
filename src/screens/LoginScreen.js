@@ -10,7 +10,7 @@ import * as storage from "../asset/utils/asyncStore"
 import * as constant from "../constants/keys"
 import { isFieldEmpty } from "../utility/index"
 import singleton from '../singleton/singleton'
-import * as api from "../constants/api"
+import * as localData from "../constants/sharedpreference"
 import axios from 'axios'
 import { UserTokenDTO, LoginDTO } from "../model"
 
@@ -93,6 +93,8 @@ const LoginScreen = ({ navigation, route }) => {
         let loginResult = new LoginDTO()
         loginResult = loginData
 
+        const deviceId = "ci0MHp4n6yw:APA91bF93ekDVFw1PcM_IlclLIlhGtTNy5XP-UDeX-cbgbG60wxuD1IpVDUDcfw72HGUqdAiSMI3SjDwcARU-DY8In9EEbr8QVdiECjGrxfWG5QmNrgx40pXQgEARs_OqfH5klYjMKeO"
+
         console.log("result.deviceToken : ----###############---->>>>>", loginResult)
 
         switch (loginResult.isValid) {
@@ -111,10 +113,9 @@ const LoginScreen = ({ navigation, route }) => {
                 storage.setData(constant.keyIsTokenId, loginResult.tokenId)
                 storage.setData(constant.keyIsPasswordExpDate, loginResult.passwordExpDate)
                 storage.setData(constant.keyIsLicensePortalMap, loginResult.licensePortalMap)
+                storage.setData(constant.keyIsDeviceId, deviceId)
 
                 storage.setData(constant.keyIsLoggedIn, true)
-
-                api.loadingSharedPreferences()
 
                 validations.snackBar(loginResult.message)
                 navigation.goBack()

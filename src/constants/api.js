@@ -11,38 +11,16 @@ export const configuredUrl = (url) => {
 // export let baseUrl                  = "https://demo.effitrac.com/13"
 
 export let baseUrl = null
-export let tokenDTO = new UserTokenDTO()
-
-export const getTokenDTO = () => {
-    return commonQueryParam(tokenDTO, "B")
-}
 
 // This is the way to config the baseUrl otherwise it does no set 
 export const loadingSharedPreferences = (async () => {
-    await storage.getData(constant.keyIsBaseUrl).then(localBaseUrl => { baseUrl = localBaseUrl })
-    
-    await storage.getData(constant.keyIsUserId).then(data => { tokenDTO.userId = data })
-    await storage.getData(constant.keyIsOrgCode).then(data => { tokenDTO.orgCode = data })
-    await storage.getData(constant.keyIsCmpCode).then(data => { tokenDTO.cmpCode = data })
-    await storage.getData(constant.keyIsDeviceId).then(data => { tokenDTO.deviceId = data })
-    await storage.getData(constant.keyIsTokenId).then(data => { tokenDTO.tokenId = data })
+    try {
+        await storage.getData(constant.keyIsBaseUrl).then(localBaseUrl => { baseUrl = localBaseUrl })
+    } catch (error) {
+        alert("Error catched from api.js", error)
+    }
 })()
 
-export const one = (async () => {
-    await storage.getData(constant.keyIsUserId).then(data => { tokenDTO.userId = data })
-})()
-export const two = (async () => {
-    await storage.getData(constant.keyIsOrgCode).then(data => { tokenDTO.orgCode = data })
-})()
-export const three = (async () => {
-    await storage.getData(constant.keyIsCmpCode).then(data => { tokenDTO.cmpCode = data })
-})()
-export const four = (async () => {
-    await storage.getData(constant.keyIsDeviceId).then(data => { tokenDTO.deviceId = data })
-})()
-export const five = (async () => {
-    await storage.getData(constant.keyIsTokenId).then(data => { tokenDTO.tokenId = data })
-})()
 
 export const getMultipleLedgers = "/erp/rest/accounts/ledger/getMultipleLedgers"
 
