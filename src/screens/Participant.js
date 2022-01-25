@@ -78,6 +78,7 @@ const Participant = ({ navigation }) => {
 
     const dispatch = useDispatch()
     const commonDataModel = useSelector(({ participantReducer }) => participantReducer.commonDataModel)
+    const inventList = useSelector(({ singletonReducer }) => singletonReducer.inventoryList)
 
     const [isSegmentEnabled, setIsSegmentEnabled] = useState(true)
     const [tabIndex, setTabIndex] = useState(0)
@@ -139,10 +140,12 @@ const Participant = ({ navigation }) => {
         })()
 
         console.log("Called from useEffect()")
+        
+        // alert(JSON.stringify(inventList)) // For testing purpose...
 
         // fetchPlaceOfSupply()
 
-        return () => { // Called when didMount && UnMount
+        return () => { // Called when didMount && 
             validations.snackBar("Called from useEffect UnMount")
             clearFields()
             setupDefaultSwitch()

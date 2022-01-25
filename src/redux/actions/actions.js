@@ -104,16 +104,18 @@ const getPathUrl = triggeredAction => {
 
     case actionType.singletonScreen.ON_GET_FISCAL_YEAR: return api.getFiscalYear
 
+    case actionType.singletonScreen.ON_GET_INVENTORY_LIST: return api.inventoryOnHandQty
+
     default: return ""
   }
 }
 
 export const getQuerUrl = (query, dataObj, triggeredAction) => {
-  
+
   const joinedQuery = (query === null || query === undefined) ? "" : query
   const queryUrl = api.baseUrl + getPathUrl(triggeredAction) + joinedQuery
 
-  if (api.baseUrl == "") return alert("BASE URL IS EMPTY")
+  if (api.baseUrl == "") return alert("BASE URL IS empty")
   if (api.baseUrl == undefined) return alert("BASE URL IS undefined")
 
   return queryUrl
@@ -134,6 +136,10 @@ const genericApiCallSuccess = (response, triggeredAction, dispatch, className) =
   TODO: // payload.accessToken = "someAccessToken" 
   console.log("Api call success", JSON.stringify(payload))
   // alert(JSON.stringify(userTokenDTO.tokenId))
+
+  if (triggeredAction == actionType.singletonScreen.ON_GET_INVENTORY_LIST) {
+    // alert(JSON.stringify(userTokenDTO.response))
+  }
 
   switch (triggeredAction) {
 
@@ -166,9 +172,11 @@ const commonGetApiCall = (query, dataObj, className, triggeredAction) => {
 
     const queryUrl = getQuerUrl(query, dataObj, triggeredAction)
     const data = (dataObj === null) ? {} : dataObj
-    console.log("Query URL: ----->", queryUrl)
-    console.log("TOKEN DTO: ----->", data)
-    console.log("Effitrac main url : =================", queryUrl)
+    console.log(
+      "Effitrac token DTO : ----->", data,
+      "Effitrac main get url : =================", queryUrl,
+      "Effitrac triggered action ", triggeredAction
+    )
 
     commonApi
       .getDataApi(queryUrl, {})
@@ -187,7 +195,11 @@ const commonApiCall = (query, dataObj, className, triggeredAction) => {
   const queryUrl = getQuerUrl(query, dataObj, triggeredAction)
   const headers = { "Content-Type": "application/json", "Access-Token": "" }
   const data = (dataObj === null) ? {} : dataObj
-  console.log("TOKEN DTO: ----->", data)
+  console.log(
+    "Effitrac token DTO : ----->", data,
+    "Effitrac main post url : =================", queryUrl,
+    "Effitrac triggered action ", triggeredAction
+  )
 
   return dispatch => {
     commonApi

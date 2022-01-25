@@ -6,7 +6,7 @@ import * as constant from '../constants/keys'
 
 import { useSelector, useDispatch } from 'react-redux'
 import singleton from '../singleton/singleton'
-import { commonGetApiCall, commonQueryParam, getQuerUrl, getSavedBaseUrl } from '../redux/actions/actions'
+import commonApiCall, { commonGetApiCall, commonQueryParam, getQuerUrl, getSavedBaseUrl } from '../redux/actions/actions'
 import * as actionType from "../redux/actions/actionTypes"
 import { UserTokenDTO, DisplayAddressDTO, GstinSettingDTO, InventoryDTO } from '../model'
 import validations from '../asset/libraries/validations'
@@ -26,6 +26,8 @@ const Dashboard = () => {
     const fiscalYear = useSelector(({ singletonReducer }) => singletonReducer.fiscalYearDTO)
     const displayAddressDTO = useSelector(({ singletonReducer }) => singletonReducer.displayAddressDTO)
     const gstinSettingDTO = useSelector(({ singletonReducer }) => singletonReducer.gstinSettingDTO)
+    const inventoryDTOList = useSelector(({ singletonReducer }) => singletonReducer.inventoryDTO)
+    const inventList = useSelector(({ singletonReducer }) => singletonReducer.inventoryList)
 
     const [fiscalYearList, setFiscalYearList] = useState([]) // [{}]
     const [displayAddress, setDisplayAddress] = useState({})
@@ -49,11 +51,69 @@ const Dashboard = () => {
         }
     }, [isFocused])
 
+    const getInventoryList = (fiscalYear, inventoryDTO, isProductUpdate) => {
+
+        const queryItem = {
+            "": localData.getTokenDTO(),
+            "fiscalYear": JSON.parse(fiscalYear)
+        }
+
+        dispatch(commonApiCall(commonQueryParam(queryItem, "C"), inventoryDTO,
+            actionType.controller.SINGLETON, actionType.singletonScreen.ON_GET_INVENTORY_LIST)
+        )
+        
+        let inventoryDtoList = new InventoryDTO()
+        let array = [new InventoryDTO()]
+        array = inventList
+        console.log("9999999", array[0].entityId)
+        // alert(JSON.stringify(array[0].strOnHandQtyMap))
+        // inventoryDto = JSON.parse(inventList)
+        // alert(JSON.stringify(inventoryDto[0]))
+        // array = [inventList]
+        // alert(JSON.stringify(array[0].strOnHandQtyMap))
+
+        // array.forEach((element, index, array)=> {
+        //     console.log(element.strOnHandQtyMap);
+        // })
+
+        return
+        const myArray = [{ x: 100 }, { x: 200 }, { x: 300 }]
+        myArray.forEach((element, index, array) => {
+            console.log(element.x); // 100, 200, 300
+            console.log(index); // 0, 1, 2
+            console.log(array); // same myArray object 3 times
+        });
+
+        // console.log(">>>>>>>>>>>>>>>", inventList[0].strOnHandQtyMap)
+        // console.log("inventoryDto------> ", array[0].strOnHandQtyMap)
+        // alert(JSON.stringify(array[0].entityId))
+        return
+
+        let userTokenDto = new UserTokenDTO()
+        userTokenDto = inventoryDTOList
+        console.log("&&&&&&&&&&&&&&&&&&& inventoryDTOList", inventoryDTOList)
+
+        switch (userTokenDto.responseCode) {
+            case "1":
+                validations.snackBar("Success singleton localData call")
+                let inventoryDto = new InventoryDTO()
+                console.log("", userTokenDto.response)
+                inventoryDto = JSON.parse(userTokenDto.response)
+                let array = [new InventoryDTO()]
+                array = [...inventoryDto]
+                console.log("inventoryDto------> ", array[0].strOnHandQtyMap)
+                // alert(JSON.stringify(array[0].entityId))
+                break
+            case "0":
+                // const errorMsg = userTokenDto.errorMessages
+                validations.snackBar(errorMsg.length > 0 ? errorMsg[0] : "Api call failed")
+            default: break
+        }
+    }
+
     const getFiscalYearApiCall = () => {
 
         const queryUrl = getQuerUrl(localData.getTokenDTO(), null, actionType.singletonScreen.ON_GET_FISCAL_YEAR)
-
-        alert(queryUrl)
 
         axios.get(queryUrl).then(response => {
             switch (response.status) {
@@ -66,9 +126,12 @@ const Dashboard = () => {
                             let inventoryDto = new InventoryDTO()
                             inventoryDto.orgCode = localData.tokenDTO.orgCode
                             inventoryDto.cmpCode = localData.tokenDTO.cmpCode
-                            alert(JSON.stringify(inventoryDto))
+                            // alert(JSON.stringify(InventoryDTO))
+                            storage.setData(constant.keyIsFiscalYear, userToken.response)
+                            getInventoryList(userToken.response, inventoryDto, false)
                             break;
-                        case "0": alert("status code is ONE : 0"); break;
+
+                        case "0": alert("status code is ZERO : 0"); break;
                         default: break
                     }
                     break
@@ -160,11 +223,10 @@ const Dashboard = () => {
 
     function callSingletonApiCalls() {
 
-        getFiscalYearApiCall()
         // getGstinDataListApiCall()
         // getDisplayAddressApiCall()
         // getFiscalYearListApiCall()
-
+        getFiscalYearApiCall()
     }
 
     return (

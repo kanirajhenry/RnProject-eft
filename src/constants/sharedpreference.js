@@ -10,6 +10,10 @@ export const getTokenDTO = () => {
     return commonQueryParam(tokenDTO, "B")
 }
 
+export const getTokenDTOwithData = () => {
+    return commonQueryParam(getTokenDTO(), "C")
+}
+
 // This is the way to config the baseUrl otherwise it does no set
 // const loadinglocalData = (async () => {
 //     try {

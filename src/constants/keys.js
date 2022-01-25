@@ -16,3 +16,5 @@ export const keyIsEmployeeCode = "@employeeCode"
 export const keyIsTokenId = "@tokenId"
 export const keyIsLicensePortalMap = "@licensePortalMap"
 export const keyIsPasswordExpDate = "@passwordExpDate"
+export const keyIsFiscalYear = "@fiscalYear"
+
