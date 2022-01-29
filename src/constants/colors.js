@@ -7,6 +7,7 @@ const primaryColor6 = "#ff0026"
 
 export const primaryColor = primaryColor1
 export const selectionColor = "red"
+export const placeholderColor = "red"
 export const segmentedControlBackgroundColor = primaryColor4
 export const activeSegmentBackgroundColor = primaryColor3
 export const white = "#fff"

@@ -13,7 +13,7 @@ export const configuredUrl = (url) => {
 export let baseUrl = null
 
 // This is the way to config the baseUrl otherwise it does no set 
-export const loadingSharedPreferences = (async () => {
+export const loadingBaseUrlSharedPreference = (async () => {
     try {
         await storage.getData(constant.keyIsBaseUrl).then(localBaseUrl => { baseUrl = localBaseUrl })
     } catch (error) {

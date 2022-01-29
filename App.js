@@ -19,7 +19,7 @@ import SettingsScreen from './src/screens/settingsScreen'
 import SettingsScreen2 from './src/screens/settingsScreen2'
 import SettingsScreen3 from './src/screens/settingsScreen3'
 
-import Participant from './src/screens/participant'
+import Participant from './src/screens/Participant'
 import ProfileScreen1 from './src/screens/profileScreen1'
 
 import LoginScreen from './src/screens/loginScreen'

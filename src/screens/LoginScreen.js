@@ -61,6 +61,8 @@ const LoginScreen = ({ navigation, route }) => {
 
         if (isFieldEmpty(savedUrl) || savedUrl == undefined) return alert("Please configure your Url")
 
+        storage.setData(constant.keyIsBaseUrl, savedUrl)
+
         dispatch(commonApiCall(null, loginDto, actionType.controller.LOGIN, actionType.loginScreen.ON_LOGIN))
 
         setTimeout(() => { afterCompletedApicall() }, 1000)
