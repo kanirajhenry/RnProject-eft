@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useLayoutEffect, useState, useRef } from 'react'
 // import { Text, View, Button } from 'react-native'
 
 import {
     ActivityIndicator, AppRegistry,
     Button, Dimensions, Image, ScrollView, StyleSheet, Switch,
     Text, TextInput, View, FlatList, Keyboard,
+    PixelRatio,
 } from 'react-native';
 import { Item } from 'react-native-paper/lib/typescript/components/List/List';
 import { KeyboardAwareSectionList, KeyboardAwareFlatList, KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -13,6 +14,9 @@ import * as api from "../constants/api"
 import { CommonDataModel, UserTokenDTO, ParticipantDTO, ParticipantContactModel, CommentDTO } from '../model'
 import { Cell, Section, TableView, Separator } from 'react-native-tableview-simple';
 import * as localData from "../constants/sharedpreference"
+import SegmentedControl from "rn-segmented-control"
+import { useIsFocused } from "@react-navigation/native"
+import validations from '../asset/libraries/validations'
 
 
 export default function SettingsScreen({ navigation }) {
@@ -20,7 +24,13 @@ export default function SettingsScreen({ navigation }) {
     const isLead = true
     const isCustomer = false
     const isVendor = false
-    const isSegmentEnabled = true
+
+    const [tabIndex, setTabIndex] = useState(0)
+    const [custSwitch, setCustSwitch] = useState(false)
+    const [vendSwitch, setVendSwitch] = useState(false)
+    const [leadSwitch, setLeadSwitch] = useState(false)
+    const isFocused = useIsFocused()
+    const [isSegmentEnabled, setIsSegmentEnabled] = useState(true)
 
     const title = isLead ? "LEAD" : isCustomer ? "CUSTOMER" : "VENDOR"
 
@@ -99,6 +109,49 @@ export default function SettingsScreen({ navigation }) {
     let participantDto = new ParticipantDTO()
     let contactModel = new ParticipantContactModel()
     let gstinDataList = new CommonDataModel()
+
+    useLayoutEffect(() => {
+
+        console.log("Called from useLayoutEffect() 111111")
+        setTabIndex(tabIndex)
+        switch (tabIndex) {
+            case 0: { setCustSwitch(true); setVendSwitch(false); setLeadSwitch(false) }; break
+            case 1: { setCustSwitch(false); setVendSwitch(true); setLeadSwitch(false) }; break
+            case 2: { setCustSwitch(false); setVendSwitch(false); setLeadSwitch(true) }; break
+        }
+        navigation.setOptions({
+            headerRight: () => <Button title="ADD" color='white' onPress={() => handleCreateParticipant()} />,
+        })
+
+    }, [])
+
+    useEffect(() => {
+
+        return () => { // Called when didMount && 
+            validations.snackBar("Called from useEffect UnMount")
+            clearFields()
+            setupDefaultSwitch()
+            // setTimeout(() => { userNameRef.current.focus() }, 500)
+        }
+
+        if (isFocused) { validations.snackBar("Focus Called For tesing purpose") }
+
+    }, [isFocused])
+
+    function handleTabsChange(index) {
+        setTabIndex(index)
+        clearFields()
+    }
+
+    const setupDefaultSwitch = () => {
+        setIsSegmentEnabled(true)
+        setTabIndex(0)
+        setCustSwitch(true); setVendSwitch(false); setLeadSwitch(false)
+    }
+
+    const clearFields = () => {
+        data.forEach((element, index, array) => element.sectionData.forEach((e, i, arr) => e.value = ""))
+    }
 
     const handleSubmit = () => {
 
@@ -240,6 +293,21 @@ export default function SettingsScreen({ navigation }) {
 
     return (
         <View style={{ marginTop: 150, flex: 1 }}>
+            <View style={styles.row}>
+                <SegmentedControl
+                    tabs={["CUSTOMER", "VENDOR", "LEAD"]}
+                    segmentedControlBackgroundColor={appColor.segmentedControlBackgroundColor}
+                    activeSegmentBackgroundColor={appColor.activeSegmentBackgroundColor}
+                    activeTextColor={appColor.white}
+                    textColor={appColor.appTextColor}
+                    paddingVertical={9}
+                    width={Dimensions.get("screen").width - 90}
+                    containerStyle={{ marginVertical: 20 }}
+                    textStyle={{ fontWeight: "300", fontSize: 24 }}
+                    currentIndex={tabIndex}
+                    onChange={handleTabsChange}
+                />
+            </View>
             <Button
                 title="Submit"
                 onPress={() => handleSubmit(data)}
@@ -320,5 +388,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'yellow',
         paddingTop: 120,
         paddingBottom: -20,
+    },
+    // RND
+    row: {
+        flexDirection: 'row',
+        // backgroundColor: 'lightgrey',
+        borderRadius: 0,
+        borderWidth: 0,
+        borderTopWidth: 1 / PixelRatio.get(),
+        borderColor: '#d6d7da',
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: "center"
     },
 });
