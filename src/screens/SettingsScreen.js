@@ -1,5 +1,4 @@
 import React, { useEffect, useLayoutEffect, useState, useRef } from 'react'
-// import { Text, View, Button } from 'react-native'
 
 import {
     ActivityIndicator, AppRegistry,
@@ -7,17 +6,16 @@ import {
     Text, TextInput, View, FlatList, Keyboard,
     PixelRatio,
 } from 'react-native';
-import { Item } from 'react-native-paper/lib/typescript/components/List/List';
+
 import { KeyboardAwareSectionList, KeyboardAwareFlatList, KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as appColor from '../constants/colors'
 import * as api from "../constants/api"
 import { CommonDataModel, UserTokenDTO, ParticipantDTO, ParticipantContactModel, CommentDTO } from '../model'
-import { Cell, Section, TableView, Separator } from 'react-native-tableview-simple';
+import { Cell, Section, TableView, Separator } from 'react-native-tableview-simple'
 import * as localData from "../constants/sharedpreference"
 import SegmentedControl from "rn-segmented-control"
 import { useIsFocused } from "@react-navigation/native"
 import validations from '../asset/libraries/validations'
-
 
 export default function SettingsScreen({ navigation }) {
 
@@ -150,10 +148,15 @@ export default function SettingsScreen({ navigation }) {
     }
 
     const clearFields = () => {
-        data.forEach((element, index, array) => element.sectionData.forEach((e, i, arr) => e.value = ""))
+        data.forEach((element, index, array) => element.sectionData.forEach((e, i, arr) => { e.value = "" }))
+        // data.forEach((element, index, array) => {
+        //     element.sectionData.forEach((e, i, arr) => {
+        //         e.value = ""
+        //     })
+        // })
     }
 
-    const handleSubmit = () => {
+    const handleCreateParticipant = () => {
 
         Keyboard.dismiss()
 
@@ -292,7 +295,7 @@ export default function SettingsScreen({ navigation }) {
     }
 
     return (
-        <View style={{ marginTop: 150, flex: 1 }}>
+        <View style={{ marginTop: 120, flex: 1 }}>
             <View style={styles.row}>
                 <SegmentedControl
                     tabs={["CUSTOMER", "VENDOR", "LEAD"]}
@@ -308,11 +311,7 @@ export default function SettingsScreen({ navigation }) {
                     onChange={handleTabsChange}
                 />
             </View>
-            <Button
-                title="Submit"
-                onPress={() => handleSubmit(data)}
-            />
-            <TableView style={{ marginTop: 0 }}>
+            <TableView style={{ marginTop: 0, flex: 1 }}>
                 <FlatList
                     style={{ marginHorizontal: 30 }}
                     data={data}
@@ -358,7 +357,7 @@ export default function SettingsScreen({ navigation }) {
                                                 autoFocus={false}
                                                 // onSubmitEditing={() => rowData.gstinRef.current.focus()}
                                                 // onSubmitEditing={() => alert("rowData.gstinRef.current.focus()")}
-                                                // onSubmitEditing={() => handleSubmit()}
+                                                // onSubmitEditing={() => handleCreateParticipant()}
                                                 // onSubmitEditing={() => {rowData.inputRef.current.focus()}}
                                                 TextInput />
                                             <Text style={{ color: appColor.placeholderColor, fontSize: 17, fontWeight: "500", justifyContent: 'center', alignItems: 'center' }}>
