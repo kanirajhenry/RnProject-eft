@@ -1,11 +1,16 @@
 const primaryColor1 = "#0a67a0"
 const primaryColor2 = "#3FA796"
-const primaryColor3 = "#0a67a0"  
+const primaryColor3 = "#0a67a0"
 const primaryColor4 = "#86c4fD"
 const primaryColor5 = "#0482f7"
 const primaryColor6 = "#ff0026"
+const primaryColor7 = "#395B64"
+const primaryColor8 = "#822432"
+const primaryColor9 = "#41ad8d"
 
-export const primaryColor = primaryColor1
+export const oceanGreen = primaryColor9
+export const primaryColor = primaryColor7
+export const overLay = primaryColor8
 export const selectionColor = "red"
 export const placeholderColor = "red"
 export const segmentedControlBackgroundColor = primaryColor4

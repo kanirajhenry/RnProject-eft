@@ -5,7 +5,7 @@ import {
     PixelRatio, Dimensions, Keyboard
 } from 'react-native'
 
-import CustomTextInput from '../components/customTextInput'
+import CustomTextInput from '../components/customInputsDemo/customTextInput'
 import { useIsFocused } from "@react-navigation/native"
 
 import { useSelector, useDispatch } from 'react-redux'

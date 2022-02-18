@@ -15,17 +15,17 @@ import Dashboard from './src/screens/dashboard'
 import HomeScreen2 from './src/screens/homeScreen2'
 import HomeScreen3 from './src/screens/homeScreen3'
 
-import SettingsScreen from './src/screens/settingsScreen'
+import SettingsScreen from './src/screens/SettingsScreen'
 import SettingsScreen2 from './src/screens/settingsScreen2'
 import SettingsScreen3 from './src/screens/settingsScreen3'
 
 import Participant from './src/screens/Participant'
 import ProfileScreen1 from './src/screens/profileScreen1'
 
-import LoginScreen from './src/screens/loginScreen'
-import RegisterScreen from './src/screens/registerScreen'
+import LoginScreen from './src/screens/LoginScreen'
+import RegisterScreen from './src/screens/RegisterScreen'
 
-import IpConfiguration from './src/screens/ipConfiguration'
+import IpConfiguration from './src/screens/IpConfiguration'
 
 const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -74,6 +74,7 @@ function AuthStackScreen({ navigation }) {
     <AuthStack.Navigator screenOptions={{ headerTitleAlign: 'center' }} >
       <AuthStack.Screen name='Login' component={LoginScreen} options={({ navigation }) => ({
         presentation: 'formSheet',
+        headerShown: false,
         headerRight: () => <Button onPress={() => navigation.navigate('Register')} title="Register" />,
         headerLeft: () => <Button onPress={() => navigation.navigate('IpConfiguration')} title="IpConfig" />,
       })}

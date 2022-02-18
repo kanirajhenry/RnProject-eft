@@ -136,7 +136,7 @@ export default function SettingsScreen({ navigation }) {
 
     }, [isFocused])
 
-    function handleTabsChange(index) {
+    const handleTabsChange = (index) => {
         setTabIndex(index)
         clearFields()
     }
