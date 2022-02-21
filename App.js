@@ -73,7 +73,7 @@ function AuthStackScreen({ navigation }) {
   return (
     <AuthStack.Navigator screenOptions={{ headerTitleAlign: 'center' }} >
       <AuthStack.Screen name='Login' component={LoginScreen} options={({ navigation }) => ({
-        presentation: 'formSheet',
+        // presentation: 'formSheet',
         headerShown: false,
         headerRight: () => <Button onPress={() => navigation.navigate('Register')} title="Register" />,
         headerLeft: () => <Button onPress={() => navigation.navigate('IpConfiguration')} title="IpConfig" />,
@@ -86,7 +86,7 @@ function AuthStackScreen({ navigation }) {
       />
 
       <AuthStack.Screen name='IpConfiguration' component={IpConfiguration} options={({ navigation, route }) => ({
-        presentation: 'formSheet',
+        // presentation: 'formSheet',
         headerRight: () => <Button title="Done" onPress={() =>
           navigation.goBack()
           // navigation.navigate('Login', {
@@ -138,7 +138,7 @@ function HomeStackScreen({ navigation }) {
       }}
       />
       <HomeStack.Screen name='AuthStackScreen' component={AuthStackScreen} options={({ navigation }) => ({
-        presentation: 'formSheet',
+       //  presentation: 'formSheet',
         headerShown: false,
       })}
       />

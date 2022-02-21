@@ -273,6 +273,13 @@ const LoginScreen = ({ navigation, route }) => {
         )
     }
 
+    const isPortrait = () => {
+        const dim = Dimensions.get('screen');
+        return dim.height >= dim.width;
+    };
+
+    const [orientation, SetOrientation] = useState(isPortrait() ? 'portrait' : 'landscape')
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '' }}>
 
@@ -282,7 +289,7 @@ const LoginScreen = ({ navigation, route }) => {
                     alignItems: 'center',
                     overflow: 'hidden',
                     height: hp('31%'),
-                    width: wp('102%'),
+                    width: wp('105%'),
                     // position: 'absolute',// left: 40,// right: 45,
                     bottom: 90,
                     borderBottomRightRadius: hp('50%'),
@@ -372,7 +379,7 @@ const LoginScreen = ({ navigation, route }) => {
 
                                     cellContentView={
                                         <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
-                                            <Image source={rowData.image} style={{ borderRadius: 5, height: 25, width: 25, paddingRight: 5 }} />                                            
+                                            <Image source={rowData.image} style={{ borderRadius: 5, height: 25, width: 25, paddingRight: 5 }} />
                                             <TextInput
                                                 style={{ backgroundColor: '#ffff', flex: 1, height: 40, fontSize: 17, paddingLeft: 10 }}
                                                 selectionColor={appColor.selectionColor}
@@ -414,10 +421,10 @@ const LoginScreen = ({ navigation, route }) => {
                     <Cell
                         cellStyle={{ height: 40 }}
                         contentContainerStyle={{ paddingVertical: 1 }}
-                        
+
                         cellContentView={
                             <View style={{ flexDirection: 'row', flex: 1 }}>
-                                    <Text style={{ fontSize: hp('1.5%'), justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={{ fontSize: hp('1.5%'), justifyContent: 'center', alignItems: 'center' }}>
                                     <Text>I agree the</Text>
                                     <Text style={{ color: appColor.oceanGreen, fontSize: hp('1.5%'), fontWeight: "700" }}> Terms and Conditions</Text>
                                 </Text>
@@ -433,21 +440,22 @@ const LoginScreen = ({ navigation, route }) => {
                 </Section>
             </TableView>
 
-            {isLogIn &&
-                <Button
-                    color={appColor.oceanGreen}
-                    title="Forgot Password ?"
-                    onPress={() => alert("Forgot Password called")}
-                />
-            }
-            <View style={{ height: hp('4%'), marginVertical: hp('2%'), justifyContent: 'center', alignItems: 'center' }}>
-                <CustomButton
-                    textColor={isTermsCheckMarkEnabled ? appColor.white : 'black'}
-                    disabled={isTermsCheckMarkEnabled ? false : true}
-                    text={objLogin.buttonTitle}
-                    onPress={onPress}
-                />
-            </View>
+            {
+        isLogIn &&
+            <Button
+                color={appColor.oceanGreen}
+                title="Forgot Password ?"
+                onPress={() => alert("Forgot Password called")}
+            />
+    }
+    <View style={{ height: hp('4%'), marginVertical: hp('2%'), justifyContent: 'center', alignItems: 'center' }}>
+        <CustomButton
+            textColor={isTermsCheckMarkEnabled ? appColor.white : 'black'}
+            disabled={isTermsCheckMarkEnabled ? false : true}
+            text={objLogin.buttonTitle}
+            onPress={onPress}
+        />
+    </View>
         </SafeAreaView >
     )
 }
