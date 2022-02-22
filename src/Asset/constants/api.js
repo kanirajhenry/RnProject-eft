@@ -1,8 +1,8 @@
 import { getUrl } from "../utility"
-import * as storage from "../asset/utils/asyncStore"
-import * as constant from "../constants/keys"
-import { UserTokenDTO } from "../model"
-import { commonQueryParam } from "../redux/actions/actions"
+import * as storage from "./../utils/asyncStore"
+import * as constant from "./keys"
+import { UserTokenDTO } from "../../model"
+import { commonQueryParam } from "../../redux/actions/actions"
 
 export const configuredUrl = (url) => {
     return getUrl(url).protocol + getUrl(url).host

@@ -4,21 +4,21 @@ import { Picker } from '@react-native-picker/picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { TextInput } from 'react-native-gesture-handler'
 
-import * as actionType from '../redux/actions/actionTypes'
+import * as actionType from '../../../redux/actions/actionTypes'
 import { useDispatch, useSelector } from 'react-redux'
 import { ActivityIndicator } from 'react-native-paper'
-import commonApiCall, { commonQueryParam } from '../redux/actions/actions'
-import { configuredUrl } from '../constants/api'
+import commonApiCall, { commonQueryParam } from '../../../redux/actions/actions'
+import { configuredUrl } from '../../../asset/constants/api'
 
-import { getUrl, isValidUrl } from '../utility'
-import * as util from "../utility"
+import { getUrl, isValidUrl } from '../../../asset/utility'
+import * as util from "../../../asset/utility"
 
-import * as alerts from "../constants/alerts"
-import * as constant from '../constants/keys'
-import * as storage from "../asset/utils/asyncStore"
-import * as api from "../constants/api"
+import * as storage from "../../../asset/utils/asyncStore"
+import * as alerts from "../../../asset/constants/alerts"
+import * as constant from '../../../asset/constants/keys'
+import * as api from "../../../asset/constants/api"
 import axios from 'axios'
-import validations from '../asset/libraries/validations'
+import validations from '../../../asset/libraries/validations'
 
 const IpConfiguration = ({ navigation }) => {
 

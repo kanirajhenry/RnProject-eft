@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-community/async-storage"
-import * as constant from "../../constants/keys"
+import * as constant from "../constants/keys"
 import { getSavedBaseUrl } from "../../redux/actions/actions"
 
 export const setData = async (key, value) => {

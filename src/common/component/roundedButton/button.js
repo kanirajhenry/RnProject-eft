@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View, TouchableOpacity, Dimensions, StyleSheet } from 'react-native'
-import { fontfamily, fontsize, wp } from '../../asset/libraries/fontsAndColors'
-import * as appColor from '../../constants/colors'
+import { fontfamily, fontsize, wp } from '../../../asset/libraries/fontsAndColors'
+import * as appColor from '../../../asset/constants/colors'
 
 const width = Dimensions.get('window').width
 

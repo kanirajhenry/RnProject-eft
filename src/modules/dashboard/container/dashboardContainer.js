@@ -1,19 +1,19 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useState, useEffect } from 'react'
 import { Text, View, Button } from 'react-native'
-import * as storage from "../asset/utils/asyncStore"
-import * as constant from '../constants/keys'
+import * as storage from "../../../asset/utils/asyncStore"
+import * as constant from '../../../asset/constants/keys'
 
 import { useSelector, useDispatch } from 'react-redux'
-import singleton from '../singleton/singleton'
-import commonApiCall, { commonGetApiCall, commonQueryParam, getQuerUrl, getSavedBaseUrl } from '../redux/actions/actions'
-import * as actionType from "../redux/actions/actionTypes"
-import { UserTokenDTO, DisplayAddressDTO, GstinSettingDTO, InventoryDTO } from '../model'
-import validations from '../asset/libraries/validations'
+import singleton from '../../../singleton/singleton'
+import commonApiCall, { commonGetApiCall, commonQueryParam, getQuerUrl, getSavedBaseUrl } from '../../../redux/actions/actions'
+import * as actionType from "../../../redux/actions/actionTypes"
+import { UserTokenDTO, DisplayAddressDTO, GstinSettingDTO, InventoryDTO } from '../../../model'
+import validations from '../../../asset/libraries/validations'
 import Snackbar from 'react-native-snackbar'
 import { useIsFocused } from "@react-navigation/native"
-import * as localData from "../constants/sharedpreference"
-import { FiscalYearDTO } from "../model/fiscalYearDTO"
+import * as localData from "../../../asset/constants/sharedpreference"
+import { FiscalYearDTO } from "../../../model/fiscalYearDTO"
 import axios from 'axios'
 
 const Dashboard = () => {

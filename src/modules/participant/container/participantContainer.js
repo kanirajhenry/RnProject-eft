@@ -5,22 +5,22 @@ import {
     PixelRatio, Dimensions, Keyboard
 } from 'react-native'
 
-import CustomTextInput from '../components/customInputsDemo/customTextInput'
+import CustomTextInput from '../../../common/component/customInputsDemo/customTextInput'
 import { useIsFocused } from "@react-navigation/native"
 
 import { useSelector, useDispatch } from 'react-redux'
-import * as actionType from '../redux/actions/actionTypes'
-import commonApiCall, { commonGetApiCall, commonQueryParam } from '../redux/actions/actions'
-import { CommonDataModel, UserTokenDTO, ParticipantDTO, ParticipantContactModel, CommentDTO } from '../model'
+import * as actionType from '../../../redux/actions/actionTypes'
+import commonApiCall, { commonGetApiCall, commonQueryParam } from '../../../redux/actions/actions'
+import { CommonDataModel, UserTokenDTO, ParticipantDTO, ParticipantContactModel, CommentDTO } from '../../../model'
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useScrollToTop } from '@react-navigation/native'
 import SegmentedControl from "rn-segmented-control"
-import * as appColor from '../constants/colors'
-import validations from '../asset/libraries/validations'
-import * as storage from "../asset/utils/asyncStore"
-import * as constant from "../constants/keys"
-import { isFieldEmpty } from '../utility'
+import * as appColor from '../../../asset/constants/colors'
+import validations from '../../../asset/libraries/validations'
+import * as storage from "../../../asset/utils/asyncStore"
+import * as constant from "../../../asset/constants/keys"
+import { isFieldEmpty } from '../../../asset/utility'
 
 const Participant = ({ navigation }) => {
 

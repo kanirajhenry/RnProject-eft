@@ -4,8 +4,8 @@ import { tokenId } from "../asset/utils/asyncStore"
 import { UserTokenDTO } from "../model"
 import { commonGetApiCall, commonQueryParam } from "../redux/actions/actions"
 import * as storage from "../asset/utils/asyncStore"
-import * as constant from "../constants/keys"
-import * as api from "../constants/api"
+import * as constant from "../asset/constants/keys"
+import * as api from "../asset/constants/api"
 
 export default class Singleton extends React.Component {
 

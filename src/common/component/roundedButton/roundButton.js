@@ -3,8 +3,8 @@ import {
     TouchableOpacity,
     Image, StyleSheet
 } from 'react-native'
-import { fontsize, color, fontfamily, width, height, wp, hp } from '../../asset/libraries/fontsAndColors';
-import * as appColor from "../../constants/colors"
+import { fontsize, color, fontfamily, width, height, wp, hp } from '../../../asset/libraries/fontsAndColors';
+import * as appColor from "../../../asset/constants/colors"
 
 const RoundButton = ({ text, handleGrear }) => {
     return (

@@ -5,32 +5,64 @@ import {
     TouchableOpacity, SafeAreaView, StatusBar, Platform, Dimensions, ActivityIndicator
 } from 'react-native'
 import { useIsFocused } from "@react-navigation/native"
-import * as actionType from '../redux/actions/actionTypes'
-import commonApiCall, { commonQueryParam } from '../redux/actions/actions'
+import * as actionType from '../../../redux/actions/actionTypes'
+import commonApiCall, { commonQueryParam } from '../../../redux/actions/actions'
 import { useDispatch, useSelector } from 'react-redux'
-import validations from '../asset/libraries/validations'
+import validations from '../../../asset/libraries/validations'
 
-import * as storage from "../asset/utils/asyncStore"
-import * as constant from "../constants/keys"
-import * as appImage from "../constants/images"
-import { isFieldEmpty } from "../utility/index"
-import singleton from '../singleton/singleton'
-import * as localData from "../constants/sharedpreference"
+import * as storage from "../../../asset/utils/asyncStore"
+import * as constant from "../../../asset/constants/keys"
+import * as appImage from "../../../asset/constants/images"
+import { isFieldEmpty } from "../../../asset/utility"
+import singleton from '../../../singleton/singleton'
+import * as localData from "../../../asset/constants/sharedpreference"
 import axios from 'axios'
-import { UserTokenDTO, LoginDTO } from "../model"
+import { UserTokenDTO, LoginDTO } from "../../../model"
 
 import { Cell, Section, TableView, Separator } from 'react-native-tableview-simple'
-import * as appColor from '../constants/colors'
+import * as appColor from '../../../asset/constants/colors'
 // import Icon from 'react-native-vector-icons/Ionicons';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon2 from 'react-native-vector-icons/SimpleLineIcons';
-import Icon1 from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon2 from 'react-native-vector-icons/SimpleLineIcons'
+import Icon1 from 'react-native-vector-icons/Feather'
 
-import GearButton from '../components/roundedButton/roundButton'
-import CustomButton from '../components/roundedButton/button';
+import GearButton from '../../../common/component/roundedButton/roundButton'
+import CustomButton from '../../../common/component/roundedButton/roundButton'
 import SegmentedControl from "rn-segmented-control"
 
-import { fontsize, color, fontfamily, width, height, wp, hp } from '../asset/libraries/fontsAndColors';
+import {
+    fontsize, color, fontfamily,
+    width, height, wp, hp
+} from '../../../asset/libraries/fontsAndColors'
+
+
+// const loginFiedData = [
+//     { id: 101, title: "User ID" + " *", image: appImage.user, value: "", inputRef: useRef(null) },
+//     { id: 102, title: "Password", image: appImage.password, value: "", inputRef: useRef(null) },
+//     { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
+// ]
+
+// const signUpFieldData = [
+//     { id: 101, title: "User ID" + " *", image: appImage.user, value: "", inputRef: useRef(null) },
+//     { id: 102, title: "Password", image: appImage.password, value: "", inputRef: useRef(null) },
+//     { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
+//     { id: 104, title: "Email", image: appImage.email, value: "", inputRef: useRef(null) },
+//     { id: 105, title: "Phone Number", image: appImage.phoneNumber, value: "", inputRef: useRef(null) },
+// ]
+
+const loginFiedData = [
+    { id: 101, title: "User ID" + " *", image: appImage.user, value: "" },
+    { id: 102, title: "Password", image: appImage.password, value: "" },
+    { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase() },
+]
+
+const signUpFieldData = [
+    { id: 101, title: "User ID" + " *", image: appImage.user, value: "" },
+    { id: 102, title: "Password", image: appImage.password, value: "" },
+    { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase() },
+    { id: 104, title: "Email", image: appImage.email, value: "" },
+    { id: 105, title: "Phone Number", image: appImage.phoneNumber, value: "" },
+]
 
 const LoginScreen = ({ navigation, route }) => {
 
@@ -39,32 +71,16 @@ const LoginScreen = ({ navigation, route }) => {
     const [loginSwitch, setLoginSwitch] = useState(false)
     const [signUpSwitch, setSignUpSwitch] = useState(false)
 
+    const mainData = [{
+        sectionId: 1,
+        sectionTitle: objLogin.title,
+        sectionFooter: objLogin.description,
+        sectionData: isLogIn ? loginFiedData : signUpFieldData
+    }]
+
     const [isLogIn, setIsLogin] = useState(true)
 
     const [isTermsCheckMarkEnabled, setIsTermsCheckMarkEnabled] = useState(false)
-
-    const loginFiedData = [
-        { id: 101, title: "User ID" + " *", image: appImage.user, value: "", inputRef: useRef(null) },
-        { id: 102, title: "Password", image: appImage.password, value: "", inputRef: useRef(null) },
-        { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
-    ]
-
-    const signUpFieldData = [
-        { id: 101, title: "User ID" + " *", image: appImage.user, value: "", inputRef: useRef(null) },
-        { id: 102, title: "Password", image: appImage.password, value: "", inputRef: useRef(null) },
-        { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
-        { id: 104, title: "Email", image: appImage.email, value: "", inputRef: useRef(null) },
-        { id: 105, title: "Phone Number", image: appImage.phoneNumber, value: "", inputRef: useRef(null) },
-    ]
-
-    const mainData = [
-        {
-            sectionId: 1,
-            sectionTitle: objLogin.title,
-            sectionFooter: objLogin.description,
-            sectionData: isLogIn ? loginFiedData : signUpFieldData
-        },
-    ]
 
     const [data, setData] = useState(mainData)
 
@@ -102,6 +118,9 @@ const LoginScreen = ({ navigation, route }) => {
     const forgotData = useSelector(({ ipReducer }) => ipReducer.forgetDTO)
 
     useLayoutEffect(() => {
+
+
+
         setTabIndex(tabIndex)
         switch (tabIndex) {
             case 0: { setLoginSwitch(true); setSignUpSwitch(false) }; break
@@ -326,7 +345,7 @@ const LoginScreen = ({ navigation, route }) => {
                             // borderBottomRightRadius: hp('5%')
                         }}
                         // source={require('../asset/images/effiLogo.png')}
-                        source={require('../asset/images/effiLogoTransparent.png')}
+                        source={require('../../../asset/images/effiLogoTransparent.png')}
                     />
                 </View>
             </View>
@@ -441,21 +460,21 @@ const LoginScreen = ({ navigation, route }) => {
             </TableView>
 
             {
-        isLogIn &&
-            <Button
-                color={appColor.oceanGreen}
-                title="Forgot Password ?"
-                onPress={() => alert("Forgot Password called")}
-            />
-    }
-    <View style={{ height: hp('4%'), marginVertical: hp('2%'), justifyContent: 'center', alignItems: 'center' }}>
-        <CustomButton
-            textColor={isTermsCheckMarkEnabled ? appColor.white : 'black'}
-            disabled={isTermsCheckMarkEnabled ? false : true}
-            text={objLogin.buttonTitle}
-            onPress={onPress}
-        />
-    </View>
+                isLogIn &&
+                <Button
+                    color={appColor.oceanGreen}
+                    title="Forgot Password ?"
+                    onPress={() => alert("Forgot Password called")}
+                />
+            }
+            <View style={{ height: hp('4%'), marginVertical: hp('2%'), justifyContent: 'center', alignItems: 'center' }}>
+                <CustomButton
+                    textColor={isTermsCheckMarkEnabled ? appColor.white : 'black'}
+                    disabled={isTermsCheckMarkEnabled ? false : true}
+                    text={objLogin.buttonTitle}
+                    onPress={onPress}
+                />
+            </View>
         </SafeAreaView >
     )
 }

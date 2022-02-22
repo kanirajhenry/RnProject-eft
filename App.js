@@ -6,26 +6,26 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-import * as constant from './src/constants/keys'
-import * as appColor from './src/constants/colors'
+import * as constant from './src/asset/constants/keys'
+import * as appColor from './src/asset/constants/colors'
 import * as storage from './src/asset/utils/asyncStore'
-import * as localData from "./src/constants/sharedpreference"
+import * as localData from './src/asset/constants/sharedpreference'
 
-import Dashboard from './src/screens/dashboard'
-import HomeScreen2 from './src/screens/homeScreen2'
-import HomeScreen3 from './src/screens/homeScreen3'
+import Dashboard from './src/modules/dashboard/container/dashboardContainer'
+import HomeScreen2 from './src/modules/home2/container/home2Container'
+import HomeScreen3 from './src/modules/home3/container/home3Container'
 
-import SettingsScreen from './src/screens/SettingsScreen'
-import SettingsScreen2 from './src/screens/settingsScreen2'
-import SettingsScreen3 from './src/screens/settingsScreen3'
+import SettingsScreen from './src/modules/settingScreen/container/settingContainer'
+import SettingsScreen2 from './src/modules/settingScreen2/container/setting2Container'
+import SettingsScreen3 from './src/modules/settingScreen3/container/setting3Container'
 
-import Participant from './src/screens/Participant'
-import ProfileScreen1 from './src/screens/profileScreen1'
+import Participant from './src/modules/participant/container/participantContainer'
+import ProfileScreen1 from './src/modules/profile1/container/profile1Container'
 
-import LoginScreen from './src/screens/LoginScreen'
-import RegisterScreen from './src/screens/RegisterScreen'
+import LoginScreen from './src/modules/login/container/loginContainer'
+import RegisterScreen from './src/modules/register/container/registerContainer'
 
-import IpConfiguration from './src/screens/IpConfiguration'
+import IpConfiguration from './src/modules/ipConfig/container/ipConfigContainer'
 
 const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -99,7 +99,6 @@ function AuthStackScreen({ navigation }) {
     </AuthStack.Navigator>
   )
 }
-
 
 const handleLogOut = (navigation) => {
 
@@ -183,7 +182,6 @@ export default function App() {
       {/* <AuthStackScreen /> */}
       <MyDrawer />
     </NavigationContainer>
-
     // <RootStackScreen />
   );
 }

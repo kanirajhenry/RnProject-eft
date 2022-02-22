@@ -8,14 +8,14 @@ import {
 } from 'react-native';
 
 import { KeyboardAwareSectionList, KeyboardAwareFlatList, KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import * as appColor from '../constants/colors'
-import * as api from "../constants/api"
-import { CommonDataModel, UserTokenDTO, ParticipantDTO, ParticipantContactModel, CommentDTO } from '../model'
+import * as appColor from '../../../asset/constants/colors'
+import * as api from "../../../asset/constants/api"
+import { CommonDataModel, UserTokenDTO, ParticipantDTO, ParticipantContactModel, CommentDTO } from '../../../model'
 import { Cell, Section, TableView, Separator } from 'react-native-tableview-simple'
-import * as localData from "../constants/sharedpreference"
+import * as localData from "../../../asset/constants/sharedpreference"
 import SegmentedControl from "rn-segmented-control"
 import { useIsFocused } from "@react-navigation/native"
-import validations from '../asset/libraries/validations'
+import validations from '../../../asset/libraries/validations'
 
 export default function SettingsScreen({ navigation }) {
 

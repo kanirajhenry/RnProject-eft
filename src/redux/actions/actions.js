@@ -1,16 +1,16 @@
 import * as actionType from "./actionTypes"
-import * as api from "../../constants/api"
-import * as alerts from "../../constants/alerts"
-import * as utility from "../../utility"
+import * as api from "../../asset/constants/api"
+import * as alerts from "../../asset/constants/alerts"
+import * as utility from "../../asset/utility"
 import * as commonApi from "./commonApi"
 import { Alert } from "react-native"
 
-import * as constant from '../../constants/keys'
+import * as constant from '../../asset/constants/keys'
 import * as storage from "../../asset/utils/asyncStore"
 import { UserTokenDTO } from "../../model"
 import singleton from "../../singleton/singleton"
 import validations from "../../asset/libraries/validations"
-import * as localData from "../../constants/sharedpreference"
+import * as localData from "../../asset/constants/sharedpreference"
 
 export const changeInternetState = isConnected => {
   alert("0000000")
