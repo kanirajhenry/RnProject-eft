@@ -7,8 +7,8 @@ const fontsize = {
     tiny: hp("1.5%"),
     Small: hp("1.8%"), 
     mediumSmall: hp("2%"),
-    largeSmall:hp("2.2%"),
-    medium: hp("2.5%"),
+    medium: hp("2.2%"),
+    largeSmall:hp("2.5%"),
     large: hp("2.9%"),
 }
 

@@ -130,16 +130,16 @@ const customHeader = (isHeaderShown) => {
 function HomeStackScreen({ navigation }) {
   return (
     <HomeStack.Navigator screenOptions={({ navigation }) => (customHeader(true))} >
+      <HomeStack.Screen name='AuthStackScreen' component={AuthStackScreen} options={({ navigation }) => ({
+       //  presentation: 'formSheet',
+        headerShown: false,
+      })}
+      />
       <HomeStack.Screen name='Dashboard' component={Dashboard} options={{
         headerLeft: () => <Button title="Menu" color={appColor.headerLeft} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer('drawerOpenRight'))} />,
         headerRight: () => <Button title="Logout" color={appColor.headerRight} onPress={() => { handleLogOut(navigation) }}
         />
       }}
-      />
-      <HomeStack.Screen name='AuthStackScreen' component={AuthStackScreen} options={({ navigation }) => ({
-       //  presentation: 'formSheet',
-        headerShown: false,
-      })}
       />
       <HomeStack.Screen name='Home2' component={HomeScreen2} />
       <HomeStack.Screen name='Home3' component={HomeScreen3} />

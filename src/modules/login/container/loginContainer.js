@@ -26,50 +26,38 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons'
 import Icon1 from 'react-native-vector-icons/Feather'
 
-import GearButton from '../../../common/component/roundedButton/roundButton'
-import CustomButton from '../../../common/component/roundedButton/roundButton'
 import SegmentedControl from "rn-segmented-control"
+import RoundButton from '../../../common/component/roundedButton/roundButton'
 
 import {
     fontsize, color, fontfamily,
-    width, height, wp, hp
+    width, height, wp, hp, listenOrientationChange
 } from '../../../asset/libraries/fontsAndColors'
 
-
-// const loginFiedData = [
-//     { id: 101, title: "User ID" + " *", image: appImage.user, value: "", inputRef: useRef(null) },
-//     { id: 102, title: "Password", image: appImage.password, value: "", inputRef: useRef(null) },
-//     { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
-// ]
-
-// const signUpFieldData = [
-//     { id: 101, title: "User ID" + " *", image: appImage.user, value: "", inputRef: useRef(null) },
-//     { id: 102, title: "Password", image: appImage.password, value: "", inputRef: useRef(null) },
-//     { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
-//     { id: 104, title: "Email", image: appImage.email, value: "", inputRef: useRef(null) },
-//     { id: 105, title: "Phone Number", image: appImage.phoneNumber, value: "", inputRef: useRef(null) },
-// ]
-
-const loginFiedData = [
-    { id: 101, title: "User ID" + " *", image: appImage.user, value: "" },
-    { id: 102, title: "Password", image: appImage.password, value: "" },
-    { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase() },
-]
-
-const signUpFieldData = [
-    { id: 101, title: "User ID" + " *", image: appImage.user, value: "" },
-    { id: 102, title: "Password", image: appImage.password, value: "" },
-    { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase() },
-    { id: 104, title: "Email", image: appImage.email, value: "" },
-    { id: 105, title: "Phone Number", image: appImage.phoneNumber, value: "" },
-]
+import { useOrientation } from '../../../asset/utility/useOrientation'
 
 const LoginScreen = ({ navigation, route }) => {
+
+    console.log(useOrientation)
 
     const [objLogin, setObjLogin] = useState({ title: "LOGIN", buttonTitle: "Login", description: "Already have an account? Let's Login." })
     const [tabIndex, setTabIndex] = useState(0)
     const [loginSwitch, setLoginSwitch] = useState(false)
     const [signUpSwitch, setSignUpSwitch] = useState(false)
+
+    const loginFiedData = [
+        { id: 101, title: "User ID" + " *", image: appImage.user, value: "", inputRef: useRef(null) },
+        { id: 102, title: "Password", image: appImage.password, value: "", inputRef: useRef(null) },
+        { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
+    ]
+
+    const signUpFieldData = [
+        { id: 101, title: "User ID" + " *", image: appImage.user, value: "", inputRef: useRef(null) },
+        { id: 102, title: "Password", image: appImage.password, value: "", inputRef: useRef(null) },
+        { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
+        { id: 104, title: "Email", image: appImage.email, value: "", inputRef: useRef(null) },
+        { id: 105, title: "Phone Number", image: appImage.phoneNumber, value: "", inputRef: useRef(null) },
+    ]
 
     const mainData = [{
         sectionId: 1,
@@ -118,9 +106,6 @@ const LoginScreen = ({ navigation, route }) => {
     const forgotData = useSelector(({ ipReducer }) => ipReducer.forgetDTO)
 
     useLayoutEffect(() => {
-
-
-
         setTabIndex(tabIndex)
         switch (tabIndex) {
             case 0: { setLoginSwitch(true); setSignUpSwitch(false) }; break
@@ -185,9 +170,6 @@ const LoginScreen = ({ navigation, route }) => {
                     })
             }
         })
-
-        // alert(JSON.stringify(data))
-        // return
 
         if (isFieldEmpty(savedUrl) || savedUrl == undefined) return alert("Please configure your Url")
         storage.setData(constant.keyIsBaseUrl, savedUrl)
@@ -280,14 +262,10 @@ const LoginScreen = ({ navigation, route }) => {
 
     const handleGrear = () => { navigation.navigate('IpConfiguration') }
 
-    const onPress = () => {
-        handleLogin()
-    }
-
     const CustomSectionHeader = () => {
         return (
             <View style={{ flex: 1, backgroundColor: '', marginBottom: hp('1%'), justifyContent: 'flex-start', alignItems: 'center' }}>
-                <Text style={{ fontSize: fontsize.large, color: '#484D6D' }}>{objLogin.title}</Text>
+                <Text style={{ fontSize: fontsize.Small, color: '#484D6D' }}>{objLogin.title}</Text>
             </View>
         )
     }
@@ -300,69 +278,62 @@ const LoginScreen = ({ navigation, route }) => {
     const [orientation, SetOrientation] = useState(isPortrait() ? 'portrait' : 'landscape')
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '' }}>
+        <View style={{ flex: 1, backgroundColor: '' }}>
 
-            <View style={{ flex: 0.4, backgroundColor: '', justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{
-                    justifyContent: 'flex-end',
-                    alignItems: 'center',
-                    overflow: 'hidden',
-                    height: hp('31%'),
-                    width: wp('105%'),
-                    // position: 'absolute',// left: 40,// right: 45,
-                    bottom: 90,
-                    borderBottomRightRadius: hp('50%'),
-                    borderBottomLeftRadius: hp('50%'),
-                    backgroundColor: 'transparent',
-                    backgroundColor: appColor.overLay,
-                }}>
-                    <SegmentedControl
-                        tabs={["Login", "Sign Up"]}
-                        segmentedControlBackgroundColor={appColor.headerTintColor}
-                        activeSegmentBackgroundColor={appColor.overLay}
-                        activeTextColor={appColor.white}
-                        textColor={appColor.appTextColor}
-                        paddingVertical={3.5}
-                        width={wp('25%')}
-                        containerStyle={{ marginVertical: 20 }}
-                        textStyle={{ fontWeight: "300", fontSize: 20 }}
-                        currentIndex={tabIndex}
-                        onChange={handleTabsChange}
-                    />
-                    <Image
-                        style={{
-                            // tintColor: 'white',
-                            // backgroundColor: 'white',
-                            resizeMode: 'contain',
-                            // flex: 1,
-                            // height: hp('29%'),
-                            // width: wp('31%'),
-                            height: hp('7%'),
-                            width: hp('15%'),
-                            // flex: 1,
-                            // width: wp('51%'),
-                            // borderBottomLeftRadius: hp('5%'),
-                            // borderBottomRightRadius: hp('5%')
-                        }}
-                        // source={require('../asset/images/effiLogo.png')}
-                        source={require('../../../asset/images/effiLogoTransparent.png')}
-                    />
-                </View>
+            <View style={{
+                flex: 0.27,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderBottomRightRadius: wp('50%'),
+                borderBottomLeftRadius: wp('50%'),
+                backgroundColor: appColor.overLay,
+            }}>
+                <SegmentedControl
+                    tabs={["Login", "Sign Up"]}
+                    segmentedControlBackgroundColor={appColor.headerTintColor}
+                    activeSegmentBackgroundColor={appColor.overLay}
+                    activeTextColor={appColor.white}
+                    textColor={appColor.appTextColor}
+                    paddingVertical={10}
+                    width={wp('28%')}
+                    containerStyle={{ marginVertical: 15 }}
+                    textStyle={{ fontWeight: "500", fontSize: fontsize.largeSmall }}
+                    currentIndex={tabIndex}
+                    onChange={handleTabsChange}
+                />
+                <Image
+                    style={{
+                        // tintColor: 'red',
+                        // backgroundColor: 'white',
+                        resizeMode: 'contain',
+                        // flex: 1,
+                        // height: hp('29%'),
+                        // width: wp('31%'),
+                        height: hp('7%'),
+                        width: hp('15%'),
+                        // flex: 1,
+                        // width: wp('51%'),
+                        // borderBottomLeftRadius: hp('5%'),
+                        // borderBottomRightRadius: hp('5%')
+                    }}
+                    // source={require('../asset/images/effiLogo.png')}
+                    source={require('../../../asset/images/effiLogoTransparent.png')}
+                />
             </View>
 
             <TouchableOpacity
                 activeOpacity={0.8}
-                style={[styles.roundButton, { right: hp('2%') }]}
+                style={[styles.roundButton, { right: hp('2%'), top: hp('5%') }]}
                 onPress={handleOpenUrl}>
                 <Image source={appImage.question} style={styles.roundImage} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={{ position: 'absolute', top: hp('3%'), right: hp('7%') }} onPress={handleOpenUrl} >
-                <Text style={{ color: '#ffff', fontSize: fontsize.Small }}>Help</Text>
+            <TouchableOpacity style={{ position: 'absolute', top: hp('6%'), right: hp('7%') }} onPress={handleOpenUrl} >
+                <Text style={{ color: '#ffff', fontSize: fontsize.mediumSmall }}>Help</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 activeOpacity={0.8}
-                style={[styles.roundButton, { left: hp('2%') }]}
+                style={[styles.roundButton, { left: hp('2%'), top: hp('5%') }]}
                 onPress={handleGrear}>
                 <Image source={appImage.gear} style={styles.roundImage} />
             </TouchableOpacity>
@@ -395,12 +366,11 @@ const LoginScreen = ({ navigation, route }) => {
                                     // accessory="Checkmark"
                                     // cellAccessoryView={<Switch />}
                                     contentContainerStyle={{ borderRadius: 20, paddingVertical: 5 }}
-
                                     cellContentView={
                                         <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
                                             <Image source={rowData.image} style={{ borderRadius: 5, height: 25, width: 25, paddingRight: 5 }} />
                                             <TextInput
-                                                style={{ backgroundColor: '#ffff', flex: 1, height: 40, fontSize: 17, paddingLeft: 10 }}
+                                                style={{ backgroundColor: '#ffff', flex: 1, height: hp('3.5%'), fontSize: fontsize.medium, paddingLeft: 10 }}
                                                 selectionColor={appColor.selectionColor}
                                                 spellCheck={false}
                                                 autoCorrect={false}
@@ -423,7 +393,7 @@ const LoginScreen = ({ navigation, route }) => {
                                                 // onSubmitEditing={() => handleCreateParticipant()}
                                                 // onSubmitEditing={() => {rowData.inputRef.current.focus()}}
                                                 TextInput />
-                                            <Text style={{ color: appColor.oceanGreen, fontSize: hp('1.5%'), fontWeight: "500", justifyContent: 'center', alignItems: 'center' }}>
+                                            <Text style={{ color: appColor.oceanGreen, fontSize: fontsize.medium, fontWeight: "500", justifyContent: 'center', alignItems: 'center' }}>
                                                 {rowData.title}
                                             </Text>
                                         </View>
@@ -438,14 +408,13 @@ const LoginScreen = ({ navigation, route }) => {
             <TableView>
                 <Section footer="All rights reserved.">
                     <Cell
-                        cellStyle={{ height: 40 }}
+                        // cellStyle={{ height: 40 }}
                         contentContainerStyle={{ paddingVertical: 1 }}
-
                         cellContentView={
                             <View style={{ flexDirection: 'row', flex: 1 }}>
-                                <Text style={{ fontSize: hp('1.5%'), justifyContent: 'center', alignItems: 'center' }}>
+                                <Text style={{ fontSize: fontsize.mediumSmall, justifyContent: 'center', alignItems: 'center' }}>
                                     <Text>I agree the</Text>
-                                    <Text style={{ color: appColor.oceanGreen, fontSize: hp('1.5%'), fontWeight: "700" }}> Terms and Conditions</Text>
+                                    <Text style={{ color: isTermsCheckMarkEnabled ? appColor.oceanGreen : 'grey', fontWeight: "500" }}> Terms and Conditions</Text>
                                 </Text>
                             </View>
                         }
@@ -458,24 +427,21 @@ const LoginScreen = ({ navigation, route }) => {
                     />
                 </Section>
             </TableView>
-
-            {
-                isLogIn &&
-                <Button
-                    color={appColor.oceanGreen}
-                    title="Forgot Password ?"
-                    onPress={() => alert("Forgot Password called")}
-                />
-            }
-            <View style={{ height: hp('4%'), marginVertical: hp('2%'), justifyContent: 'center', alignItems: 'center' }}>
-                <CustomButton
-                    textColor={isTermsCheckMarkEnabled ? appColor.white : 'black'}
+            <Button
+                disabled={isLogIn ? false : true}
+                color={appColor.oceanGreen}
+                title="Forgot Password ?"
+                onPress={() => alert("Forgot Password called")}
+            />
+            <View style={{ height: hp('5%'), marginVertical: hp('2%'), justifyContent: 'center', alignItems: 'center' }}>
+                <RoundButton
+                    textColor={isTermsCheckMarkEnabled ? appColor.white : 'grey'}
                     disabled={isTermsCheckMarkEnabled ? false : true}
                     text={objLogin.buttonTitle}
-                    onPress={onPress}
+                    onPress={handleLogin}
                 />
             </View>
-        </SafeAreaView >
+        </View >
     )
 }
 
@@ -486,7 +452,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 0,
         marginVertical: 0,
         backgroundColor: '#EFEFF4',
-        backgroundColor: 'yellow',
+        // backgroundColor: 'yellow',
         paddingTop: 120,
         paddingBottom: -20,
     },
