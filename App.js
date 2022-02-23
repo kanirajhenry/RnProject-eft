@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Text, View, Button, Settings } from 'react-native'
+import { Text, View, Button, Settings, Image } from 'react-native'
 import { NavigationContainer, DrawerActions, useNavigation } from '@react-navigation/native'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -26,6 +26,8 @@ import LoginScreen from './src/modules/login/container/loginContainer'
 import RegisterScreen from './src/modules/register/container/registerContainer'
 
 import IpConfiguration from './src/modules/ipConfig/container/ipConfigContainer'
+import { hp, wp } from './src/asset/libraries'
+import { fontsize } from './src/asset/libraries/fontsAndColors'
 
 const Tab = createBottomTabNavigator()
 const Drawer = createDrawerNavigator()
@@ -52,8 +54,8 @@ const handleLogOut = (navigation) => {
 
 const customHeader = (isHeaderShown) => {
   return ({
-    headerBlurEffect: 'regular',
-    headerTransparent: true,
+    // headerBlurEffect: 'regular',
+    // headerTransparent: true,
     headerShown: isHeaderShown,
     headerTitleAlign: 'center',
     headerLargeTitle: true,
@@ -77,11 +79,17 @@ const customHeader = (isHeaderShown) => {
 const RootStackScreen = () => {
   return (
     <NavigationContainer>
-      <RootStack.Navigator
-      // mode="formSheet" 
-      >
-        {/* <RootStack.Screen name="Main" component={MyDrawer} options={{ headerShown: false }} /> */}
-        <RootStack.Screen name="AuthStackScreen" component={AuthStackScreen} options={{ headerShown: false }} />
+      <RootStack.Navigator mode="formSheet">
+
+        <RootStack.Screen name="AuthStackScreen" component={AuthStackScreen}
+          options={({ navigation }) => ({
+            headerShown: false,
+            // headerRight: () => <Button onPress={() => navigation.navigate('Register')} title="Register" />,
+            headerRight: () => <Button onPress={() => navigation.navigate("TabsScreen", { screen: 'HomeStackScreen' })} title="Home" />,
+            headerLeft: () => <Button onPress={() => navigation.navigate('IpConfiguration')} title="IpConfig" />,
+          })}
+        />
+
       </RootStack.Navigator>
     </NavigationContainer>
   );
@@ -100,11 +108,14 @@ function MyDrawer({ navigation }) {
 
 function AuthStackScreen({ navigation }) {
   return (
-    <AuthStack.Navigator screenOptions={{ headerTitleAlign: 'center' }} >
+    <AuthStack.Navigator
+      //screenOptions={{ headerTitleAlign: 'center' }} 
+      screenOptions={customHeader(false)}
+    >
 
       <AuthStack.Group >
-        <AuthStack.Screen name="TabsScreen" component={TabsScreen} options={{ headerShown: false, title: 'Home' }} />
-        {/* <AuthStack.Screen name="Main" component={MyDrawer} options={{ headerShown: true }} /> */}
+        {/* <AuthStack.Screen name="TabsScreen" component={TabsScreen} options={{ headerShown: false, title: 'Home' }} /> */}
+        <AuthStack.Screen name="Main" component={MyDrawer} options={{ headerShown: false }} />
       </AuthStack.Group>
 
       <AuthStack.Group>
@@ -182,7 +193,8 @@ function ProfileStackScreen() {
 
 function TabsScreen() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false, tabBarActiveBackgroundColor: appColor.overLay, tabBarActiveTintColor: appColor.white }}>
+    <Tab.Navigator
+      screenOptions={customHeader(false), { headerShown: false, tabBarActiveBackgroundColor: appColor.overLay, tabBarActiveTintColor: appColor.white }}>
       <Tab.Screen name="HomeStackScreen" component={HomeStackScreen} options={{ title: "Home Page", }} />
       <Tab.Screen name="SettingsStackScreen" component={SettingsStackScreen} options={{ title: "Setting Page" }} />
       <Tab.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: "Profile page" }} />
@@ -196,6 +208,7 @@ export default function App() {
     //   {/* <AuthStackScreen /> */}
     //   <MyDrawer />
     // </NavigationContainer>
+
     <RootStackScreen />
   );
 }
