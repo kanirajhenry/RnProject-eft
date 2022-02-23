@@ -146,7 +146,7 @@ const Participant = ({ navigation }) => {
         // fetchPlaceOfSupply()
 
         return () => { // Called when didMount && 
-            validations.snackBar("Called from useEffect UnMount")
+            // validations.snackBar("Called from useEffect UnMount")
             clearFields()
             setupDefaultSwitch()
             // setTimeout(() => { userNameRef.current.focus() }, 500)

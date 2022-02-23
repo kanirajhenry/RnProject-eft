@@ -147,6 +147,10 @@ const LoginScreen = ({ navigation, route }) => {
     }
 
     const handleLogin = () => {
+        storage.setData(constant.keyIsLoggedIn, true)
+        navigation.navigate("TabsScreen", { screen: 'HomeStackScreen' })
+        // navigation.goBack()
+        return
 
         loginDto = new LoginDTO()
 
@@ -176,35 +180,6 @@ const LoginScreen = ({ navigation, route }) => {
 
         dispatch(commonApiCall(null, loginDto, actionType.controller.LOGIN, actionType.loginScreen.ON_LOGIN))
         setTimeout(() => { afterCompletedApicall() }, 1000)
-    }
-
-    const clearFields = () => {
-        data.forEach((element, index, array) => element.sectionData.forEach((e, i, arr) => { e.value = "" }))
-        // data.forEach((element, index, array) => {
-        //     element.sectionData.forEach((e, i, arr) => {
-        //         e.value = ""
-        //     })
-        // })
-        setData(mainData)
-    }
-
-    const handleForgetPassword = () => {
-
-        let tokenDTO = new UserTokenDTO()
-        tokenDTO.cmpCode = "RGS"
-        tokenDTO.orgCode = "???".toUpperCase()
-        tokenDTO.userId = "???".toUpperCase()
-
-        const query = commonQueryParam(tokenDTO, "B")
-
-        dispatch(commonApiCall(query, {}, actionType.controller.LOGIN, actionType.loginScreen.ON_FORGET_PASSWORD))
-
-        setTimeout(() => {
-            let forgetResult = new LoginDTO()
-            forgetResult = forgotData
-            console.log("result.deviceToken : ----###############---->>>>>", forgetResult.response)
-            alert(JSON.stringify(forgetResult.response))
-        }, 1000)
     }
 
     const afterCompletedApicall = () => {
@@ -250,6 +225,35 @@ const LoginScreen = ({ navigation, route }) => {
         }
     }
 
+    const clearFields = () => {
+        data.forEach((element, index, array) => element.sectionData.forEach((e, i, arr) => { e.value = "" }))
+        // data.forEach((element, index, array) => {
+        //     element.sectionData.forEach((e, i, arr) => {
+        //         e.value = ""
+        //     })
+        // })
+        setData(mainData)
+    }
+
+    const handleForgetPassword = () => {
+
+        let tokenDTO = new UserTokenDTO()
+        tokenDTO.cmpCode = "RGS"
+        tokenDTO.orgCode = "???".toUpperCase()
+        tokenDTO.userId = "???".toUpperCase()
+
+        const query = commonQueryParam(tokenDTO, "B")
+
+        dispatch(commonApiCall(query, {}, actionType.controller.LOGIN, actionType.loginScreen.ON_FORGET_PASSWORD))
+
+        setTimeout(() => {
+            let forgetResult = new LoginDTO()
+            forgetResult = forgotData
+            console.log("result.deviceToken : ----###############---->>>>>", forgetResult.response)
+            alert(JSON.stringify(forgetResult.response))
+        }, 1000)
+    }
+
     const handleOpenUrl = () => {
         const url = "https://www.youtube.com/watch?v=3zpLRYzp9oU"
         if (Linking.canOpenURL(url)) return Linking.openURL(url)
@@ -260,7 +264,9 @@ const LoginScreen = ({ navigation, route }) => {
 
     const myIcon = <Icon name="rocket" size={30} color="#900" />;
 
-    const handleGrear = () => { navigation.navigate('IpConfiguration') }
+    const handleGrear = () => {
+        navigation.navigate('IpConfiguration')
+    }
 
     const CustomSectionHeader = () => {
         return (
@@ -280,43 +286,22 @@ const LoginScreen = ({ navigation, route }) => {
     return (
         <View style={{ flex: 1, backgroundColor: '' }}>
 
-            <View style={{
-                flex: 0.27,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderBottomRightRadius: wp('50%'),
-                borderBottomLeftRadius: wp('50%'),
-                backgroundColor: appColor.overLay,
-            }}>
+            <View style={{ flex: 0.3, backgroundColor: appColor.overLay, justifyContent: 'center', alignItems: 'center', borderBottomRightRadius: wp('50%'), borderBottomLeftRadius: wp('50%') }}>
                 <SegmentedControl
                     tabs={["Login", "Sign Up"]}
                     segmentedControlBackgroundColor={appColor.headerTintColor}
                     activeSegmentBackgroundColor={appColor.overLay}
                     activeTextColor={appColor.white}
                     textColor={appColor.appTextColor}
-                    paddingVertical={10}
+                    paddingVertical={7}
                     width={wp('28%')}
-                    containerStyle={{ marginVertical: 15 }}
+                    containerStyle={{ marginVertical: 10 }}
                     textStyle={{ fontWeight: "500", fontSize: fontsize.largeSmall }}
                     currentIndex={tabIndex}
                     onChange={handleTabsChange}
                 />
                 <Image
-                    style={{
-                        // tintColor: 'red',
-                        // backgroundColor: 'white',
-                        resizeMode: 'contain',
-                        // flex: 1,
-                        // height: hp('29%'),
-                        // width: wp('31%'),
-                        height: hp('7%'),
-                        width: hp('15%'),
-                        // flex: 1,
-                        // width: wp('51%'),
-                        // borderBottomLeftRadius: hp('5%'),
-                        // borderBottomRightRadius: hp('5%')
-                    }}
-                    // source={require('../asset/images/effiLogo.png')}
+                    style={{ resizeMode: 'contain', height: hp('7%'), width: hp('15%') }}
                     source={require('../../../asset/images/effiLogoTransparent.png')}
                 />
             </View>
@@ -327,7 +312,6 @@ const LoginScreen = ({ navigation, route }) => {
                 onPress={handleOpenUrl}>
                 <Image source={appImage.question} style={styles.roundImage} />
             </TouchableOpacity>
-
             <TouchableOpacity style={{ position: 'absolute', top: hp('6%'), right: hp('7%') }} onPress={handleOpenUrl} >
                 <Text style={{ color: '#ffff', fontSize: fontsize.mediumSmall }}>Help</Text>
             </TouchableOpacity>
@@ -338,9 +322,9 @@ const LoginScreen = ({ navigation, route }) => {
                 <Image source={appImage.gear} style={styles.roundImage} />
             </TouchableOpacity>
 
-            <TableView style={{ marginTop: 0, flex: 0.6, backgroundColor: "" }}>
+            <TableView style={{ flex: 0.65, marginTop: 0, backgroundColor: "" }}>
                 <FlatList
-                    style={{ marginHorizontal: wp('5%') }}
+                    style={{ marginHorizontal: wp('5%'), marginVertical: hp('2%') }}
                     data={data}
                     keyExtractor={(item, index) => item.sectionId}
                     renderItem={({ item, index, separators }) => (
@@ -365,12 +349,12 @@ const LoginScreen = ({ navigation, route }) => {
                                     // accessory="DetailDisclosure"
                                     // accessory="Checkmark"
                                     // cellAccessoryView={<Switch />}
-                                    contentContainerStyle={{ borderRadius: 20, paddingVertical: 5 }}
+                                    contentContainerStyle={{ borderRadius: 20, paddingVertical: 6 }}
                                     cellContentView={
                                         <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', backgroundColor: 'white' }}>
-                                            <Image source={rowData.image} style={{ borderRadius: 5, height: 25, width: 25, paddingRight: 5 }} />
+                                            <Image source={rowData.image} style={{ height: hp('2.5%'), width: hp('2.5%') }} />
                                             <TextInput
-                                                style={{ backgroundColor: '#ffff', flex: 1, height: hp('3.5%'), fontSize: fontsize.medium, paddingLeft: 10 }}
+                                                style={{ flex: 1, height: hp('3.5%'), fontSize: fontsize.medium, paddingLeft: wp('2%') }}
                                                 selectionColor={appColor.selectionColor}
                                                 spellCheck={false}
                                                 autoCorrect={false}
@@ -387,7 +371,7 @@ const LoginScreen = ({ navigation, route }) => {
                                                 secureTextEntry={rowData.id == 2 || rowData.id == 3 ? true : false}
                                                 maxLength={(rowData.id == 105) ? 10 : 1000}
                                                 keyboardAppearance='dark'
-                                                autoFocus={true}
+                                                autoFocus={false}
                                                 // onSubmitEditing={() => rowData.gstinRef.current.focus()}
                                                 // onSubmitEditing={() => alert("rowData.gstinRef.current.focus()")}
                                                 // onSubmitEditing={() => handleCreateParticipant()}
@@ -408,8 +392,8 @@ const LoginScreen = ({ navigation, route }) => {
             <TableView>
                 <Section footer="All rights reserved.">
                     <Cell
-                        // cellStyle={{ height: 40 }}
-                        contentContainerStyle={{ paddingVertical: 1 }}
+                        //cellStyle={{ height: 40 }}
+                        contentContainerStyle={{ backgroundColor:''}}
                         cellContentView={
                             <View style={{ flexDirection: 'row', flex: 1 }}>
                                 <Text style={{ fontSize: fontsize.mediumSmall, justifyContent: 'center', alignItems: 'center' }}>
@@ -426,14 +410,15 @@ const LoginScreen = ({ navigation, route }) => {
                         onPress={() => { setIsTermsCheckMarkEnabled(!isTermsCheckMarkEnabled) }}
                     />
                 </Section>
-            </TableView>
-            <Button
-                disabled={isLogIn ? false : true}
-                color={appColor.oceanGreen}
-                title="Forgot Password ?"
-                onPress={() => alert("Forgot Password called")}
-            />
-            <View style={{ height: hp('5%'), marginVertical: hp('2%'), justifyContent: 'center', alignItems: 'center' }}>
+            </TableView >
+            
+            <View style={{ backgroundColor:'', height: hp('15%'), marginVertical: hp('2%'), justifyContent: 'space-between', alignItems: 'center' }}>
+                <Button
+                    disabled={isLogIn ? false : true}
+                    color={appColor.oceanGreen}
+                    title="Forgot Password ?"
+                    onPress={() => alert("Forgot Password called")}
+                />
                 <RoundButton
                     textColor={isTermsCheckMarkEnabled ? appColor.white : 'grey'}
                     disabled={isTermsCheckMarkEnabled ? false : true}

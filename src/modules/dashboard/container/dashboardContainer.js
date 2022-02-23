@@ -11,7 +11,11 @@ import * as actionType from "../../../redux/actions/actionTypes"
 import * as localData from "../../../asset/constants/sharedpreference"
 
 import singleton from '../../../singleton/singleton'
-import commonApiCall, { commonGetApiCall, commonQueryParam, getQuerUrl, getSavedBaseUrl } from '../../../redux/actions/actions'
+
+import commonApiCall, {
+    commonGetApiCall, commonQueryParam, getQuerUrl, getSavedBaseUrl
+} from '../../../redux/actions/actions'
+
 import validations from '../../../asset/libraries/validations'
 import Snackbar from 'react-native-snackbar'
 import axios from 'axios'
@@ -43,8 +47,8 @@ const Dashboard = () => {
                         return
                     }
 
-                    validations.snackBar("Successfully came to the Dashboard")
-                    callSingletonApiCalls()
+                    // validations.snackBar("Successfully came to the Dashboard")
+                    // callSingletonApiCalls()
 
                 }).catch(error => console.log(error))
             })()
@@ -61,7 +65,7 @@ const Dashboard = () => {
         dispatch(commonApiCall(commonQueryParam(queryItem, "C"), inventoryDTO,
             actionType.controller.SINGLETON, actionType.singletonScreen.ON_GET_INVENTORY_LIST)
         )
-        
+
         let inventoryDtoList = new InventoryDTO()
         let array = [new InventoryDTO()]
         array = inventList
