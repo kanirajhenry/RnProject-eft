@@ -3,7 +3,7 @@ export const apiResponse = {
     API_FAILURE: "API_FAILURE",
 }
 
-export const controller = {
+export const containers = {
     IP: "IP",
     LOGIN: "LOGIN",
     DASHBOARD: "DASHBOARD",
@@ -11,22 +11,22 @@ export const controller = {
     SINGLETON: "SINGLETON"
 }
 
-export const ipScreen = {
+export const ipConfigContainer = {
     IP_CONFIG: "IP_CONFIG"
 }
 
-export const loginScreen = {
+export const loginContainer = {
     ON_LOGIN: "ON_LOGIN",
     ON_SIGN_UP: "ON_SIGN_UP",
     ON_REGISTER: "ON_REGISTER",
     ON_FORGET_PASSWORD: "ON_FORGET_PASSWORD"
 }
 
-export const participantScreen = {
+export const participantContainer = {
     ON_CREATE_PARTICIPANT: "ON_CREATE_PARTICIPANT"
 }
 
-export const dashboard = {
+export const dashboardContainer = {
     ON_LAUNCH: "ON_LAUNCH"
 }
 
@@ -70,11 +70,11 @@ export const singletonScreen = {
 
 // TODO: // ABOVE CHANGED AS ON OBJECT FOR TRIGGERED ACTION
 
-// // export const ipScreen = {
+// // export const ipConfigContainer = {
 // //     ipConfig: "ipConfig"
 // // }
 
-// // export const loginScreen = {
+// // export const loginContainer = {
 // //     onLogin: "onLogin",
 // //     onSignUp: "onSignUp",
 // //     onRegister: "onRegister",

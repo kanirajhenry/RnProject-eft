@@ -96,6 +96,7 @@ const IpConfiguration = ({ navigation }) => {
         let mainURL = configuredBaseUrl + api.checkConfig + query
 
         storage.setData(constant.keyIsBaseUrl, configuredBaseUrl)
+        api.baseUrl = configuredBaseUrl
 
         axios.post(mainURL, {})
             .then(response => {

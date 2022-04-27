@@ -172,7 +172,7 @@ const Participant = ({ navigation }) => {
         const query = commonQueryParam(obj, "C")
 
         dispatch(commonGetApiCall(query, null,
-            actionType.controller.PARTICIPANT, actionType.participantScreen.ON_CREATE_PARTICIPANT)
+            actionType.containers.PARTICIPANT, actionType.participantContainer.ON_CREATE_PARTICIPANT)
         )
     }
 

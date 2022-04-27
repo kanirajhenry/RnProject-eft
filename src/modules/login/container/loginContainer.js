@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useLayoutEffect } from 'react'
 import {
     Text, Switch, View, Image, StyleSheet,
     Button, Linking, PixelRatio, FlatList, TextInput,
-    TouchableOpacity, SafeAreaView, StatusBar, Platform, Dimensions, ActivityIndicator
+    TouchableOpacity, SafeAreaView, StatusBar, Platform, Dimensions, ActivityIndicator, Alert
 } from 'react-native'
 import { useIsFocused } from "@react-navigation/native"
 import * as actionType from '../../../redux/actions/actionTypes'
@@ -38,7 +38,7 @@ import { useOrientation } from '../../../asset/utility/useOrientation'
 
 const LoginScreen = ({ navigation, route }) => {
 
-    console.log(useOrientation)
+   console.log(useOrientation)
 
     const [objLogin, setObjLogin] = useState({ title: "LOGIN", buttonTitle: "Login", description: "Already have an account? Let's Login." })
     const [tabIndex, setTabIndex] = useState(0)
@@ -46,17 +46,17 @@ const LoginScreen = ({ navigation, route }) => {
     const [signUpSwitch, setSignUpSwitch] = useState(false)
 
     const loginFiedData = [
-        { id: 101, title: "User ID" + " *", image: appImage.user, value: "", inputRef: useRef(null) },
-        { id: 102, title: "Password", image: appImage.password, value: "", inputRef: useRef(null) },
-        { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
+        { id: 101, title: "User ID" + " *", color: 'red', image: appImage.user, value: "", inputRef: useRef(null) },
+        { id: 102, title: "Password *", color: 'red', image: appImage.password, value: "", inputRef: useRef(null) },
+        { id: 103, title: "OrgCode *", color: 'red', image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
     ]
 
     const signUpFieldData = [
-        { id: 101, title: "User ID" + " *", image: appImage.user, value: "", inputRef: useRef(null) },
-        { id: 102, title: "Password", image: appImage.password, value: "", inputRef: useRef(null) },
-        { id: 103, title: "OrgCode", image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
-        { id: 104, title: "Email", image: appImage.email, value: "", inputRef: useRef(null) },
-        { id: 105, title: "Phone Number", image: appImage.phoneNumber, value: "", inputRef: useRef(null) },
+        { id: 101, title: "User ID" + " *", color: 'red', image: appImage.user, value: "", inputRef: useRef(null) },
+        { id: 102, title: "Password *", color: 'red', image: appImage.password, value: "", inputRef: useRef(null) },
+        { id: 103, title: "OrgCode *", color: 'red', image: appImage.organization, value: "".toUpperCase(), inputRef: useRef(null) },
+        { id: 104, title: "Email", color: appColor.oceanGreen, image: appImage.email, value: "", inputRef: useRef(null) },
+        { id: 105, title: "Phone Number", color: appColor.oceanGreen, image: appImage.phoneNumber, value: "", inputRef: useRef(null) },
     ]
 
     const mainData = [{
@@ -146,45 +146,76 @@ const LoginScreen = ({ navigation, route }) => {
         setLoginSwitch(true); setSignUpSwitch(false)
     }
 
+    const [isFormSubmit, setIsFormSubmit] = useState(false)
+
     const handleLogin = () => {
-        storage.setData(constant.keyIsLoggedIn, true)
-        navigation.navigate("TabsScreen", { screen: 'HomeStackScreen' })
-        // navigation.goBack()
-        return
+
+        if (isFieldEmpty(savedUrl) || savedUrl == undefined || savedUrl === null) return alert("Please configure your Url")
+        if (!isTermsCheckMarkEnabled) alert("Please accept the Terms and Conditions")
+
+        storage.setData(constant.keyIsBaseUrl, savedUrl)
 
         loginDto = new LoginDTO()
 
-        data.forEach((element, index, array) => {
+        let formId = 100
+        // let isFormSubmit = false
 
+        let someUserId = ""
+        let somePassword = ""
+        let someOrgCode = ""
+
+        data.forEach((element, index, array) => {
             const sectionData = element.sectionData
+
+            // sectionData.forEach((item, i, arr) => {
+            //     if (item.id == 101 && item.value == '') return alert("Please enter User ID"); setIsFormSubmit(false); return
+            //     if (item.id == 102 && item.value == '') return alert("Please enter Password"); setIsFormSubmit(false); return
+            //     if (item.id == 103 && item.value == '') return alert("Please enter OrgCode"); setIsFormSubmit(false); retur
+            // })
 
             switch (element.sectionId) {
                 case 1:
                     sectionData.forEach((item, i, arr) => {
                         switch (item.id) {
-                            case 101: loginDto.userId = item.value.toUpperCase()
-                            case 102: loginDto.password = item.value
-                            case 103: loginDto.orgCode = item.value.toUpperCase()
-                            case 104: console.log("")
-                            case 105: console.log("")
+                            case 101:
+                                someUserId = item.value.toUpperCase()
+                                loginDto.userId = item.value.toUpperCase()
+                            case 102:
+                                somePassword = item.value.toUpperCase()
+                                loginDto.password = item.value
+                            case 103:
+                                someOrgCode = item.value.toUpperCase()
+                                loginDto.orgCode = item.value.toUpperCase()
+                            case 104:
+                                console.log("")
+                            case 105:
+                                console.log("")
                             default:
                                 loginDto.cmpCode = "RGS"
                                 loginDto.deviceToken = "ci0MHp4n6yw:APA91bF93ekDVFw1PcM_IlclLIlhGtTNy5XP-UDeX-cbgbG60wxuD1IpVDUDcfw72HGUqdAiSMI3SjDwcARU-DY8In9EEbr8QVdiECjGrxfWG5QmNrgx40pXQgEARs_OqfH5klYjMKeO"
                         }
                     })
+                default: break
             }
         })
 
-        if (isFieldEmpty(savedUrl) || savedUrl == undefined) return alert("Please configure your Url")
-        storage.setData(constant.keyIsBaseUrl, savedUrl)
+        // if (isFieldEmpty(someUserId)) return alert("Please enter User Id")
+        // if (isFieldEmpty(somePassword)) return alert("Please enter Password")
+        // if (isFieldEmpty(someOrgCode)) return alert("Please enter OrgCode")
 
-        dispatch(commonApiCall(null, loginDto, actionType.controller.LOGIN, actionType.loginScreen.ON_LOGIN))
-        setTimeout(() => { afterCompletedApicall() }, 1000)
+        // TODO: Navigate to Dashboard without validation for testing purpose
+        storage.setData(constant.keyIsLoggedIn, true)
+        navigation.navigate("TabsScreen", { screen: 'HomeStackScreen' })
+
+        // TODO: - Login API Call
+        // dispatch(commonApiCall(null, loginDto, actionType.containers.LOGIN, actionType.loginContainer.ON_LOGIN))
+        // setTimeout(() => { afterCompletedApicall() }, 1000)
+
     }
 
     const afterCompletedApicall = () => {
 
-        console.log(JSON.stringify(loginData))
+        console.log("afterCompletedApicall ***", JSON.stringify(loginData))
         console.log(loginData.message)
 
         let loginResult = new LoginDTO()
@@ -215,7 +246,8 @@ const LoginScreen = ({ navigation, route }) => {
                 storage.setData(constant.keyIsLoggedIn, true)
 
                 validations.snackBar(loginResult.message)
-                navigation.goBack()
+                // navigation.goBack()
+                navigation.navigate("TabsScreen", { screen: 'HomeStackScreen' })
                 break
             case false:
                 validations.snackBar(loginResult.message, "DISMISS")
@@ -244,7 +276,7 @@ const LoginScreen = ({ navigation, route }) => {
 
         const query = commonQueryParam(tokenDTO, "B")
 
-        dispatch(commonApiCall(query, {}, actionType.controller.LOGIN, actionType.loginScreen.ON_FORGET_PASSWORD))
+        dispatch(commonApiCall(query, {}, actionType.containers.LOGIN, actionType.loginContainer.ON_FORGET_PASSWORD))
 
         setTimeout(() => {
             let forgetResult = new LoginDTO()
@@ -270,8 +302,9 @@ const LoginScreen = ({ navigation, route }) => {
 
     const CustomSectionHeader = () => {
         return (
-            <View style={{ flex: 1, backgroundColor: '', marginBottom: hp('1%'), justifyContent: 'flex-start', alignItems: 'center' }}>
-                <Text style={{ fontSize: fontsize.Small, color: '#484D6D' }}>{objLogin.title}</Text>
+            <View style={{ flex: 1, backgroundColor: '', marginBottom: hp('2%'), justifyContent: 'flex-start', alignItems: 'center' }}>
+                {/* <Text style={{ fontSize: fontsize.large, color: '#484D6D' }}>{objLogin.title}</Text> */}
+                <Text style={{ fontSize: fontsize.large, color: '#484D6D' }}>{savedUrl ?? "Please configure url"}</Text>
             </View>
         )
     }
@@ -329,7 +362,7 @@ const LoginScreen = ({ navigation, route }) => {
                     keyExtractor={(item, index) => item.sectionId}
                     renderItem={({ item, index, separators }) => (
                         <Section
-                            // headerComponent={<CustomSectionHeader />}
+                            headerComponent={<CustomSectionHeader />}
                             hideSurroundingSeparators
                             roundedCorners
                             // sectionTintColor="purple"
@@ -376,8 +409,9 @@ const LoginScreen = ({ navigation, route }) => {
                                                 // onSubmitEditing={() => alert("rowData.gstinRef.current.focus()")}
                                                 // onSubmitEditing={() => handleCreateParticipant()}
                                                 // onSubmitEditing={() => {rowData.inputRef.current.focus()}}
+                                                onSubmitEditing={() => rowData.inputRef.current?.focus()}
                                                 TextInput />
-                                            <Text style={{ color: appColor.oceanGreen, fontSize: fontsize.medium, fontWeight: "500", justifyContent: 'center', alignItems: 'center' }}>
+                                            <Text style={{ color: rowData.color, fontSize: fontsize.medium, fontWeight: "500", justifyContent: 'center', alignItems: 'center' }}>
                                                 {rowData.title}
                                             </Text>
                                         </View>
@@ -393,7 +427,7 @@ const LoginScreen = ({ navigation, route }) => {
                 <Section footer="All rights reserved.">
                     <Cell
                         //cellStyle={{ height: 40 }}
-                        contentContainerStyle={{ backgroundColor:''}}
+                        contentContainerStyle={{ backgroundColor: '' }}
                         cellContentView={
                             <View style={{ flexDirection: 'row', flex: 1 }}>
                                 <Text style={{ fontSize: fontsize.mediumSmall, justifyContent: 'center', alignItems: 'center' }}>
@@ -411,8 +445,8 @@ const LoginScreen = ({ navigation, route }) => {
                     />
                 </Section>
             </TableView >
-            
-            <View style={{ backgroundColor:'', height: hp('15%'), marginVertical: hp('2%'), justifyContent: 'space-between', alignItems: 'center' }}>
+
+            <View style={{ backgroundColor: '', height: hp('15%'), marginVertical: hp('2%'), justifyContent: 'space-between', alignItems: 'center' }}>
                 <Button
                     disabled={isLogIn ? false : true}
                     color={appColor.oceanGreen}

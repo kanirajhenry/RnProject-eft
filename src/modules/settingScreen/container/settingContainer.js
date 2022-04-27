@@ -118,7 +118,7 @@ export default function SettingsScreen({ navigation }) {
             case 2: { setCustSwitch(false); setVendSwitch(false); setLeadSwitch(true) }; break
         }
         navigation.setOptions({
-            headerRight: () => <Button title="ADD" color='white' onPress={() => handleCreateParticipant()} />,
+            headerRight: () => <Button title="ADD" color='#ffff' onPress={() => handleCreateParticipant()} />,
         })
 
     }, [])

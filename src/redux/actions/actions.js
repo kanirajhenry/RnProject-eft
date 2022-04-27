@@ -2,7 +2,7 @@ import * as actionType from "./actionTypes"
 import * as api from "../../asset/constants/api"
 import * as alerts from "../../asset/constants/alerts"
 import * as utility from "../../asset/utility"
-import * as commonApi from "./commonApi"
+import * as commonApi from "./axiosConfig"
 import { Alert } from "react-native"
 
 import * as constant from '../../asset/constants/keys'
@@ -84,17 +84,17 @@ const getPathUrl = triggeredAction => {
 
   switch (triggeredAction) {
 
-    case actionType.ipScreen.IP_CONFIG: return api.checkConfig
+    case actionType.ipConfigContainer.IP_CONFIG: return api.checkConfig
 
-    case actionType.loginScreen.ON_LOGIN: return api.validateUser
+    case actionType.loginContainer.ON_LOGIN: return api.validateUser
 
-    case actionType.loginScreen.ON_FORGET_PASSWORD: return api.forgetPassword
+    case actionType.loginContainer.ON_FORGET_PASSWORD: return api.forgetPassword
 
-    case actionType.loginScreen.ON_REGISTER: return api.registerGST
+    case actionType.loginContainer.ON_REGISTER: return api.registerGST
 
-    case actionType.loginScreen.ON_SIGN_UP: return api.userSignUp
+    case actionType.loginContainer.ON_SIGN_UP: return api.userSignUp
 
-    case actionType.participantScreen.ON_CREATE_PARTICIPANT: return api.gstinData
+    case actionType.participantContainer.ON_CREATE_PARTICIPANT: return api.gstinData
 
     case actionType.singletonScreen.ON_GET_DISPLAY_ADDRESS: return api.getOrgAddress
 
@@ -112,11 +112,25 @@ const getPathUrl = triggeredAction => {
 
 export const getQuerUrl = (query, dataObj, triggeredAction) => {
 
+
+  // let someUrl = ""
+  //   (async () => await storage.getData(constant.keyIsBaseUrl)
+  //     .then(localBaseUrl => {
+
+  //     })
+  //     .catch(error => console.log(error))
+  //   )()
+
   const joinedQuery = (query === null || query === undefined) ? "" : query
+  console.log("joinedQuery::: >> ", joinedQuery)
+  console.log("api.baseUrl::: >> ", api.baseUrl)
+  console.log("getPathUrl(triggeredAction)::: >> ", getPathUrl(triggeredAction))
   const queryUrl = api.baseUrl + getPathUrl(triggeredAction) + joinedQuery
 
   if (api.baseUrl == "") return alert("BASE URL IS empty")
   if (api.baseUrl == undefined) return alert("BASE URL IS undefined")
+
+  console.log("Final queryUrl", queryUrl)
 
   return queryUrl
 }
@@ -143,7 +157,7 @@ const genericApiCallSuccess = (response, triggeredAction, dispatch, className) =
 
   switch (triggeredAction) {
 
-    case actionType.loginScreen.ON_LOGIN:
+    case actionType.loginContainer.ON_LOGIN:
       returnToDispatch(dispatch, actionType.apiResponse.API_SUCCESS, payload, className, triggeredAction)
       break
 
@@ -196,10 +210,13 @@ const commonApiCall = (query, dataObj, className, triggeredAction) => {
   const headers = { "Content-Type": "application/json", "Access-Token": "" }
   const data = (dataObj === null) ? {} : dataObj
   console.log(
+    "Effitrac ###", query, "+", dataObj, "-",  triggeredAction,
     "Effitrac token DTO : ----->", data,
     "Effitrac main post url : =================", queryUrl,
     "Effitrac triggered action ", triggeredAction
   )
+
+  if (queryUrl == undefined) return alert('QueryUrl is Undefined in CommonApiCall()')
 
   return dispatch => {
     commonApi

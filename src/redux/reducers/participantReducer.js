@@ -17,7 +17,7 @@ const participantReducer = (state = participantInitialState, action) => {
             console.log("<<<<<<<<---->>>>>>>> Called from Participant API_SUCCESS")
 
             switch (action.triggeredAction) {
-                case actionType.participantScreen.ON_CREATE_PARTICIPANT:
+                case actionType.participantContainer.ON_CREATE_PARTICIPANT:
                     console.log("<<<<<<<<---->>>>>>>> Called from Participant ON_CREATE_PARTICIPANT")
                     return {
                         ...state, loading: false, error: action.payload.error, data: action.payload,
@@ -44,10 +44,10 @@ const participantReducer = (state = participantInitialState, action) => {
 //         case actionType.apiResponse.API_SUCCESS:
 //             console.log("<<<<<<<<---->>>>>>>> Called from Participant API_SUCCESS")
 //             switch (action.className) {
-//                 case actionType.controller.PARTICIPANT:
+//                 case actionType.containers.PARTICIPANT:
 //                     switch (action.triggeredAction) {
 
-//                         case actionType.participantScreen.ON_CREATE_PARTICIPANT:
+//                         case actionType.participantContainer.ON_CREATE_PARTICIPANT:
 //                             console.log("<<<<<<<<---->>>>>>>> Called from Participant ON_CREATE_PARTICIPANT")
 //                             return { data: "Success bro" }
 //                         default:

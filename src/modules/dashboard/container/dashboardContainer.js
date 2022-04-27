@@ -63,7 +63,7 @@ const Dashboard = () => {
         }
 
         dispatch(commonApiCall(commonQueryParam(queryItem, "C"), inventoryDTO,
-            actionType.controller.SINGLETON, actionType.singletonScreen.ON_GET_INVENTORY_LIST)
+            actionType.containers.SINGLETON, actionType.singletonScreen.ON_GET_INVENTORY_LIST)
         )
 
         let inventoryDtoList = new InventoryDTO()
@@ -148,7 +148,7 @@ const Dashboard = () => {
     const getGstinDataListApiCall = () => {
 
         dispatch(commonGetApiCall(localData.getTokenDTO(), null,
-            actionType.controller.SINGLETON, actionType.singletonScreen.ON_GET_GSTIN_DATA_LIST)
+            actionType.containers.SINGLETON, actionType.singletonScreen.ON_GET_GSTIN_DATA_LIST)
         )
 
         let userTokenDto = new UserTokenDTO()
@@ -174,7 +174,7 @@ const Dashboard = () => {
     const getDisplayAddressApiCall = () => {
 
         dispatch(commonGetApiCall(localData.getTokenDTO(), null,
-            actionType.controller.SINGLETON, actionType.singletonScreen.ON_GET_DISPLAY_ADDRESS)
+            actionType.containers.SINGLETON, actionType.singletonScreen.ON_GET_DISPLAY_ADDRESS)
         )
 
         let userTokenDto = new UserTokenDTO()
@@ -200,7 +200,7 @@ const Dashboard = () => {
     const getFiscalYearListApiCall = () => {
 
         dispatch(commonGetApiCall(localData.getTokenDTO(), null,
-            actionType.controller.SINGLETON, actionType.singletonScreen.ON_GET_FISCAL_YEAR_LIST)
+            actionType.containers.SINGLETON, actionType.singletonScreen.ON_GET_FISCAL_YEAR_LIST)
         )
 
         let userTokenDto = new UserTokenDTO()
@@ -244,12 +244,12 @@ const Dashboard = () => {
                 */}
 
             {/* TODO: Class Component */}
-            <Button title="this.props.navigation.navigate => Home2" onPress={() => this.props.navigation.navigate("Home2")} />
-            <Button title="this.props.navigation.navigate => Home3" onPress={() => this.props.navigation.navigate("Home2")} />
+            {/* <Button title="this.props.navigation.navigate => Home2" onPress={() => this.props.navigation.navigate("Home2")} /> */}
+            {/* <Button title="this.props.navigation.navigate => Home3" onPress={() => this.props.navigation.navigate("Home2")} /> */}
 
             {/* TODO: Functional Component */}
-            {/* <Button title="navigation.push => Home2" onPress={() => navigation.push("Home2")} />
-                <Button title="navigation.push => Home3" onPress={() => navigation.push("Home3")} /> */}
+            <Button title="navigation.push => Home2" onPress={() => navigation.push("Home2")} />
+                <Button title="navigation.push => Home3" onPress={() => navigation.push("Home3")} />
             {/* <Button title="navigation.navigate => Home3" onPress={() => navigation.navigate("Home3")} /> */}
         </View>
     )

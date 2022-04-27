@@ -15,21 +15,21 @@ export const ipReducer = (state = ipInitialState, action) => {
         case actionType.apiResponse.API_SUCCESS:
             console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer API_SUCCESS")
             switch (action.className) {
-                case actionType.controller.IP:
+                case actionType.containers.IP:
                     console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer controller.IP")
                     return {
                         ...state, loading: false, error: action.payload.error, data: action.payload,
                     }
 
-                case actionType.controller.LOGIN:
+                case actionType.containers.LOGIN:
                     console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer controller.LOGIN")
                     switch (action.triggeredAction) {
-                        case actionType.loginScreen.ON_LOGIN:
-                            console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer <- triggeredAction -> loginScreen.ON_LOGIN")
+                        case actionType.loginContainer.ON_LOGIN:
+                            console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer <- triggeredAction -> loginContainer.ON_LOGIN")
                             return { ...state, loading: false, error: action.payload.error, data: "", loginDTO: action.payload }
 
-                        case actionType.loginScreen.ON_FORGET_PASSWORD:
-                            console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer <- triggeredAction -> loginScreen.ON_FORGET_PASSWORD")
+                        case actionType.loginContainer.ON_FORGET_PASSWORD:
+                            console.log("<<<<<<<<---->>>>>>>> Called from Ip Reducer <- triggeredAction -> loginContainer.ON_FORGET_PASSWORD")
                             return { ...state, loading: false, error: action.payload.error, data: "", forgetDTO: action.payload }
                         default:
                             return state

@@ -8,19 +8,21 @@ export const configuredUrl = (url) => {
     return getUrl(url).protocol + getUrl(url).host
 }
 
-// export let baseUrl                  = "https://demo.effitrac.com/13"
+// export let baseUrl = "https://demo.effitrac.com"
 
 export let baseUrl = null
 
 // This is the way to config the baseUrl otherwise it does no set 
 export const loadingBaseUrlSharedPreference = (async () => {
     try {
-        await storage.getData(constant.keyIsBaseUrl).then(localBaseUrl => { baseUrl = localBaseUrl })
+        return await storage.getData(constant.keyIsBaseUrl).then(localBaseUrl => {
+            baseUrl = localBaseUrl
+            return localBaseUrl
+        })
     } catch (error) {
         alert("Error catched from api.js", error)
     }
 })()
-
 
 export const getMultipleLedgers = "/erp/rest/accounts/ledger/getMultipleLedgers"
 

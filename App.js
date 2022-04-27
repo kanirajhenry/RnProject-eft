@@ -135,9 +135,9 @@ function AuthStackScreen({ navigation }) {
         />
 
         <AuthStack.Screen name='IpConfiguration' component={IpConfiguration} options={({ navigation, route }) => ({
-          // headerShown: false,
+          headerShown: true,
           presentation: 'fullScreenModal',
-          headerRight: () => <Button title="Done" onPress={() =>
+          headerRight: () => <Button title="Done" color='#ffff' onPress={() =>
             navigation.goBack()
             // navigation.navigate('Login', {
             //   ip: "Nav bar tapped"
