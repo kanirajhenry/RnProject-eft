@@ -13,7 +13,7 @@ const RoundButton = ({ text, onPress, disabled, textColor }) => {
             activeOpacity={0.5}
             style={styles.btnContainerStyle}
             onPress={onPress}>
-            <Text style={{ fontSize: fontsize.large, fontWeight: 'bold', color: textColor }}>{text}</Text>
+            <Text style={{ fontSize: fontsize.medium, fontWeight: 'bold', color: textColor}}>{text}</Text>
             {/* <Image source={require('../../../asset/images/call.png')} style={styles.btnTextStyle} /> */}
         </TouchableOpacity>
     )
@@ -26,9 +26,10 @@ const styles = StyleSheet.create({
         // left: hp('2%'),
         fontSize: fontsize.mediumSmall,
         backgroundColor: appColor.overLay,
-        height: hp('5%'),
-        width: wp('45%'),
-        borderRadius: hp('0.5%'),
+        // backgroundColor: "#DDDDDD",
+        height: hp('4.5%'),
+        width: wp('50%'),
+        borderRadius: hp('1%'),
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -38,7 +39,8 @@ const styles = StyleSheet.create({
         height: hp('2%'),
         width: hp('2%'),
         tintColor: '#ffff',
-        fontSize: 25
+        // tintColor: 'red',
+        fontSize: 20
     }
 })
 

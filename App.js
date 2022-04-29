@@ -5,6 +5,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import * as constant from './src/asset/constants/keys'
 import * as appColor from './src/asset/constants/colors'
@@ -25,6 +26,11 @@ import ProfileScreen1 from './src/modules/profile1/container/profile1Container'
 import LoginScreen from './src/modules/login/container/loginContainer'
 import RegisterScreen from './src/modules/register/container/registerContainer'
 
+
+import invoiceContainer from './src/modules/invoice/container/invoiceContainer'
+import FirstPage from './src/modules/invoice/container/firstPage'
+import SecondPage from './src/modules/invoice/container/secondPage'
+
 import IpConfiguration from './src/modules/ipConfig/container/ipConfigContainer'
 import { hp, wp } from './src/asset/libraries'
 import { fontsize } from './src/asset/libraries/fontsAndColors'
@@ -39,6 +45,9 @@ const AuthStack = createNativeStackNavigator()
 const HomeStack = createNativeStackNavigator()
 const SettingsStack = createNativeStackNavigator()
 const ProfileStack = createNativeStackNavigator()
+const InvoiceStack = createNativeStackNavigator()
+
+const TopTab = createMaterialTopTabNavigator();
 
 const handleLogOut = (navigation) => {
 
@@ -51,6 +60,8 @@ const handleLogOut = (navigation) => {
   localData.tokenDTO = {}
   navigation.navigate("AuthStackScreen", { screen: 'Login' })
 }
+
+
 
 const customHeader = (isHeaderShown) => {
   return ({
@@ -191,6 +202,73 @@ function ProfileStackScreen() {
   )
 }
 
+function TopTabStack() {
+  return (
+    <TopTab.Navigator
+      initialRouteName="Feed"
+      tabBarOptions={{
+        activeTintColor: '#FFFFFF',
+        inactiveTintColor: '#F8F8F8',
+        style: {
+          backgroundColor: '#633689',
+        },
+        labelStyle: {
+          textAlign: 'center',
+        },
+        indicatorStyle: {
+          borderBottomColor: '#87B56A',
+          borderBottomWidth: 2,
+        },
+      }}>
+      <TopTab.Screen
+        name="FirstPage"
+        component={FirstPage}
+        options={{
+          tabBarLabel: 'Customer',
+          // tabBarIcon: ({ color, size }) => (
+          //   <MaterialCommunityIcons
+          //       name="home"
+          //       color={color}
+          //       size={size}
+          //     />
+          // ),
+        }}  />
+      <TopTab.Screen
+        name="SecondPage"
+        component={SecondPage}
+        options={{
+          tabBarLabel: 'Product',
+          // tabBarIcon: ({ color, size }) => (
+          //   <MaterialCommunityIcons
+          //       name="settings"
+          //       color={color}
+          //       size={size}
+          //     />
+          // ),
+        }} />
+    </TopTab.Navigator>
+  );
+}
+
+function InvoiceStackScreen() {
+  return (
+
+    <InvoiceStack.Navigator
+        initialRouteName="Settings"
+        screenOptions={{
+          headerStyle: { backgroundColor: '#633689' },
+          headerTintColor: '#fff',
+          headerTitleStyle: { fontWeight: 'bold' }
+        }}>
+        <InvoiceStack.Screen
+          name="TopTabStack"
+          component={TopTabStack}
+          options={{ title: 'CREATE INVOICE' }}
+        />
+      </InvoiceStack.Navigator>
+    )
+}
+
 function TabsScreen() {
   return (
     <Tab.Navigator
@@ -198,6 +276,7 @@ function TabsScreen() {
       <Tab.Screen name="HomeStackScreen" component={HomeStackScreen} options={{ title: "Home Page", }} />
       <Tab.Screen name="SettingsStackScreen" component={SettingsStackScreen} options={{ title: "Setting Page" }} />
       <Tab.Screen name="ProfileStackScreen" component={ProfileStackScreen} options={{ title: "Profile page" }} />
+      <Tab.Screen name="InvoiceStackScreen" component={InvoiceStackScreen} options={{ title: "Invoice page" }} />
     </Tab.Navigator>
   )
 }

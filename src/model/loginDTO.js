@@ -13,8 +13,8 @@ export class LoginDTO {
     attachments: string
     deviceToken: string
     deviceType: string
-    createdTs = Date
-    modifiedTs = Date
+    createdTs = Date()
+    modifiedTs = Date()
     createdBy: string
     modifiedBy: string
     isLogout: string
